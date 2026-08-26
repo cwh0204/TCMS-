@@ -1,0 +1,40 @@
+## Build results (빌드 출력물 및 실행 파일 제외)
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+[Bb]in/
+[Oo]bj/
+
+## Executables & Dynamic Libraries (실행 파일 및 라이브러리)
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+*.i
+*.ilk
+*.exp
+*.lib
+
+## Visual Studio & User-specific files (VS 캐시 및 개발자 개인 설정)
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## NuGet Packages
+*.nupkg
+packages/
+!packages/repositories.config
+
+## Operating System Files (운영체제 생성 파일)
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
