@@ -1,0 +1,1056 @@
+﻿{
+  "Header": {
+    "ResultID": "8f9ad15216844c75a5ce23bc54a17e8b",
+    "TestDateTime": "2026-08-25 18:53:39",
+    "TesterName": "홍길동",
+    "FleetNo": "0000",
+    "TrainNo": "0000",
+    "SerialNo": "0000",
+    "TCMSUnit": "CC",
+    "TotalRound": 1,
+    "FinalResult": "합격"
+  },
+  "GridResults": [
+    {
+      "GridTitle": "디지털 입출력 시험",
+      "HeaderRounds": [
+        "1회차"
+      ],
+      "RowData": {},
+      "PinDetails": [
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 1,
+          "PinName": "DI1_1번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 2,
+          "PinName": "DI1_2번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 3,
+          "PinName": "DI1_3번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 4,
+          "PinName": "DI1_4번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 5,
+          "PinName": "DI1_5번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 6,
+          "PinName": "DI1_6번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 7,
+          "PinName": "DI1_7번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 8,
+          "PinName": "DI1_8번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 9,
+          "PinName": "DI1_9번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 10,
+          "PinName": "DI1_10번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 11,
+          "PinName": "DI1_11번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 12,
+          "PinName": "DI1_12번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 13,
+          "PinName": "DI1_13번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 14,
+          "PinName": "DI1_14번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 15,
+          "PinName": "DI1_15번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 16,
+          "PinName": "DI1_16번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 17,
+          "PinName": "DI1_17번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 18,
+          "PinName": "DI1_18번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 19,
+          "PinName": "DI1_19번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 20,
+          "PinName": "DI1_20번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 21,
+          "PinName": "DI1_21번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 22,
+          "PinName": "DI1_22번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 23,
+          "PinName": "DI1_23번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 24,
+          "PinName": "DI1_24번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 25,
+          "PinName": "DI1_25번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 26,
+          "PinName": "DI1_26번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 27,
+          "PinName": "DI1_27번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 28,
+          "PinName": "DI1_28번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 29,
+          "PinName": "DI1_29번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 30,
+          "PinName": "DI1_30번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 31,
+          "PinName": "DI1_31번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 32,
+          "PinName": "DI1_32번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 33,
+          "PinName": "DI1_33번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 34,
+          "PinName": "DI1_34번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 35,
+          "PinName": "DI1_35번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 36,
+          "PinName": "DI1_36번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 37,
+          "PinName": "DI1_37번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 38,
+          "PinName": "DI1_38번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 39,
+          "PinName": "DI1_39번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 40,
+          "PinName": "DI1_40번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 41,
+          "PinName": "DI1_41번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 42,
+          "PinName": "DI1_42번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 43,
+          "PinName": "DI1_43번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 44,
+          "PinName": "DI1_44번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 45,
+          "PinName": "DI1_45번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 46,
+          "PinName": "DI1_46번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 47,
+          "PinName": "DI1_47번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 48,
+          "PinName": "DI1_48번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 1,
+          "PinName": "DI2_1번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 2,
+          "PinName": "DI2_2번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 3,
+          "PinName": "DI2_3번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 4,
+          "PinName": "DI2_4번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 5,
+          "PinName": "DI2_5번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 6,
+          "PinName": "DI2_6번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 7,
+          "PinName": "DI2_7번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 8,
+          "PinName": "DI2_8번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 9,
+          "PinName": "DI2_9번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 10,
+          "PinName": "DI2_10번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 11,
+          "PinName": "DI2_11번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 12,
+          "PinName": "DI2_12번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 13,
+          "PinName": "DI2_13번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 14,
+          "PinName": "DI2_14번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 15,
+          "PinName": "DI2_15번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 16,
+          "PinName": "DI2_16번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 17,
+          "PinName": "DI2_17번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 18,
+          "PinName": "DI2_18번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 19,
+          "PinName": "DI2_19번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 20,
+          "PinName": "DI2_20번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 21,
+          "PinName": "DI2_21번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 22,
+          "PinName": "DI2_22번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 23,
+          "PinName": "DI2_23번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 24,
+          "PinName": "DI2_24번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 25,
+          "PinName": "DI2_25번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 26,
+          "PinName": "DI2_26번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 27,
+          "PinName": "DI2_27번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 28,
+          "PinName": "DI2_28번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 29,
+          "PinName": "DI2_29번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 30,
+          "PinName": "DI2_30번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 31,
+          "PinName": "DI2_31번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 32,
+          "PinName": "DI2_32번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 33,
+          "PinName": "DI2_33번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 34,
+          "PinName": "DI2_34번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 35,
+          "PinName": "DI2_35번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 36,
+          "PinName": "DI2_36번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 37,
+          "PinName": "DI2_37번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 38,
+          "PinName": "DI2_38번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 39,
+          "PinName": "DI2_39번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 40,
+          "PinName": "DI2_40번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 41,
+          "PinName": "DI2_41번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 42,
+          "PinName": "DI2_42번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 43,
+          "PinName": "DI2_43번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 44,
+          "PinName": "DI2_44번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 45,
+          "PinName": "DI2_45번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 46,
+          "PinName": "DI2_46번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 47,
+          "PinName": "DI2_47번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI2",
+          "PinNo": 48,
+          "PinName": "DI2_48번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 1,
+          "PinName": "DO_1번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 2,
+          "PinName": "DO_2번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 3,
+          "PinName": "DO_3번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 4,
+          "PinName": "DO_4번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 5,
+          "PinName": "DO_5번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 6,
+          "PinName": "DO_6번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 7,
+          "PinName": "DO_7번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 8,
+          "PinName": "DO_8번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 9,
+          "PinName": "DO_9번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 10,
+          "PinName": "DO_10번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 11,
+          "PinName": "DO_11번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 12,
+          "PinName": "DO_12번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 13,
+          "PinName": "DO_13번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 14,
+          "PinName": "DO_14번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 15,
+          "PinName": "DO_15번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 16,
+          "PinName": "DO_16번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 17,
+          "PinName": "DO_17번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 18,
+          "PinName": "DO_18번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 19,
+          "PinName": "DO_19번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 20,
+          "PinName": "DO_20번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 21,
+          "PinName": "DO_21번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 22,
+          "PinName": "DO_22번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 23,
+          "PinName": "DO_23번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 24,
+          "PinName": "DO_24번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 25,
+          "PinName": "DO_25번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 26,
+          "PinName": "DO_26번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 27,
+          "PinName": "DO_27번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 28,
+          "PinName": "DO_28번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 29,
+          "PinName": "DO_29번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 30,
+          "PinName": "DO_30번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 31,
+          "PinName": "DO_31번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 32,
+          "PinName": "DO_32번",
+          "MeasuredValue": "Err",
+          "Result": "불합격"
+        }
+      ]
+    },
+    {
+      "GridTitle": "아날로그 입출력 시험",
+      "HeaderRounds": [
+        "1회차"
+      ],
+      "RowData": {},
+      "PinDetails": []
+    }
+  ]
+}

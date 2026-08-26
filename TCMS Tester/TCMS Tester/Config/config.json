@@ -1,0 +1,2512 @@
+﻿{
+    "DigitalInputs": [
+        {
+            "ChannelNo": 0,
+            "Name": "DO<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 1,
+            "Name": "DO<9>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 2,
+            "Name": "DO<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 3,
+            "Name": "DO<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 4,
+            "Name": "DO<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 5,
+            "Name": "DO<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 6,
+            "Name": "DO<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 7,
+            "Name": "DO<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 8,
+            "Name": "DO<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 9,
+            "Name": "DO<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 10,
+            "Name": "DO<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 11,
+            "Name": "DO<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 12,
+            "Name": "DO<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 13,
+            "Name": "DO<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 14,
+            "Name": "DO<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 15,
+            "Name": "DO<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 16,
+            "Name": "DO<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 17,
+            "Name": "DO<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 18,
+            "Name": "DO<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 19,
+            "Name": "DO<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 20,
+            "Name": "DO<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 21,
+            "Name": "DO<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 22,
+            "Name": "DO<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 23,
+            "Name": "DO<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 24,
+            "Name": "DO<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 25,
+            "Name": "DO<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 26,
+            "Name": "DO<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 27,
+            "Name": "DO<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 28,
+            "Name": "DO<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 29,
+            "Name": "DO<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 30,
+            "Name": "DO<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 31,
+            "Name": "DO<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 32,
+            "Name": "D01<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 33,
+            "Name": "D01<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 34,
+            "Name": "D01<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 35,
+            "Name": "D01<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 36,
+            "Name": "D01<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 37,
+            "Name": "D01<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 38,
+            "Name": "D01<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 39,
+            "Name": "D01<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 40,
+            "Name": "D01<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 41,
+            "Name": "D01<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 42,
+            "Name": "D01<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 43,
+            "Name": "D01<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 44,
+            "Name": "D01<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 45,
+            "Name": "D01<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 46,
+            "Name": "D01<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 47,
+            "Name": "D01<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 48,
+            "Name": "D01<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 49,
+            "Name": "D01<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 50,
+            "Name": "D01<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 51,
+            "Name": "D01<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 52,
+            "Name": "D01<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 53,
+            "Name": "D01<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 54,
+            "Name": "D01<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 55,
+            "Name": "D01<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 56,
+            "Name": "D01<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 57,
+            "Name": "D01<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 58,
+            "Name": "D01<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 59,
+            "Name": "D01<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 60,
+            "Name": "D01<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 61,
+            "Name": "D01<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 62,
+            "Name": "D01<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 63,
+            "Name": "D01<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        }
+    ],
+    "DigitalOutputs": [
+        {
+            "ChannelNo": 0,
+            "Name": "DI24-1<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 1,
+            "Name": "DI24-1<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 2,
+            "Name": "DI24-1<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 3,
+            "Name": "DI24-1<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 4,
+            "Name": "DI24-1<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 5,
+            "Name": "DI24-1<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 6,
+            "Name": "DI24-1<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 7,
+            "Name": "DI24-1<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 8,
+            "Name": "DI24-1<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 9,
+            "Name": "DI24-1<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 10,
+            "Name": "DI24-1<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 11,
+            "Name": "DI24-1<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 12,
+            "Name": "DI24-1<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 13,
+            "Name": "DI24-1<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 14,
+            "Name": "DI24-1<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 15,
+            "Name": "DI24-1<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 16,
+            "Name": "DI24-1<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 17,
+            "Name": "DI24-1<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 18,
+            "Name": "DI24-1<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 19,
+            "Name": "DI24-1<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 20,
+            "Name": "DI24-1<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 21,
+            "Name": "DI24-1<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 22,
+            "Name": "DI24-1<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 23,
+            "Name": "DI24-1<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 24,
+            "Name": "DI24-1<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 25,
+            "Name": "DI24-1<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 26,
+            "Name": "DI24-1<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 27,
+            "Name": "DI24-1<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 28,
+            "Name": "DI24-1<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 29,
+            "Name": "DI24-1<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 30,
+            "Name": "DI24-1<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 31,
+            "Name": "DI24-1<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 32,
+            "Name": "DI24-1<33>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 33,
+            "Name": "DI24-1<34>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 34,
+            "Name": "DI24-1<35>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 35,
+            "Name": "DI24-1<36>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 36,
+            "Name": "DI24-1<37>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 37,
+            "Name": "DI24-1<38>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 38,
+            "Name": "DI24-1<39>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 39,
+            "Name": "DI24-1<40>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 40,
+            "Name": "DI24-1<41>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 41,
+            "Name": "DI24-1<42>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 42,
+            "Name": "DI24-1<43>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 43,
+            "Name": "DI24-1<44>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 44,
+            "Name": "DI24-1<45>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 45,
+            "Name": "DI24-1<46>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 46,
+            "Name": "DI24-1<47>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 47,
+            "Name": "DI24-1<48>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 48,
+            "Name": "DI24-2<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 49,
+            "Name": "DI24-2<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 50,
+            "Name": "DI24-2<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 51,
+            "Name": "DI24-2<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 52,
+            "Name": "DI24-2<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 53,
+            "Name": "DI24-2<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 54,
+            "Name": "DI24-2<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 55,
+            "Name": "DI24-2<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 56,
+            "Name": "DI24-2<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 57,
+            "Name": "DI24-2<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 58,
+            "Name": "DI24-2<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 59,
+            "Name": "DI24-2<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 60,
+            "Name": "DI24-2<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 61,
+            "Name": "DI24-2<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 62,
+            "Name": "DI24-2<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 63,
+            "Name": "DI24-2<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 64,
+            "Name": "DI24-2<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 65,
+            "Name": "DI24-2<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 66,
+            "Name": "DI24-2<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 67,
+            "Name": "DI24-2<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 68,
+            "Name": "DI24-2<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 69,
+            "Name": "DI24-2<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 70,
+            "Name": "DI24-2<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 71,
+            "Name": "DI24-2<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 72,
+            "Name": "DI24-2<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 73,
+            "Name": "DI24-2<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 74,
+            "Name": "DI24-2<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 75,
+            "Name": "DI24-2<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 76,
+            "Name": "DI24-2<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 77,
+            "Name": "DI24-2<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 78,
+            "Name": "DI24-2<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 79,
+            "Name": "DI24-2<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 80,
+            "Name": "DI24-2<33>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 81,
+            "Name": "DI24-2<34>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 82,
+            "Name": "DI24-2<35>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 83,
+            "Name": "DI24-2<36>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 84,
+            "Name": "DI24-2<37>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 85,
+            "Name": "DI24-2<38>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 86,
+            "Name": "DI24-2<39>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 87,
+            "Name": "DI24-2<40>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 88,
+            "Name": "DI24-2<41>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 89,
+            "Name": "DI24-2<42>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 90,
+            "Name": "DI24-2<43>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 91,
+            "Name": "DI24-2<44>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 92,
+            "Name": "DI24-2<45>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 93,
+            "Name": "DI24-2<46>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 94,
+            "Name": "DI24-2<47>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 95,
+            "Name": "DI24-2<48>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 96,
+            "Name": "DI100<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 97,
+            "Name": "DI100<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 98,
+            "Name": "DI100<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 99,
+            "Name": "DI100<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 100,
+            "Name": "DI100<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 101,
+            "Name": "DI100<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 102,
+            "Name": "DI100<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 103,
+            "Name": "DI100<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 104,
+            "Name": "DI100<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 105,
+            "Name": "DI100<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 106,
+            "Name": "DI100<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 107,
+            "Name": "DI100<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 108,
+            "Name": "DI100<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 109,
+            "Name": "DI100<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 110,
+            "Name": "DI100<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 111,
+            "Name": "DI100<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 112,
+            "Name": "DI100<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 113,
+            "Name": "DI100<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 114,
+            "Name": "DI100<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 115,
+            "Name": "DI100<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 116,
+            "Name": "DI100<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 117,
+            "Name": "DI100<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 118,
+            "Name": "DI100<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 119,
+            "Name": "DI100<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 120,
+            "Name": "DI100<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 121,
+            "Name": "DI100<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 122,
+            "Name": "DI100<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 123,
+            "Name": "DI100<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 124,
+            "Name": "DI100<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 125,
+            "Name": "DI100<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 126,
+            "Name": "DI100<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 127,
+            "Name": "DI100<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 128,
+            "Name": "DI100<33>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 129,
+            "Name": "DI100<34>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 130,
+            "Name": "DI100<35>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 131,
+            "Name": "DI100<36>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 132,
+            "Name": "DI100<37>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 133,
+            "Name": "DI100<38>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 134,
+            "Name": "DI100<39>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 135,
+            "Name": "DI100<40>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 136,
+            "Name": "DI100<41>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 137,
+            "Name": "DI100<42>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 138,
+            "Name": "DI100<43>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 139,
+            "Name": "DI100<44>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 140,
+            "Name": "DI100<45>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 141,
+            "Name": "DI100<46>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 142,
+            "Name": "DI100<47>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 143,
+            "Name": "DI100<48>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 144,
+            "Name": "DI100-1<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 145,
+            "Name": "DI100-1<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 146,
+            "Name": "DI100-1<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 147,
+            "Name": "DI100-1<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 148,
+            "Name": "DI100-1<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 149,
+            "Name": "DI100-1<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 150,
+            "Name": "DI100-1<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 151,
+            "Name": "DI100-1<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 152,
+            "Name": "DI100-1<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 153,
+            "Name": "DI100-1<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 154,
+            "Name": "DI100-1<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 155,
+            "Name": "DI100-1<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 156,
+            "Name": "DI100-1<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 157,
+            "Name": "DI100-1<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 158,
+            "Name": "DI100-1<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 159,
+            "Name": "DI100-1<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 160,
+            "Name": "DI100-1<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 161,
+            "Name": "DI100-1<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 162,
+            "Name": "DI100-1<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 163,
+            "Name": "DI100-1<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 164,
+            "Name": "DI100-1<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 165,
+            "Name": "DI100-1<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 166,
+            "Name": "DI100-1<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 167,
+            "Name": "DI100-1<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 168,
+            "Name": "DI100-1<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 169,
+            "Name": "DI100-1<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 170,
+            "Name": "DI100-1<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 171,
+            "Name": "DI100-1<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 172,
+            "Name": "DI100-1<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 173,
+            "Name": "DI100-1<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 174,
+            "Name": "DI100-1<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 175,
+            "Name": "DI100-1<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 176,
+            "Name": "DI100-1<33>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 177,
+            "Name": "DI100-1<34>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 178,
+            "Name": "DI100-1<35>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 179,
+            "Name": "DI100-1<36>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 180,
+            "Name": "DI100-1<37>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 181,
+            "Name": "DI100-1<38>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 182,
+            "Name": "DI100-1<39>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 183,
+            "Name": "DI100-1<40>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 184,
+            "Name": "DI100-1<41>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 185,
+            "Name": "DI100-1<42>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 186,
+            "Name": "DI100-1<43>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 187,
+            "Name": "DI100-1<44>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 188,
+            "Name": "DI100-1<45>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 189,
+            "Name": "DI100-1<46>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 190,
+            "Name": "DI100-1<47>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 191,
+            "Name": "DI100-1<48>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 192,
+            "Name": "DI100-2<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 193,
+            "Name": "DI100-2<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 194,
+            "Name": "DI100-2<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 195,
+            "Name": "DI100-2<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 196,
+            "Name": "DI100-2<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 197,
+            "Name": "DI100-2<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 198,
+            "Name": "DI100-2<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 199,
+            "Name": "DI100-2<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 200,
+            "Name": "DI100-2<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 201,
+            "Name": "DI100-2<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 202,
+            "Name": "DI100-2<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 203,
+            "Name": "DI100-2<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 204,
+            "Name": "DI100-2<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 205,
+            "Name": "DI100-2<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 206,
+            "Name": "DI100-2<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 207,
+            "Name": "DI100-2<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 208,
+            "Name": "DI100-2<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 209,
+            "Name": "DI100-2<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 210,
+            "Name": "DI100-2<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 211,
+            "Name": "DI100-2<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 212,
+            "Name": "DI100-2<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 213,
+            "Name": "DI100-2<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 214,
+            "Name": "DI100-2<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 215,
+            "Name": "DI100-2<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 216,
+            "Name": "DI100-2<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 217,
+            "Name": "DI100-2<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 218,
+            "Name": "DI100-2<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 219,
+            "Name": "DI100-2<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 220,
+            "Name": "DI100-2<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 221,
+            "Name": "DI100-2<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 222,
+            "Name": "DI100-2<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 223,
+            "Name": "DI100-2<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 224,
+            "Name": "DI100-2<33>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 225,
+            "Name": "DI100-2<34>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 226,
+            "Name": "DI100-2<35>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 227,
+            "Name": "DI100-2<36>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 228,
+            "Name": "DI100-2<37>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 229,
+            "Name": "DI100-2<38>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 230,
+            "Name": "DI100-2<39>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 231,
+            "Name": "DI100-2<40>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 232,
+            "Name": "DI100-2<41>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 233,
+            "Name": "DI100-2<42>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 234,
+            "Name": "DI100-2<43>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 235,
+            "Name": "DI100-2<44>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 236,
+            "Name": "DI100-2<45>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 237,
+            "Name": "DI100-2<46>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 238,
+            "Name": "DI100-2<47>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 239,
+            "Name": "DI100-2<48>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 240,
+            "Name": "DI100-2<01>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 241,
+            "Name": "DI100-2<02>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 242,
+            "Name": "DI100-2<03>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 243,
+            "Name": "DI100-2<04>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 244,
+            "Name": "DI100-2<05>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 245,
+            "Name": "DI100-2<06>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 246,
+            "Name": "DI100-2<07>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 247,
+            "Name": "DI100-2<08>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 248,
+            "Name": "DI100-2<09>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 249,
+            "Name": "DI100-2<10>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 250,
+            "Name": "DI100-2<11>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 251,
+            "Name": "DI100-2<12>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 252,
+            "Name": "DI100-2<13>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 253,
+            "Name": "DI100-2<14>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 254,
+            "Name": "DI100-2<15>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 255,
+            "Name": "DI100-2<16>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 256,
+            "Name": "DI100-2<17>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 257,
+            "Name": "DI100-2<18>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 258,
+            "Name": "DI100-2<19>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 259,
+            "Name": "DI100-2<20>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 260,
+            "Name": "DI100-2<21>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 261,
+            "Name": "DI100-2<22>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 262,
+            "Name": "DI100-2<23>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 263,
+            "Name": "DI100-2<24>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 264,
+            "Name": "DI100-2<25>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 265,
+            "Name": "DI100-2<26>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 266,
+            "Name": "DI100-2<27>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 267,
+            "Name": "DI100-2<28>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 268,
+            "Name": "DI100-2<29>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 269,
+            "Name": "DI100-2<30>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 270,
+            "Name": "DI100-2<31>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 271,
+            "Name": "DI100-2<32>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 272,
+            "Name": "DI100-2<33>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 273,
+            "Name": "DI100-2<34>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 274,
+            "Name": "DI100-2<35>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 275,
+            "Name": "DI100-2<36>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 276,
+            "Name": "DI100-2<37>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 277,
+            "Name": "DI100-2<38>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 278,
+            "Name": "DI100-2<39>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 279,
+            "Name": "DI100-2<40>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 280,
+            "Name": "DI100-2<41>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 281,
+            "Name": "DI100-2<42>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 282,
+            "Name": "DI100-2<43>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 283,
+            "Name": "DI100-2<44>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 284,
+            "Name": "DI100-2<45>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 285,
+            "Name": "DI100-2<46>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 286,
+            "Name": "DI100-2<47>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 287,
+            "Name": "DI100-2<48>",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 288,
+            "Name": "MC DC P100A 투입",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 289,
+            "Name": "EVENT RECORDER MC 투입",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 290,
+            "Name": "MC DC P100A 차단",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 291,
+            "Name": "SPEED 센서 CHECK",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 292,
+            "Name": "HDLC 통신 TC,CC",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        },
+        {
+            "ChannelNo": 293,
+            "Name": "SPEED 센서 투입",
+            "OnValue": 1,
+            "OffValue": 0,
+            "IsChecked": false
+        }
+    ]
+}

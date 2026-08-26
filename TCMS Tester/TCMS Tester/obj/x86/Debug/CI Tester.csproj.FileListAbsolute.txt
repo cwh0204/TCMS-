@@ -1,0 +1,273 @@
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\SqlServerTypes\x64\msvcr120.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\SqlServerTypes\x64\SqlServerSpatial140.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\SqlServerTypes\x86\msvcr120.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\SqlServerTypes\x86\SqlServerSpatial140.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\runtimes\win-x86\native\WebView2Loader.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\CI Tester.exe.config
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\CI Tester.exe
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\CI Tester.pdb
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\en-US\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko-KR\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\en\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko-KP\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Ivi.Visa.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.Common.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.DataVisualization.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.Design.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.ProcessingObjectModel.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.WebDesign.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.SqlServer.Types.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.Web.WebView2.Core.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.Web.WebView2.WinForms.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.Web.WebView2.Wpf.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\EnvDTE.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.ReportViewer.WinForms.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\stdole.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Ivi.Visa.xml
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.Web.WebView2.Core.xml
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.Web.WebView2.WinForms.xml
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\Microsoft.Web.WebView2.Wpf.xml
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\de\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\es\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\it\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\de\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\es\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\it\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\de\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\es\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\it\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\de\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\es\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\it\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\de\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\es\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\it\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\de\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\es\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\it\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.csproj.AssemblyReference.cache
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.CtrlOscilloscope.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.CtrlTimingChart.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormConfig.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormDB.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormDiagnosis.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormLoad.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormLogon.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormMain.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormPassword.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormPLC.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormPrint.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormResult.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormResultView.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormSerial.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormTester.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.Properties.Resources.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FlatTabControl.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormConfig.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormConfig.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormDB.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormDB.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormDiagnosis.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormLoad.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormLoad.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormMain.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormMain.en.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormMain.ko-KP.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormMain.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormResult.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormResult.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormResultView.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormResultView.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormSerial.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormSerial.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormTester.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CITester.FormTester.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.csproj.GenerateResource.cache
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.csproj.CoreCompileInputs.cache
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\en-US\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\ko-KR\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\en\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\ko-KP\CI Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.csproj.Up2Date
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.exe
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.pdb
+C:\Users\izp33\OneDrive\Desktop\CI TESTER\CI Tester\obj\x86\Debug\CI Tester.exe.config
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CI Tester.csproj.AssemblyReference.cache
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.CtrlOscilloscope.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.CtrlTimingChart.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormConfig.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormDB.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormDiagnosis.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormLoad.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormLogon.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormMain.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormPassword.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormPLC.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormPrint.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormResult.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormResultView.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormSerial.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormTester.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\TCMSTester.Properties.Resources.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FlatTabControl.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormConfig.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormConfig.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormDB.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormDB.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormDiagnosis.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormLoad.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormLoad.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormMain.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormMain.en.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormMain.ko-KP.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormMain.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormResult.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormResult.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormResultView.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormResultView.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormSerial.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormSerial.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormTester.en-US.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CITester.FormTester.ko-KR.resources
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CI Tester.csproj.GenerateResource.cache
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CI Tester.csproj.CoreCompileInputs.cache
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\SqlServerTypes\x64\msvcr120.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\SqlServerTypes\x64\SqlServerSpatial140.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\SqlServerTypes\x86\msvcr120.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\SqlServerTypes\x86\SqlServerSpatial140.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\runtimes\win-x86\native\WebView2Loader.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\TCMS Tester.exe.config
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\TCMS Tester.exe
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\TCMS Tester.pdb
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\en-US\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko-KR\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\en\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko-KP\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Ivi.Visa.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.Common.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.DataVisualization.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.Design.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.ProcessingObjectModel.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.WebDesign.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.SqlServer.Types.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.Web.WebView2.Core.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.Web.WebView2.WinForms.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.Web.WebView2.Wpf.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\EnvDTE.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.ReportViewer.WinForms.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\stdole.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Ivi.Visa.xml
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.Web.WebView2.Core.xml
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.Web.WebView2.WinForms.xml
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\Microsoft.Web.WebView2.Wpf.xml
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\de\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\es\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\it\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.Common.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\de\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\es\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\it\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.DataVisualization.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\de\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\es\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\it\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.Design.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\de\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\es\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\it\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.WebDesign.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\de\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\es\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\it\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.WebForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\de\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\es\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\fr\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\it\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ja\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ko\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\pt\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\ru\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHS\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\bin\Debug\zh-CHT\Microsoft.ReportViewer.WinForms.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\en-US\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\ko-KR\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\en\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\ko-KP\TCMS Tester.resources.dll
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\CI Tester.csproj.Up2Date
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\TCMS Tester.exe
+C:\Users\izp33\OneDrive\Desktop\TCMS Tester\CI Tester\obj\x86\Debug\TCMS Tester.pdb

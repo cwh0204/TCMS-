@@ -1,0 +1,582 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|CITester||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\properties\\datasources\\formresultview.datasource||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\properties\\datasources\\formresultview.datasource||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\userclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\userclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formconfig.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formconfig.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\ctrloscilloscope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\ctrloscilloscope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\ctrloscilloscope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\ctrloscilloscope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\customiconbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\customiconbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\customiconbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\customiconbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\numericupdown.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\numericupdown.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\roundedpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\roundedpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\roundedpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\roundedpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\serialclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\serialclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formlogon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formlogon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\citester\\formserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|solutionrelative:citester\\formserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|CITester\\CITester.csproj|c:\\users\\izp33\\onedrive\\desktop\\ci tester\\citester\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CITester",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CITester.csproj",
+              "RelativeDocumentMoniker": "CITester\\CITester.csproj",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CITester.csproj",
+              "RelativeToolTip": "CITester\\CITester.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-05-14T07:25:54.907Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FormResultView.datasource",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\Properties\\DataSources\\FormResultView.datasource",
+              "RelativeDocumentMoniker": "CITester\\Properties\\DataSources\\FormResultView.datasource",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\Properties\\DataSources\\FormResultView.datasource",
+              "RelativeToolTip": "CITester\\Properties\\DataSources\\FormResultView.datasource",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001116|",
+              "WhenOpened": "2026-05-14T07:24:20.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\Properties\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "CITester\\Properties\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\Properties\\AssemblyInfo.cs",
+              "RelativeToolTip": "CITester\\Properties\\AssemblyInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T07:24:15.254Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "FormConfig.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormConfig.Designer.cs",
+              "RelativeDocumentMoniker": "CITester\\FormConfig.Designer.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormConfig.Designer.cs",
+              "RelativeToolTip": "CITester\\FormConfig.Designer.cs",
+              "ViewState": "AgIAACgLAAAAAAAAAAAYwCgLAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T04:52:54.804Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CtrlOscilloscope.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CtrlOscilloscope.cs",
+              "RelativeDocumentMoniker": "CITester\\CtrlOscilloscope.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CtrlOscilloscope.cs",
+              "RelativeToolTip": "CITester\\CtrlOscilloscope.cs",
+              "ViewState": "AgIAAMoAAAAAAAAAAAAAANoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T01:29:53.676Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "CtrlOscilloscope.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CtrlOscilloscope.cs",
+              "RelativeDocumentMoniker": "CITester\\CtrlOscilloscope.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\CtrlOscilloscope.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\CtrlOscilloscope.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T01:29:52.354Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CustomIconButton.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CustomIconButton.cs",
+              "RelativeDocumentMoniker": "CITester\\CustomIconButton.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CustomIconButton.cs",
+              "RelativeToolTip": "CITester\\CustomIconButton.cs",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAgwMUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T00:29:01.488Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "CustomIconButton.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\CustomIconButton.cs",
+              "RelativeDocumentMoniker": "CITester\\CustomIconButton.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\CustomIconButton.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\CustomIconButton.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-14T00:29:00.514Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "RoundedPanel.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\RoundedPanel.cs",
+              "RelativeDocumentMoniker": "CITester\\RoundedPanel.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\RoundedPanel.cs",
+              "RelativeToolTip": "CITester\\RoundedPanel.cs",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAIwIcAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T07:59:48.173Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "RoundedPanel.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\RoundedPanel.cs",
+              "RelativeDocumentMoniker": "CITester\\RoundedPanel.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\RoundedPanel.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\RoundedPanel.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T07:59:46.945Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "NumericUpdown.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\NumericUpdown.cs",
+              "RelativeDocumentMoniker": "CITester\\NumericUpdown.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\NumericUpdown.cs",
+              "RelativeToolTip": "CITester\\NumericUpdown.cs",
+              "ViewState": "AgIAAH8BAAAAAAAAAAAgwKMBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T07:55:41.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "FormMain.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormMain.cs",
+              "RelativeDocumentMoniker": "CITester\\FormMain.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormMain.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormMain.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T06:20:40.12Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FormMain.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormMain.cs",
+              "RelativeDocumentMoniker": "CITester\\FormMain.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormMain.cs",
+              "RelativeToolTip": "CITester\\FormMain.cs",
+              "ViewState": "AgIAAP0EAAAAAAAAAAAswA8FAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T23:25:05.401Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "FormResult.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormResult.cs",
+              "RelativeDocumentMoniker": "CITester\\FormResult.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormResult.cs",
+              "RelativeToolTip": "CITester\\FormResult.cs",
+              "ViewState": "AgIAAPUAAAAAAAAAAAAYwAwBAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-21T01:20:29.735Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FormResultView.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormResultView.cs",
+              "RelativeDocumentMoniker": "CITester\\FormResultView.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormResultView.cs",
+              "RelativeToolTip": "CITester\\FormResultView.cs",
+              "ViewState": "AgIAACQBAAAAAAAAAAAswDYBAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T06:01:30.999Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "FormLoad.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormLoad.cs",
+              "RelativeDocumentMoniker": "CITester\\FormLoad.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormLoad.cs",
+              "RelativeToolTip": "CITester\\FormLoad.cs",
+              "ViewState": "AgIAAFoBAAAAAAAAAAAAAGkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-04T00:24:15.509Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "FormResult.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormResult.cs",
+              "RelativeDocumentMoniker": "CITester\\FormResult.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormResult.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormResult.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T23:45:36.711Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "FormLoad.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormLoad.cs",
+              "RelativeDocumentMoniker": "CITester\\FormLoad.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormLoad.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormLoad.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T05:06:11.797Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "FormDB.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormDB.cs",
+              "RelativeDocumentMoniker": "CITester\\FormDB.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormDB.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormDB.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T01:45:49.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "FormDB.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormDB.cs",
+              "RelativeDocumentMoniker": "CITester\\FormDB.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormDB.cs",
+              "RelativeToolTip": "CITester\\FormDB.cs",
+              "ViewState": "AgIAAH8BAAAAAAAAAAAmwJIBAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T06:47:28.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "FormTester.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormTester.cs",
+              "RelativeDocumentMoniker": "CITester\\FormTester.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormTester.cs",
+              "RelativeToolTip": "CITester\\FormTester.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAAwFQAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T23:19:08.519Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "FormDiagnosis.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormDiagnosis.cs",
+              "RelativeDocumentMoniker": "CITester\\FormDiagnosis.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormDiagnosis.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormDiagnosis.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-04T00:39:06.137Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "FormTester.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormTester.cs",
+              "RelativeDocumentMoniker": "CITester\\FormTester.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormTester.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormTester.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T04:05:42.914Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "FormResultView.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormResultView.cs",
+              "RelativeDocumentMoniker": "CITester\\FormResultView.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormResultView.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormResultView.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T23:17:42.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FormSerial.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormSerial.cs",
+              "RelativeDocumentMoniker": "CITester\\FormSerial.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormSerial.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormSerial.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T23:29:16.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FormConfig.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormConfig.cs",
+              "RelativeDocumentMoniker": "CITester\\FormConfig.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormConfig.cs",
+              "RelativeToolTip": "CITester\\FormConfig.cs",
+              "ViewState": "AgIAACcBAAAAAAAAAAAswEUBAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-20T23:34:01.764Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FormConfig.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormConfig.cs",
+              "RelativeDocumentMoniker": "CITester\\FormConfig.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\Ver1.0.0.0\\CITester\\FormConfig.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "..\\Ver1.0.0.0\\CITester\\FormConfig.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-19T23:11:01.375Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "FormSerial.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormSerial.cs",
+              "RelativeDocumentMoniker": "CITester\\FormSerial.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormSerial.cs",
+              "RelativeToolTip": "CITester\\FormSerial.cs",
+              "ViewState": "AgIAAGwAAAAAAAAAAABYwGgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T07:19:44.333Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "FormDiagnosis.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormDiagnosis.cs",
+              "RelativeDocumentMoniker": "CITester\\FormDiagnosis.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormDiagnosis.cs",
+              "RelativeToolTip": "CITester\\FormDiagnosis.cs",
+              "ViewState": "AgIAADEBAAAAAAAAAABIwEcBAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-04T00:39:14.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\Program.cs",
+              "RelativeDocumentMoniker": "CITester\\Program.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\Program.cs",
+              "RelativeToolTip": "CITester\\Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAkwBwAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T01:48:02.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "FormLogon.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormLogon.cs",
+              "RelativeDocumentMoniker": "CITester\\FormLogon.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormLogon.cs",
+              "RelativeToolTip": "CITester\\FormLogon.cs",
+              "ViewState": "AgIAAK8AAAAAAAAAAAAUwEMAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T07:33:30.092Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "SerialClient.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\SerialClient.cs",
+              "RelativeDocumentMoniker": "CITester\\SerialClient.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\SerialClient.cs",
+              "RelativeToolTip": "CITester\\SerialClient.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAcwD8AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-04T01:40:33.315Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserClass.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\UserClass.cs",
+              "RelativeDocumentMoniker": "CITester\\UserClass.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\UserClass.cs",
+              "RelativeToolTip": "CITester\\UserClass.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAswDcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-02T23:58:39.839Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "FormPLC.cs",
+              "DocumentMoniker": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormPLC.cs",
+              "RelativeDocumentMoniker": "CITester\\FormPLC.cs",
+              "ToolTip": "C:\\Users\\izp33\\OneDrive\\Desktop\\CI TESTER\\CITester\\FormPLC.cs",
+              "RelativeToolTip": "CITester\\FormPLC.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-03T02:09:35.624Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 1674,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 1674,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

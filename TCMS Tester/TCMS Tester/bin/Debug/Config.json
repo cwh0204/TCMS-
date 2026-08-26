@@ -1,0 +1,417 @@
+﻿{
+  "Operation": {
+    "lstCombinedHistory": [
+      {
+        "strUnit": "CC",
+        "strSerialNo": "0000",
+        "strFleetNo": "0000",
+        "strTrainNo": "0000",
+        "strTesterName": "홍길동"
+      },
+      {
+        "strUnit": "TC",
+        "strSerialNo": "0000",
+        "strFleetNo": "0000",
+        "strTrainNo": "0000",
+        "strTesterName": "홍길동"
+      },
+      {
+        "strUnit": "DU",
+        "strSerialNo": "0000",
+        "strFleetNo": "0000",
+        "strTrainNo": "0000",
+        "strTesterName": "홍길동"
+      },
+      {
+        "strUnit": "ER",
+        "strSerialNo": "0000",
+        "strFleetNo": "0000",
+        "strTrainNo": "0000",
+        "strTesterName": "홍길동"
+      },
+      {
+        "strUnit": "TC",
+        "strSerialNo": "123",
+        "strFleetNo": "12",
+        "strTrainNo": "0000",
+        "strTesterName": "홍길동"
+      },
+      {
+        "strUnit": "CC",
+        "strSerialNo": "12345",
+        "strFleetNo": "1234",
+        "strTrainNo": "1234",
+        "strTesterName": "테스트"
+      },
+      {
+        "strUnit": "TC",
+        "strSerialNo": "12345",
+        "strFleetNo": "1234",
+        "strTrainNo": "1234",
+        "strTesterName": "테스트"
+      },
+      {
+        "strUnit": "TC",
+        "strSerialNo": "1234",
+        "strFleetNo": "1234",
+        "strTrainNo": "1234",
+        "strTesterName": "테스트"
+      },
+      {
+        "strUnit": "ER",
+        "strSerialNo": "1234",
+        "strFleetNo": "1234",
+        "strTrainNo": "1234",
+        "strTesterName": "이건"
+      },
+      {
+        "strUnit": "DU",
+        "strSerialNo": "5444",
+        "strFleetNo": "1111",
+        "strTrainNo": "3321",
+        "strTesterName": "이름"
+      }
+    ],
+    "TesterName": "홍길동",
+    "FleetNo": "0000",
+    "TrainNo": "0000",
+    "SerialNo": "0000",
+    "TCMSUnit": "CC",
+    "ShowTCMSUnit": true
+  },
+  "TestEnables": {
+    "PowerUnitTest": true,
+    "SequenceTest1": true,
+    "SequenceTest2": true,
+    "SequenceTest3": true,
+    "ProtectionTest": true,
+    "ConverterInverterTest": true,
+    "StartStopSequenceTest": true,
+    "MainCircuitTest": true,
+    "GduTest": true,
+    "VoltageCurrentTest": true,
+    "CommunicationTest": true
+  },
+  "Database": {
+    "Path": "CIDB.mdb",
+    "Password": "hzsofttr"
+  },
+  "Device": {
+    "Plc_IPAddress": "192.168.1.20",
+    "Plc_COM": "COM1",
+    "Oscilloscope_IPAddress": "TCPIP0::192.168.1.10::5025::SOCKET",
+    "Oscilloscope_IDN": "DSOX1204A",
+    "SpeedOut_ComPort": "COM1",
+    "SpeedOut_BaudRate": 9600,
+    "SpeedOut_IDN": "speed",
+    "DMM_IPAddress": "TCPIP0::192.168.1.30::inst0::INSTR",
+    "DMM_IDN": "DAQ970A",
+    "ACPower_IPAddress": "192.168.1.23",
+    "ACPower_PortNo": 2268,
+    "ACPower_IDN": "APS-7100",
+    "DCPower_ComPort": "COM1",
+    "DCPower_BaudRate": 9600,
+    "DCPower_IDN": "EX-Series",
+    "PwmOut_ComPort": "COM102",
+    "PwmOut_BaudRate": 9600,
+    "CurrentOut_ComPort": "COM73",
+    "CurrentOut_BaudRate": 9600,
+    "CurrentOut_IDN": "current",
+    "OpticalBoard_ComPort": "COM1",
+    "OpticalBoard_BaudRate": 19200,
+    "OpticalBoard_IDN": "optboard-tester.0",
+    "OpticalBoard2_ComPort": "COM1",
+    "OpticalBoard2_BaudRate": 19200,
+    "OpticalBoard2_IDN": "optboard-tester.1",
+    "TrimmerBoard1_ComPort": "COM1",
+    "TrimmerBoard1_BaudRate": 9600,
+    "TrimmerBoard1_IDN": "trimmerx1 board.0",
+    "TrimmerBoard2_ComPort": "COM1",
+    "TrimmerBoard2_BaudRate": 9600,
+    "TrimmerBoard2_IDN": "trimmerx1 board.1",
+    "LineVoltageBoard0_ComPort": "COM1",
+    "LineVoltageBoard0_BaudRate": 9600,
+    "LineVoltageBoard0_IDN": "3sin.phase",
+    "MVBBoard_ComPort": "COM1",
+    "MVBBoard_BaudRate": 19200,
+    "MVBBoard_IDN": "MVB",
+    "DPS1_ComPort": "COM100",
+    "DPS2_ComPort": "COM101"
+  },
+  "ListSpecsCommon": [
+    {
+      "ItemName": "Converter_ON",
+      "Standard": 3.0,
+      "Permissible": 0.15,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "Converter_OFF",
+      "Standard": 3.0,
+      "Permissible": 0.15,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "Inverter_ON",
+      "Standard": 3.0,
+      "Permissible": 0.15,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "Inverter_OFF",
+      "Standard": 3.0,
+      "Permissible": 0.15,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "P24_Unit",
+      "Standard": 24.0,
+      "Permissible": 2.4,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "N24_Unit",
+      "Standard": -24.0,
+      "Permissible": -2.4,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "P12_Unit",
+      "Standard": 12.0,
+      "Permissible": 1.2,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "Main_ON",
+      "Standard": 100.0,
+      "Permissible": 5.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "Main_OFF",
+      "Standard": -100.0,
+      "Permissible": 5.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "주파수",
+      "Standard": 60.0,
+      "Permissible": 0.0,
+      "Unit": "Hz"
+    },
+    {
+      "ItemName": "DCPT_TEST1",
+      "Standard": 0.0,
+      "Permissible": 0.1,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "DCPT_TEST2",
+      "Standard": 1000.0,
+      "Permissible": 50.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "DCPT_TEST3",
+      "Standard": 2000.0,
+      "Permissible": 100.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACPT_TEST1",
+      "Standard": 0.0,
+      "Permissible": 0.1,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACPT_TEST2",
+      "Standard": 50.0,
+      "Permissible": 2.5,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACPT_TEST3",
+      "Standard": 100.0,
+      "Permissible": 5.0,
+      "Unit": "V"
+    }
+  ],
+  "ListSpecs123": [
+    {
+      "ItemName": "컨버터/인버터(1,2,3) ON",
+      "Standard": 5.0,
+      "Permissible": 0.5,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "컨버터/인버터(1,2,3) OFF",
+      "Standard": 0.0,
+      "Permissible": 0.5,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "BPSF_123",
+      "Standard": 70.0,
+      "Permissible": 7.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACOV_123",
+      "Standard": 30000.0,
+      "Permissible": 3000.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACLV_123",
+      "Standard": 19500.0,
+      "Permissible": 1950.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "VDOV_123",
+      "Standard": 2200.0,
+      "Permissible": 220.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "VDLV_123",
+      "Standard": 1600.0,
+      "Permissible": 160.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ISOC1_123",
+      "Standard": 2300.0,
+      "Permissible": 230.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "ISOC2_123",
+      "Standard": 2300.0,
+      "Permissible": 230.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "MOCD_123",
+      "Standard": 1850.0,
+      "Permissible": 185.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "PUD_123",
+      "Standard": 300.0,
+      "Permissible": 30.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "FCDF_123",
+      "Standard": 350.0,
+      "Permissible": 35.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "IGOC_123",
+      "Standard": 300.0,
+      "Permissible": 30.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "BSD_123",
+      "Standard": 5.0,
+      "Permissible": 0.5,
+      "Unit": "km"
+    },
+    {
+      "ItemName": "IDOC_123",
+      "Standard": 3000.0,
+      "Permissible": 150.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "ZCDFP_123",
+      "Standard": 61.0,
+      "Permissible": 1.0,
+      "Unit": "Hz"
+    },
+    {
+      "ItemName": "ZCDFM_123",
+      "Standard": 59.0,
+      "Permissible": 1.0,
+      "Unit": "Hz"
+    }
+  ],
+  "ListSpecs54": [
+    {
+      "ItemName": "컨버터/인버터(54) ON",
+      "Standard": 15.0,
+      "Permissible": 2.2,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "컨버터/인버터(54) OFF",
+      "Standard": -15.0,
+      "Permissible": 2.2,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "BPSF_54",
+      "Standard": 70.0,
+      "Permissible": 7.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACOV_54",
+      "Standard": 30000.0,
+      "Permissible": 3000.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ACLV_54",
+      "Standard": 17300.0,
+      "Permissible": 1730.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "ISOC_54",
+      "Standard": 1950.0,
+      "Permissible": 195.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "MOCD_54",
+      "Standard": 1150.0,
+      "Permissible": 115.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "FCOV_54",
+      "Standard": 2150.0,
+      "Permissible": 215.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "FCLV_54",
+      "Standard": 1650.0,
+      "Permissible": 165.0,
+      "Unit": "V"
+    },
+    {
+      "ItemName": "LGD_54",
+      "Standard": 290.0,
+      "Permissible": 29.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "BOCD_54",
+      "Standard": 240.0,
+      "Permissible": 24.0,
+      "Unit": "A"
+    },
+    {
+      "ItemName": "PUD_54",
+      "Standard": 300.0,
+      "Permissible": 30.0,
+      "Unit": "V"
+    }
+  ]
+}

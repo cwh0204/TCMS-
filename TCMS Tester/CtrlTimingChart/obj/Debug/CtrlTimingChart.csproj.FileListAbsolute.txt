@@ -1,0 +1,6 @@
+D:\Work\시험기\CI\CITester\CtrlTimingChart\bin\Debug\CtrlTimingChart.dll
+D:\Work\시험기\CI\CITester\CtrlTimingChart\bin\Debug\CtrlTimingChart.pdb
+D:\Work\시험기\CI\CITester\CtrlTimingChart\obj\Debug\CtrlTimingChart.dll
+D:\Work\시험기\CI\CITester\CtrlTimingChart\obj\Debug\CtrlTimingChart.pdb
+D:\Work\시험기\CI\CITester\CtrlTimingChart\obj\Debug\CtrlTimingChart.CtrlTimingChart.resources
+D:\Work\시험기\CI\CITester\CtrlTimingChart\obj\Debug\CtrlTimingChart.csproj.GenerateResource.Cache

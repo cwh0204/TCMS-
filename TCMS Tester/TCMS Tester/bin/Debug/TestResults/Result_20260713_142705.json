@@ -1,0 +1,273 @@
+﻿{
+  "Header": {
+    "ResultID": "c26338e760034adfaaff902e48b7eaae",
+    "TestDateTime": "2026-07-13 14:27:04",
+    "TesterName": "홍길동",
+    "FleetNo": "0000",
+    "TrainNo": "0000",
+    "SerialNo": "0000",
+    "TCMSUnit": "DU",
+    "TotalRound": 1,
+    "FinalResult": "합격"
+  },
+  "GridResults": [
+    {
+      "GridTitle": "디지털 입출력 시험",
+      "HeaderRounds": [
+        "1회차"
+      ],
+      "RowData": {},
+      "PinDetails": [
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 1,
+          "PinName": "DI1_1번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 2,
+          "PinName": "DI1_2번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 3,
+          "PinName": "DI1_3번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 4,
+          "PinName": "DI1_4번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 5,
+          "PinName": "DI1_5번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 6,
+          "PinName": "DI1_6번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 7,
+          "PinName": "DI1_7번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 8,
+          "PinName": "DI1_8번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 9,
+          "PinName": "DI1_9번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 10,
+          "PinName": "DI1_10번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 11,
+          "PinName": "DI1_11번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 12,
+          "PinName": "DI1_12번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 13,
+          "PinName": "DI1_13번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 14,
+          "PinName": "DI1_14번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 15,
+          "PinName": "DI1_15번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DI1",
+          "PinNo": 16,
+          "PinName": "DI1_16번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 1,
+          "PinName": "DO_1번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 2,
+          "PinName": "DO_2번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 3,
+          "PinName": "DO_3번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 4,
+          "PinName": "DO_4번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 5,
+          "PinName": "DO_5번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "DO",
+          "PinNo": 6,
+          "PinName": "DO_6번",
+          "MeasuredValue": "ON",
+          "Result": "합격"
+        }
+      ]
+    },
+    {
+      "GridTitle": "아날로그 입출력 시험",
+      "HeaderRounds": [
+        "1회차"
+      ],
+      "RowData": {},
+      "PinDetails": [
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 1,
+          "PinName": "아날로그 입력_00",
+          "MeasuredValue": "9.82 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 2,
+          "PinName": "아날로그 입력_01",
+          "MeasuredValue": "10.20 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 3,
+          "PinName": "아날로그 입력_02",
+          "MeasuredValue": "9.99 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 4,
+          "PinName": "아날로그 입력_03",
+          "MeasuredValue": "10.14 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 6,
+          "PinName": "아날로그 출력_00",
+          "MeasuredValue": "9.84 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 7,
+          "PinName": "아날로그 출력_01",
+          "MeasuredValue": "10.13 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 8,
+          "PinName": "아날로그 출력_02",
+          "MeasuredValue": "9.97 V",
+          "Result": "합격"
+        },
+        {
+          "Round": 1,
+          "ChannelGroup": "ANALOG",
+          "PinNo": 9,
+          "PinName": "아날로그 출력_03",
+          "MeasuredValue": "9.88 V",
+          "Result": "합격"
+        }
+      ]
+    }
+  ]
+}
