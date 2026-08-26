@@ -2,14 +2,14 @@
   "Operation": {
     "lstCombinedHistory": [
       {
-        "strUnit": "CC",
+        "strUnit": "TC",
         "strSerialNo": "0000",
         "strFleetNo": "0000",
         "strTrainNo": "0000",
         "strTesterName": "홍길동"
       },
       {
-        "strUnit": "TC",
+        "strUnit": "CC",
         "strSerialNo": "0000",
         "strFleetNo": "0000",
         "strTrainNo": "0000",
@@ -76,7 +76,7 @@
     "FleetNo": "0000",
     "TrainNo": "0000",
     "SerialNo": "0000",
-    "TCMSUnit": "CC",
+    "TCMSUnit": "TC",
     "ShowTCMSUnit": true
   },
   "TestEnables": {

@@ -52,7 +52,8 @@ namespace TCMSTester.Services
             var objAnalogGridResult = new TestResultJson.GridTestResult { GridTitle = "아날로그 입출력 시험" };
 
             bool bHasAnyFailure = false;
-            int nAnimationDelay = 200;
+            //딜레이 시간
+            int nAnimationDelay = 100;
 
             try
             {

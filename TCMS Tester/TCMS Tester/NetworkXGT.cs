@@ -191,19 +191,21 @@ namespace CITester
 
         //#########################################################################################
         //
-        public void SetDO(int nModule, int nPin, int nValue)
+        /*
+        public void 
+        (int nModule, int nPin, int nValue)
         {
-            m_bDOValue[nPin] = (nValue == 0) ? false : true;
-            /*
-            int nByteIndex = nPin / 8 + ((nModule - 1) * 8);
-            int nBitIndex = nPin % 8;
+        m_bDOValue[nPin] = (nValue == 0) ? false : true;
 
-            byte cShift = 0x01;
-            cShift <<= nBitIndex;
-            m_bDOBuffer[nByteIndex] |= cShift;
-            */
+        int nByteIndex = nPin / 8 + ((nModule - 1) * 8);
+        int nBitIndex = nPin % 8;
+
+        byte cShift = 0x01;
+        cShift <<= nBitIndex;
+        m_bDOBuffer[nByteIndex] |= cShift;
+
         }
-
+        */
         //#########################################################################################
         //
         public void SetDO(int nModule, int nPin, bool bValue)

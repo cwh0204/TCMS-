@@ -73,7 +73,7 @@ namespace TCMSTester.Protocol
             }
             else
             {
-                // ★ CC 유닛 (DI3 없음: 32Byte 패킷)
+                // CC 유닛 (DI3 없음: 32Byte 패킷)
                 // DO (4Bytes: 22~25)
                 Array.Copy(buffer, 22, packet.DoRaw, 0, 4);
                 Array.Reverse(packet.DoRaw);

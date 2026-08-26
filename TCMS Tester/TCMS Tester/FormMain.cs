@@ -31,6 +31,7 @@ using Ivi.Visa.Interop;
 using Microsoft.Web.WebView2;
 using Microsoft.Web.WebView2.Core;
 using NetworkService;
+using TCMSTester.Config;
 using TCMSTester.Hardware;
 using TCMSTester.Models;
 using TCMSTester.Protocol;
@@ -713,6 +714,7 @@ namespace CITester
             {
 
             }
+
         }
 
         const int TIMINGCHART_MCB = 0;
@@ -827,7 +829,6 @@ namespace CITester
             {
                 Console.WriteLine($"[TCMS 수신 에러] {errorMsg}");
             };
-
 
         }
         // 유닛마다 탭페이지 조절 함수
@@ -4789,11 +4790,29 @@ namespace CITester
         private bool m_bIsTesting = false;
         private TestResultJson m_objTestResult = null;
 
+        /// <summary>
+        /// FEnet 통신을 통해 모든 PLC 출력을 OFF 상태로 초기화
+        /// </summary>
+        private void ResetAllPlcOutputs(int maxChannelCount = 32)
+        {
+
+            for (int ch = 1; ch <= maxChannelCount; ch++)
+            {
+                // 국번(0), 채널번호(ch), OFF(false)
+                m_PLCNetwork.SetDO(0, ch, false);
+            }
+        }
+
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
+            // 1. 강제 중단 요청 시 PLC 출력 즉시 차단
             if (m_bIsTesting)
             {
                 m_bIsTesting = false;
+
+                // fenet 기반 전체 출력 OFF
+                ResetAllPlcOutputs();
+
                 AppendTestLog(richTextBox_Log, "[시스템] 사용자 요청에 의해 시험이 강제 중단됩니다.", Color.OrangeRed);
                 return;
             }
@@ -4802,6 +4821,8 @@ namespace CITester
             if (MessageBox.Show($"시험 차수 : {nMaxLoop}회\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
+            // 시험 진행 상태 플래그 및 UI 설정
+            m_bIsTesting = true;
             SetTestingUiState(true);
 
             try
@@ -4810,7 +4831,6 @@ namespace CITester
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
-                // MvbReceiver 전달
                 var testService = new TcmsTestService(m_mvbReceiver)
                 {
                     OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
@@ -4833,20 +4853,17 @@ namespace CITester
                             case "DO": targetDgv = dataGridViewDO; break;
                         }
 
-                        // 채널별 기대 설정값 패턴
                         bool[] expectedBits = GetExpectedBitsForCategory(cat);
+                        Func<byte[]> channelRawDataSupplier = () => currentRawData?.Invoke();
 
-                        Func<byte[]> channelRawDataSupplier = () =>
-                        {
-                            // currentRawData?.Invoke()가 이미 잘라진 byte[](6bytes / 4bytes)를 들고 들어옵니다.
-                            byte[] raw = currentRawData?.Invoke();
-                            return raw; // TcmsParser 재호출 없이 바이트 배열 그대로 전달
-                        };
+                        // [수정] cat(DI1, DI2, DI3, DO) 문자열 또는 카테고리별 시작 핀 구분 전달
+                        // AppConfig.GetStartChannelNo 메서드가 cat(string)을 받도록 개편되었거나 
+                        // 아래처럼 카테고리별로 시작 핀을 분기해야 합니다.
+                        int nStartPin = GetStartPinByCategory(strUnitType, cat);
 
-                        // 9번째 인수로 Func<byte[]> 공급자를 전달 (9번째 인수 에러 해결)
                         await RunChannelTestSequenceAsync(
                             cat, arr, count, targetDgv, delay, loop, fails, details,
-                            channelRawDataSupplier, expectedBits
+                            channelRawDataSupplier, expectedBits, nStartPin
                         );
                     }
                 };
@@ -4859,7 +4876,30 @@ namespace CITester
             }
             finally
             {
+                // 시험 종료 시 안전 플래그 해제 및 FEnet 출력 안전 OFF
+                m_bIsTesting = false;
+                ResetAllPlcOutputs();
+
                 SetTestingUiState(false);
+            }
+        }
+
+        // 카테고리별 시작 핀 번호 반환 헬퍼 메서드 예시
+        private int GetStartPinByCategory(string strUnitType, string cat)
+        {
+            var unitType = AppConfig.ParseUnitType(strUnitType);
+
+            // AppConfig 내부 메서드가 cat(string)을 직접 지원하는 경우:
+            // return AppConfig.GetStartChannelNo(unitType, cat);
+
+            // 직접 분기할 경우 예시:
+            switch (cat?.ToUpper())
+            {
+                case "DI1": return AppConfig.GetStartChannelNo(unitType, false);       // 예: 144 (또는 1)
+                case "DI2": return AppConfig.GetStartChannelNo(unitType, false) + 48;  // 예: 192 (또는 49)
+                case "DI3": return AppConfig.GetStartChannelNo(unitType, false) + 96;  // 예: 240 (또는 97)
+                case "DO": return AppConfig.GetStartChannelNo(unitType, true);        // DO 시작 핀
+                default: return 1;
             }
         }
 
@@ -4878,7 +4918,6 @@ namespace CITester
                 BtnStart.HoverBackColor = Color.FromArgb(223, 115, 115);
                 BtnStart.PressedBackColor = Color.FromArgb(166, 68, 68);
                 BtnStart.Image = TCMSTester.Properties.Resources.stop_button;
-
                 imagebtn1.Visible = false;
                 imagebtn2.Visible = false;
             }
@@ -4988,81 +5027,178 @@ namespace CITester
                     return null;
             }
         }
-
         private async Task RunChannelTestSequenceAsync(
     string strChannelName,
     EChannelState[] arrStates,
     int nActiveCount,
     DataGridView dgvTarget,
-    int nDelay,                      // 하드웨어 응답 대기 시간 (타이머)
+    int nDelay,
     int nRound,
     List<string> listFailedPins,
     List<TestResultJson.PinResultItem> listPinDetails,
-    Func<byte[]> getRawDataFunc,     // 9번째: 실시간 수신 데이터 획득 대리자
-    bool[] expectedBitPattern        // 10번째: 원본 타입 유지 (bool[])
+    Func<byte[]> getRawDataFunc,
+    bool[] expectedBitPattern,
+    int nStartPin = 0,
+    CancellationToken cancellationToken = default
 )
         {
             if (arrStates == null || dgvTarget == null || nActiveCount <= 0) return;
 
             int loopCount = Math.Min(nActiveCount, arrStates.Length);
 
-            // 1. 테스트 진입 - 전체 채널을 테스트 중(Test) 상태로 표시
-            for (int i = 0; i < loopCount; i++)
+            // 1. 차종/편성별 탭 개수 변화에 대응하는 동적 탭 전환
+            int targetTabIndex = -1;
+            if (!string.IsNullOrEmpty(strChannelName))
             {
-                arrStates[i] = EChannelState.Test;
+                string chKey = strChannelName.ToUpper().Trim();
+
+                for (int t = 0; t < flatTabControl1.TabPages.Count; t++)
+                {
+                    TabPage page = flatTabControl1.TabPages[t];
+                    string tabText = page.Text?.ToUpper().Trim() ?? "";
+                    string tabName = page.Name?.ToUpper().Trim() ?? "";
+
+                    if (tabText.Contains(chKey) || tabName.Contains(chKey))
+                    {
+                        targetTabIndex = t;
+                        break;
+                    }
+                }
+            }
+
+            if (targetTabIndex >= 0 && flatTabControl1.SelectedIndex != targetTabIndex)
+            {
+                flatTabControl1.SelectedIndex = targetTabIndex;
+                Application.DoEvents();
+            }
+
+            // 2. 상태 배열 초기화
+            for (int k = 0; k < loopCount; k++)
+            {
+                arrStates[k] = default;
             }
             dgvTarget.Invalidate();
 
-            // 2. PLC 제어 및 통신 패킷 응답 대기 (타이머)
-            await Task.Delay(nDelay);
+            bool isDoCategory = (strChannelName?.ToUpper() == "DO");
 
-            // 3. 최신 수신 데이터 패킷 가져오기
-            byte[] actualRawData = getRawDataFunc?.Invoke();
-
-            // 4. 수신 데이터 Null 검사 및 디버그 로그 출력
-            if (actualRawData == null)
+            // 3. 핀 단위 시험 진행
+            for (int i = 0; i < loopCount; i++)
             {
-                AppendTestLog(richTextBox_Log, $"[{strChannelName}] 수신된 MVB 데이터(actualRawData)가 null입니다.", Color.Red);
+                // ★ [중지 체크 1] 핀 시험 시작 전 중지 플래그 및 토큰 확인
+                if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                {
+                    Console.WriteLine($"[Debug] [{strChannelName}] 사용자 중지 요청 감지 - 루프 즉시 종료");
+                    return;
+                }
 
-                for (int i = 0; i < loopCount; i++)
+                int nPinNo = nStartPin + i;
+                arrStates[i] = EChannelState.Test;
+                dgvTarget.Invalidate();
+
+                bool isOnOk = false;
+                bool isOffOk = false;
+
+                Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 시험 시작 (PLC DO index: {i})");
+
+                try
+                {
+                    if (!isDoCategory)
+                    {
+                        // STEP 1: ON 검증
+                        m_PLCNetwork?.SetDO(0, i, true);
+
+                        await Task.Delay(nDelay, cancellationToken);
+
+                        // ★ [중지 체크 2] STEP 1 Delay 직후 중지 여부 확인
+                        if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                        {
+                            m_PLCNetwork?.SetDO(0, i, false);
+                            return;
+                        }
+
+                        byte[] rawDataOn = getRawDataFunc?.Invoke();
+                        if (rawDataOn != null)
+                        {
+                            EChannelState[] tempStatesOn = new EChannelState[loopCount];
+                            bool[] patternOn = new bool[loopCount];
+                            patternOn[i] = true;
+
+                            TcmsValidator.ValidateGroup(strChannelName, rawDataOn, patternOn, tempStatesOn, nActiveCount);
+                            isOnOk = (tempStatesOn[i] == EChannelState.On);
+
+                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 1(ON) - 결과: {isOnOk}, RawData: {BitConverter.ToString(rawDataOn)}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 1(ON) - RawData 수신 Null");
+                        }
+
+                        // STEP 2: OFF 검증
+                        m_PLCNetwork?.SetDO(0, i, false);
+                        await Task.Delay(nDelay, cancellationToken);
+
+                        // ★ [중지 체크 3] STEP 2 Delay 직후 중지 여부 확인
+                        if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        byte[] rawDataOff = getRawDataFunc?.Invoke();
+                        if (rawDataOff != null)
+                        {
+                            EChannelState[] tempStatesOff = new EChannelState[loopCount];
+                            bool[] patternOff = new bool[loopCount];
+                            patternOff[i] = false;
+
+                            TcmsValidator.ValidateGroup(strChannelName, rawDataOff, patternOff, tempStatesOff, nActiveCount);
+                            isOffOk = (tempStatesOff[i] == EChannelState.Off || tempStatesOff[i] == default);
+
+                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 2(OFF) - 결과: {isOffOk}, RawData: {BitConverter.ToString(rawDataOff)}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 2(OFF) - RawData 수신 Null");
+                        }
+                    }
+                    else
+                    {
+                        // [DO 시험] TCMS DO 제어 및 PLC DI 확인 로직
+                        await Task.Delay(nDelay, cancellationToken);
+
+                        // ★ [중지 체크 4] DO Delay 직후 중지 여부 확인
+                        if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    // Task.Delay 대기 도중 정지 버튼이 눌렸을 때 안전 처리 및 PLC 출력 원복
+                    m_PLCNetwork?.SetDO(0, i, false);
+                    arrStates[i] = default;
+                    dgvTarget.Invalidate();
+
+                    Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 진행 중 정지 예외 수신");
+                    return;
+                }
+
+                // STEP 3: 최종 결과 처리
+                bool isFinalSuccess = isOnOk && isOffOk;
+
+                Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 최종 결과: {(isFinalSuccess ? "합격" : "불합격")} (ON:{isOnOk}, OFF:{isOffOk})");
+
+                if (isFinalSuccess)
+                {
+                    arrStates[i] = EChannelState.On;
+                    AppendTestLog(richTextBox_Log, $"{strChannelName} {nPinNo}번 핀 ON/OFF (성공)", Color.Black);
+                }
+                else
                 {
                     arrStates[i] = EChannelState.Err;
+                    AppendTestLog(richTextBox_Log, $"{strChannelName} {nPinNo}번 핀 ON/OFF (실패)", Color.Red);
+                    listFailedPins.Add($"{strChannelName}_{nPinNo}번");
                 }
-            }
-            else
-            {
-                // 수신된 Raw 데이터 HEX 로그 출력
-                string hexData = BitConverter.ToString(actualRawData);
-                AppendTestLog(richTextBox_Log, $"[{strChannelName}] 수신 패킷: {hexData}", Color.DarkBlue);
-
-                // 프로젝트에 실제 존재하는 TcmsValidator.ValidateGroup 호출
-                TcmsValidator.ValidationResult validationResult = TcmsValidator.ValidateGroup(
-                    strChannelName,
-                    actualRawData,
-                    expectedBitPattern,
-                    arrStates,
-                    nActiveCount
-                );
-
-                if (!validationResult.IsSuccess && validationResult.FailedPins != null)
-                {
-                    listFailedPins.AddRange(validationResult.FailedPins);
-                }
-            }
-
-            // 5. UI Grid 갱신
-            dgvTarget.Invalidate();
-
-            // 6. 채널별 검증 결과 로그 및 JSON 데이터 수집
-            for (int i = 0; i < loopCount; i++)
-            {
-                int nPinNo = i + 1;
-                EChannelState state = arrStates[i];
-                bool isSuccess = (state == EChannelState.On || state == EChannelState.Off);
-
-                // 기대 상태 확인 (true = ON 기대패턴, false = OFF 기대패턴)
-                bool bExpectedOn = (expectedBitPattern != null && i < expectedBitPattern.Length) ? expectedBitPattern[i] : true;
-                string strExpectedState = bExpectedOn ? "ON" : "OFF";
 
                 TestResultJson.PinResultItem objPinResult = new TestResultJson.PinResultItem
                 {
@@ -5070,30 +5206,12 @@ namespace CITester
                     ChannelGroup = strChannelName,
                     PinNo = nPinNo,
                     PinName = $"{strChannelName}_{nPinNo}번",
-                    MeasuredValue = state.ToString(),
-                    Result = isSuccess ? "합격" : "불합격"
+                    MeasuredValue = arrStates[i].ToString(),
+                    Result = isFinalSuccess ? "합격" : "불합격"
                 };
-
-                if (isSuccess)
-                {
-                    AppendTestLog(richTextBox_Log, $"{strChannelName} {nPinNo}번 핀: [{strExpectedState} 검증 성공] (상태: {state})", Color.Black);
-                }
-                else
-                {
-                    string strFailDetail;
-                    if (actualRawData == null)
-                    {
-                        strFailDetail = "통신 데이터 미수신 (Null)";
-                    }
-                    else
-                    {
-                        strFailDetail = bExpectedOn ? "ON 신호 미수신 (ON 실패)" : "OFF 신호 잔류 (OFF 실패)";
-                    }
-
-                    AppendTestLog(richTextBox_Log, $"{strChannelName} {nPinNo}번 핀: [{strFailDetail}] (상태: {state})", Color.Red);
-                }
-
                 listPinDetails?.Add(objPinResult);
+
+                dgvTarget.Invalidate();
             }
         }
 
@@ -6007,6 +6125,7 @@ namespace CITester
 
         private void BtnChange_Click(object sender, EventArgs e)
         {
+
             // 현재 설정된 Operation 정보를 가져와 폼 인스턴스에 전달
             string strCurrentUnit = ConfigJson.CurrentConfig.Operation.TCMSUnit;
             string strCurrentSerial = ConfigJson.CurrentConfig.Operation.SerialNo;
@@ -6059,6 +6178,8 @@ namespace CITester
                 }
             }
         }
+
+
 
         private void BtnNew_Click(object sender, EventArgs e)
         {
