@@ -1,4 +1,15 @@
-## Build results (빌드 출력물 및 실행 파일 제외)
+## Visual Studio & IDE Cache (VS 캐시, 인덱스 및 개발자 설정)
+.vs/
+*.vsidx
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## Build Results & Outputs (빌드 출력물 및 임시 파일)
+[Bb]in/
+[Oo]bj/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -6,8 +17,6 @@
 x64/
 x86/
 build/
-[Bb]in/
-[Oo]bj/
 
 ## Executables & Dynamic Libraries (실행 파일 및 라이브러리)
 *.exe
@@ -29,13 +38,11 @@ build/
 *.mdf
 *.ldf
 
-## Visual Studio & User-specific files (VS 캐시 및 개발자 개인 설정)
-.vs/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-*.userprefs
+## MSBuild Cache & Logs (빌드 캐시 및 로그 파일)
+*.cache
+*.log
+*.tlog
+*.unsuccessfulbuild
 
 ## NuGet Packages
 *.nupkg
