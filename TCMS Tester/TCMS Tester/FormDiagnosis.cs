@@ -1,16 +1,18 @@
-﻿using main;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO.Ports;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using main;
 using TCMSTester;
 using static CITester.FormLoad;
 using static CITester.FormMain;
+using System.Threading.Tasks;
 
 namespace CITester
 {
@@ -122,76 +124,132 @@ namespace CITester
 
         }
 
-        private void button_PLC_Click(object sender, EventArgs e)
+        // 3. PLC 통신 진단 (비동기 Task.Run 및 로컬 포트 사용하여 멈춤 원천 차단)
+        private async void button_PLC_Click(object sender, EventArgs e)
         {
-            string[] arrayAvailablePorts = System.IO.Ports.SerialPort.GetPortNames();
             Timer_Check.Enabled = false;
-            int i = 0;
-            string strBuf;
-            ushort[] nCnetAnswerValue = new ushort[16];
-            ushort[] nTest1 = new ushort[16];
-            ushort[] nTest2 = new ushort[16];
-            string hex3;
-            int nCnetResult;
-            int nIndex = m_nStep - 1;
             button_PLC.StartNewDiagnosis();
+            button_PLC.Enabled = false;
 
-            // PLC 연결 상태 확인
+            string strTargetPort = ConfigJson.CurrentConfig?.Device?.Plc_COM;
+            List<string> lstCandidatePorts = new List<string>();
+
+            if (!string.IsNullOrEmpty(strTargetPort))
+            {
+                lstCandidatePorts.Add(strTargetPort);
+            }
+
+            string[] arrSystemPorts = System.IO.Ports.SerialPort.GetPortNames();
+            for (int nIdx = 0; nIdx < arrSystemPorts.Length; nIdx++)
+            {
+                string strPort = arrSystemPorts[nIdx];
+                if (!lstCandidatePorts.Contains(strPort, StringComparer.OrdinalIgnoreCase))
+                {
+                    lstCandidatePorts.Add(strPort);
+                }
+            }
+
             bool bPingSuccess = false;
+            string strFoundPort = string.Empty;
 
             try
             {
-                if (serialPlcPort.IsOpen)
+                await Task.Run(() =>
                 {
-                    serialPlcPort.Close();
-                }
-                serialPlcPort.Open();
-
-                for (i = 0; i < 5; i++)
-                {
-                    strBuf = string.Format("{0:X2}{1}{2}{3}{4}{5}", 0, "r", "SS", "01", "06", "%PX000");
-                    cnetToPlc.Request(strBuf.ToCharArray());
-
-                    Thread.Sleep(500);
-
-                    nCnetResult = cnetToPlc.Answer("00".ToCharArray(), 'w', "SS".ToCharArray(), out nCnetAnswerValue);
-                    Console.WriteLine(nCnetResult);
-
-                    if (nCnetResult >= 0)
+                    try
                     {
-                        bPingSuccess = true;
-                        break;
+                        if (serialPlcPort != null && serialPlcPort.IsOpen)
+                        {
+                            serialPlcPort.Close();
+                        }
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                bPingSuccess = false;
-            }
-            //bPingSuccess = true;
+                    catch { }
 
-            // 통신 결과 UI 및 카운트 반영
+                    for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
+                    {
+                        string strCurrentPort = lstCandidatePorts[nPortIdx];
+
+                        using (var tempPort = new System.IO.Ports.SerialPort())
+                        {
+                            try
+                            {
+                                tempPort.PortName = strCurrentPort;
+                                tempPort.BaudRate = 115200;
+                                tempPort.ReadTimeout = 100;
+                                tempPort.WriteTimeout = 100;
+                                tempPort.Open();
+
+                                tempPort.DiscardInBuffer();
+                                tempPort.DiscardOutBuffer();
+
+                                for (int nRetry = 0; nRetry < 2; nRetry++)
+                                {
+                                    string strReqPacket = string.Format("{0:X2}{1}{2}{3}{4}{5}", 0, "r", "SS", "01", "06", "%PX000");
+                                    cnetToPlc.Request(strReqPacket.ToCharArray());
+
+                                    int nWaitCount = 0;
+                                    const int nMaxWait = 10;
+
+                                    while (nWaitCount < nMaxWait)
+                                    {
+                                        Thread.Sleep(10);
+
+                                        if (tempPort.IsOpen && tempPort.BytesToRead >= 5)
+                                        {
+                                            ushort[] arrCnetAnswer;
+                                            int nCnetResult = cnetToPlc.Answer("00".ToCharArray(), 'w', "SS".ToCharArray(), out arrCnetAnswer);
+
+                                            if (nCnetResult >= 0)
+                                            {
+                                                bPingSuccess = true;
+                                                strFoundPort = strCurrentPort;
+                                                break;
+                                            }
+                                        }
+
+                                        nWaitCount++;
+                                    }
+
+                                    if (bPingSuccess) break;
+                                }
+
+                                tempPort.Close();
+                                if (bPingSuccess) break;
+                            }
+                            catch (Exception)
+                            {
+                                try { if (tempPort.IsOpen) tempPort.Close(); } catch { }
+                            }
+                        }
+                    }
+                });
+            }
+            finally
+            {
+                button_PLC.Enabled = true;
+                Timer_Check.Enabled = true; // 타이머 복구
+            }
+
             if (!bPingSuccess)
             {
                 button_PLC.BackColor = Color.Red;
                 button_PLC.CurrentStatus = eDiagStatus.Abnormal;
-                m_lstFailItems.Add("PLC");
-
-                if (serialPlcPort.IsOpen)
+                if (!m_lstFailItems.Contains("PLC"))
                 {
-                    serialPlcPort.Close();
+                    m_lstFailItems.Add("PLC");
                 }
             }
             else
             {
+                ConfigJson.CurrentConfig.Device.Plc_COM = strFoundPort;
                 button_PLC.BackColor = Color.GreenYellow;
                 button_PLC.CurrentStatus = eDiagStatus.Normal;
-                if (serialPlcPort.IsOpen)
-                {
-                    serialPlcPort.Close();
-                }
+                m_lstFailItems.Remove("PLC");
+
+                try { serialPlcPort.PortName = strFoundPort; } catch { }
             }
         }
+
 
         private void button_PowerSupply_Click(object sender, EventArgs e)
         {
@@ -228,6 +286,9 @@ namespace CITester
 
         private void button_OutputBoard_Click(object sender, EventArgs e)
         {
+
+            return; // 출력보드 진단 기능 비활성화
+
             int nFailBoard = 0;
 
             button_OutputBoard.StartNewDiagnosis();
@@ -245,13 +306,42 @@ namespace CITester
 
         private void FormDiagnosis_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ConfigManager cfgManager = new ConfigManager();
-            bool bIsSaveSuccess = cfgManager.SaveConfig(ConfigJson.CurrentConfig);
+            SaveCurrentJsonConfig();
+        }
+
+        // 4. 자가진단 폼 설정값 저장
+        public bool SaveCurrentJsonConfig()
+        {
+            // [수정] Json_Config -> ConfigJson 으로 통일
+            if (ConfigJson.CurrentConfig == null)
+            {
+                Console.WriteLine("설정 인스턴스(ConfigJson.CurrentConfig)가 null 상태입니다.");
+                return false;
+            }
+
+            try
+            {
+                ConfigManager configManager = new ConfigManager();
+                bool bSaveResult = configManager.SaveConfig(ConfigJson.CurrentConfig);
+
+                if (!bSaveResult)
+                {
+                    Console.WriteLine("현재 설정값의 JSON 파일(config.json) 저장에 실패했습니다.");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"JSON 파일 저장 중 예외 발생: {ex.Message}");
+                return false;
+            }
         }
 
         private void button_InputBoard_Click(object sender, EventArgs e)
         {
-
+            return; // 입력보드 진단 기능 비활성화
         }
     }
 

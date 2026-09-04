@@ -7,26 +7,31 @@ namespace TCMSTester.Protocol
 {
     public class MvbPacketEventArgs : EventArgs
     {
+        public string PortAddress { get; }
         public TcmsPacket Packet { get; }
         public byte[] RawData { get; }
-        public MvbPacketEventArgs(TcmsPacket packet, byte[] rawData)
+
+        public MvbPacketEventArgs(string portAddress, TcmsPacket packet, byte[] rawData)
         {
+            PortAddress = portAddress?.ToUpper();
             Packet = packet;
             RawData = rawData;
         }
     }
 
     /// <summary>
-    /// 실제 수신 스트림은 순수 바이너리가 아니라 ASCII 텍스트 프로토콜입니다.
-    /// 예) "41A01826083118264011310100002000000000000001000080000000000000C1receiveddata 41A0..."
+    /// 실제 수신 스트림은 ASCII 텍스트 프로토콜입니다.
+    /// 예) "receiveddata 41A0 F3260910114734113101000000000000000000000000800000000000000000C1"
     /// </summary>
     public class MvbReceiver : IDisposable
     {
         public const int PACKET_SIZE_TC = 40;
-        public const int PACKET_SIZE_DEFAULT = 34; // CC 유닛 기본 크기 34바이트로 변경
+        public const int PACKET_SIZE_DEFAULT = 34; // CC 유닛 기본 크기 34바이트
 
-        // 기존 {68} 고정에서 {64,80} 범위로 수정 (32바이트~40바이트 대응)
-        private static readonly Regex FrameRegex = new Regex(@"(?<hex>[0-9A-Fa-f]{64,80})", RegexOptions.Compiled);
+        // 1. receiveddata(선택), 4자리 PortAddress, 공백 후 64~80자리 Hex 데이터 분리 추출 정규식
+        private static readonly Regex FrameRegex = new Regex(
+            @"(?:receiveddata\s+)?(?<port>[0-9A-Fa-f]{4})\s+(?<hex>[0-9A-Fa-f]{64,80})",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private const int MAX_BUFFER_CHARS = 20000;
 
@@ -84,7 +89,7 @@ namespace TCMSTester.Protocol
                 {
                     int trimCount = _textBuffer.Length - MAX_BUFFER_CHARS;
                     _textBuffer.Remove(0, trimCount);
-                    ErrorOccurred?.Invoke(this, $"[MVB 텍스트 버퍼] 프레임 구분자를 찾지 못해 버퍼가 과도하게 커져 앞부분 {trimCount}자를 폐기했습니다.");
+                    ErrorOccurred?.Invoke(this, $"[MVB 텍스트 버퍼] 프레임 구분자를 찾지 못해 앞부분 {trimCount}자를 폐기했습니다.");
                 }
 
                 ExtractCompleteFrames();
@@ -98,11 +103,10 @@ namespace TCMSTester.Protocol
 
             foreach (Match m in FrameRegex.Matches(bufferContent))
             {
+                // 정규식에서 매칭된 4자리 MVB 포트 번호 추출
+                string port = m.Groups["port"].Value.ToUpper();
                 string hex = m.Groups["hex"].Value;
                 lastConsumedIndex = m.Index + m.Length;
-
-                // [수정] 41A0 헤더 검사 및 제거 로직 완전 삭제
-                // Regex를 통해 추출된 Hex 문자열의 길이 유효성만 검사합니다.
 
                 if (hex.Length % 2 != 0)
                 {
@@ -121,17 +125,20 @@ namespace TCMSTester.Protocol
                     continue;
                 }
 
-                // TcmsParser 호출 (TcmsParser 내부 오프셋이 Byte 7부터 IO를 읽도록 되어있는지 확인 필요)
+                // TcmsParser 파싱 실행
                 if (TcmsParser.TryParse(frameBytes, out TcmsPacket packet))
                 {
-                    // 최신 Raw 데이터 스레드 안전하게 저장
-                    _latestRawData = (byte[])frameBytes.Clone();
+                    lock (_lockObj)
+                    {
+                        _latestRawData = (byte[])frameBytes.Clone();
+                    }
 
-                    PacketReceived?.Invoke(this, new MvbPacketEventArgs(packet, frameBytes));
+                    // 추출된 port 주소를 이벤트 인자로 전달
+                    PacketReceived?.Invoke(this, new MvbPacketEventArgs(port, packet, frameBytes));
                 }
                 else
                 {
-                    ErrorOccurred?.Invoke(this, $"MVB 패킷 검증(Tail/RTC) 실패 (길이={frameBytes.Length}바이트, HEX={hex})");
+                    ErrorOccurred?.Invoke(this, $"MVB 패킷 검증(Tail/RTC) 실패 (포트={port}, 길이={frameBytes.Length}바이트, HEX={hex})");
                 }
             }
 

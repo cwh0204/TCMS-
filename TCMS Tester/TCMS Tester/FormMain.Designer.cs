@@ -66,6 +66,7 @@
             this.BtnResult = new CustomIconButton();
             this.button2 = new System.Windows.Forms.Button();
             this.roundedLabel15 = new CITester.RoundedLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.mainTabControl1 = new CITester.MainTabControl();
             this.tabPage17 = new System.Windows.Forms.TabPage();
@@ -87,16 +88,7 @@
             this.dataGridViewAnalog = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.radioButtonRS3 = new System.Windows.Forms.RadioButton();
-            this.radioButtonRS2 = new System.Windows.Forms.RadioButton();
-            this.radioButtonRS1 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMVB3 = new System.Windows.Forms.RadioButton();
-            this.radioButtonWTB3 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMVB2 = new System.Windows.Forms.RadioButton();
-            this.radioButtonMVB1 = new System.Windows.Forms.RadioButton();
-            this.radioButtonWTB2 = new System.Windows.Forms.RadioButton();
-            this.radioButtonWTB1 = new System.Windows.Forms.RadioButton();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.flatTabControl4 = new CITester.FlatTabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -152,7 +144,6 @@
             this.miniToolStrip = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel6.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
@@ -177,7 +168,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAnalog)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.flatTabControl4.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -534,6 +524,16 @@
             this.roundedLabel15.Size = new System.Drawing.Size(435, 125);
             this.roundedLabel15.TabIndex = 85;
             this.roundedLabel15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1194, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(14, 119);
+            this.button1.TabIndex = 86;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // tableLayoutPanel7
             // 
@@ -925,7 +925,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel4, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -936,122 +936,14 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(638, 526);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // panel1
+            // panel4
             // 
-            this.panel1.Controls.Add(this.radioButtonRS3);
-            this.panel1.Controls.Add(this.radioButtonRS2);
-            this.panel1.Controls.Add(this.radioButtonRS1);
-            this.panel1.Controls.Add(this.radioButtonMVB3);
-            this.panel1.Controls.Add(this.radioButtonWTB3);
-            this.panel1.Controls.Add(this.radioButtonMVB2);
-            this.panel1.Controls.Add(this.radioButtonMVB1);
-            this.panel1.Controls.Add(this.radioButtonWTB2);
-            this.panel1.Controls.Add(this.radioButtonWTB1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(8, 13);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 480);
-            this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // radioButtonRS3
-            // 
-            this.radioButtonRS3.AutoSize = true;
-            this.radioButtonRS3.Location = new System.Drawing.Point(412, 154);
-            this.radioButtonRS3.Name = "radioButtonRS3";
-            this.radioButtonRS3.Size = new System.Drawing.Size(123, 29);
-            this.radioButtonRS3.TabIndex = 8;
-            this.radioButtonRS3.TabStop = true;
-            this.radioButtonRS3.Text = "RS485 CH3";
-            this.radioButtonRS3.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonRS2
-            // 
-            this.radioButtonRS2.AutoSize = true;
-            this.radioButtonRS2.Location = new System.Drawing.Point(412, 110);
-            this.radioButtonRS2.Name = "radioButtonRS2";
-            this.radioButtonRS2.Size = new System.Drawing.Size(123, 29);
-            this.radioButtonRS2.TabIndex = 7;
-            this.radioButtonRS2.TabStop = true;
-            this.radioButtonRS2.Text = "RS485 CH2";
-            this.radioButtonRS2.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonRS1
-            // 
-            this.radioButtonRS1.AutoSize = true;
-            this.radioButtonRS1.Location = new System.Drawing.Point(412, 65);
-            this.radioButtonRS1.Name = "radioButtonRS1";
-            this.radioButtonRS1.Size = new System.Drawing.Size(123, 29);
-            this.radioButtonRS1.TabIndex = 6;
-            this.radioButtonRS1.TabStop = true;
-            this.radioButtonRS1.Text = "RS485 CH1";
-            this.radioButtonRS1.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonMVB3
-            // 
-            this.radioButtonMVB3.AutoSize = true;
-            this.radioButtonMVB3.Location = new System.Drawing.Point(255, 154);
-            this.radioButtonMVB3.Name = "radioButtonMVB3";
-            this.radioButtonMVB3.Size = new System.Drawing.Size(111, 29);
-            this.radioButtonMVB3.TabIndex = 5;
-            this.radioButtonMVB3.TabStop = true;
-            this.radioButtonMVB3.Text = "MVB CH3";
-            this.radioButtonMVB3.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonWTB3
-            // 
-            this.radioButtonWTB3.AutoSize = true;
-            this.radioButtonWTB3.Location = new System.Drawing.Point(38, 154);
-            this.radioButtonWTB3.Name = "radioButtonWTB3";
-            this.radioButtonWTB3.Size = new System.Drawing.Size(110, 29);
-            this.radioButtonWTB3.TabIndex = 4;
-            this.radioButtonWTB3.TabStop = true;
-            this.radioButtonWTB3.Text = "WTB CH3";
-            this.radioButtonWTB3.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonMVB2
-            // 
-            this.radioButtonMVB2.AutoSize = true;
-            this.radioButtonMVB2.Location = new System.Drawing.Point(255, 110);
-            this.radioButtonMVB2.Name = "radioButtonMVB2";
-            this.radioButtonMVB2.Size = new System.Drawing.Size(111, 29);
-            this.radioButtonMVB2.TabIndex = 3;
-            this.radioButtonMVB2.TabStop = true;
-            this.radioButtonMVB2.Text = "MVB CH2";
-            this.radioButtonMVB2.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonMVB1
-            // 
-            this.radioButtonMVB1.AutoSize = true;
-            this.radioButtonMVB1.Location = new System.Drawing.Point(255, 65);
-            this.radioButtonMVB1.Name = "radioButtonMVB1";
-            this.radioButtonMVB1.Size = new System.Drawing.Size(111, 29);
-            this.radioButtonMVB1.TabIndex = 2;
-            this.radioButtonMVB1.TabStop = true;
-            this.radioButtonMVB1.Text = "MVB CH1";
-            this.radioButtonMVB1.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonWTB2
-            // 
-            this.radioButtonWTB2.AutoSize = true;
-            this.radioButtonWTB2.Location = new System.Drawing.Point(38, 110);
-            this.radioButtonWTB2.Name = "radioButtonWTB2";
-            this.radioButtonWTB2.Size = new System.Drawing.Size(110, 29);
-            this.radioButtonWTB2.TabIndex = 1;
-            this.radioButtonWTB2.TabStop = true;
-            this.radioButtonWTB2.Text = "WTB CH2";
-            this.radioButtonWTB2.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonWTB1
-            // 
-            this.radioButtonWTB1.AutoSize = true;
-            this.radioButtonWTB1.Location = new System.Drawing.Point(38, 65);
-            this.radioButtonWTB1.Name = "radioButtonWTB1";
-            this.radioButtonWTB1.Size = new System.Drawing.Size(110, 29);
-            this.radioButtonWTB1.TabIndex = 0;
-            this.radioButtonWTB1.TabStop = true;
-            this.radioButtonWTB1.Text = "WTB CH1";
-            this.radioButtonWTB1.UseVisualStyleBackColor = true;
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(8, 499);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(622, 24);
+            this.panel4.TabIndex = 1;
+            this.panel4.Paint += new System.Windows.Forms.PaintEventHandler(this.panel4_Paint);
             // 
             // tabPage4
             // 
@@ -1987,16 +1879,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(200, 24);
             this.menuStrip1.TabIndex = 0;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1194, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(14, 119);
-            this.button1.TabIndex = 86;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // FormMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2032,8 +1914,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAnalog)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.flatTabControl4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
@@ -2103,17 +1983,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         public System.Windows.Forms.DataGridView dataGridViewAnalog;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.RadioButton radioButtonMVB3;
-        private System.Windows.Forms.RadioButton radioButtonWTB3;
-        private System.Windows.Forms.RadioButton radioButtonMVB2;
-        private System.Windows.Forms.RadioButton radioButtonMVB1;
-        private System.Windows.Forms.RadioButton radioButtonWTB2;
-        private System.Windows.Forms.RadioButton radioButtonWTB1;
-        private System.Windows.Forms.RadioButton radioButtonRS3;
-        private System.Windows.Forms.RadioButton radioButtonRS2;
-        private System.Windows.Forms.RadioButton radioButtonRS1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TabPage tabPageDO;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
@@ -2167,6 +2036,8 @@
         private CustomIconButton BtnChange;
         private CustomNumeric customNumeric1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panel4;
     }
 }
 

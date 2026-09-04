@@ -468,7 +468,6 @@ D:\@Workspace\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.exe
 D:\@Workspace\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.pdb
 D:\@Workspace\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.exe.config
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.csproj.AssemblyReference.cache
-D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.exe.config
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\CITester.FormResultView.resources
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\CITester.CtrlOscilloscope.resources
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\CITester.CtrlTimingChart.resources
@@ -503,8 +502,6 @@ D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\CITester.Form
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\CITester.FormTester.ko-KR.resources
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.csproj.GenerateResource.cache
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.csproj.CoreCompileInputs.cache
-D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.exe
-D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.pdb
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\bin\Debug\SqlServerTypes\x64\msvcr120.dll
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\bin\Debug\SqlServerTypes\x64\SqlServerSpatial140.dll
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\bin\Debug\SqlServerTypes\x86\msvcr120.dll
@@ -634,3 +631,6 @@ D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\ko-KR\TCMS Te
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\en\TCMS Tester.resources.dll
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\ko-KP\TCMS Tester.resources.dll
 D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tes.61F9845D.Up2Date
+D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.exe
+D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.pdb
+D:\@Workspace\TCMS 시험기\TCMS Tester\TCMS Tester\obj\x86\Debug\TCMS Tester.exe.config

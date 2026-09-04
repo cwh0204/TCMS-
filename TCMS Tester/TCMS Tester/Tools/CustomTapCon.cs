@@ -24,7 +24,6 @@ namespace CITester
         private Font _cachedBoldFont = null;
         private Font _cachedRegularFont = null;
 
-        // ★ 100% 정확한 디자이너 감지 프로퍼티 (투명 버그 방어의 핵심)
         private bool bIsDesignMode => DesignMode || LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         public MainTabControl()
@@ -255,7 +254,7 @@ namespace CITester
             {
                 if (nDiameter > 0)
                 {
-                    // ★ 수동 선 연결 논리 오류를 수정하고 호와 패스의 정석 조립법으로 복구했습니다.
+                    // 수동 선 연결 논리 오류를 수정하고 호와 패스의 정석 조립법으로 복구했습니다.
                     path.AddArc(rect.X, rect.Y, nDiameter, nDiameter, 180, 90);
                     path.AddArc(rect.Right - nDiameter, rect.Y, nDiameter, nDiameter, 270, 90);
                     path.AddLine(rect.Right, rect.Y + nDiameter, rect.Right, rect.Bottom);

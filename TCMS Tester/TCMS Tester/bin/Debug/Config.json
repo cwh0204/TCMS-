@@ -16,14 +16,14 @@
         "strTesterName": "홍길동"
       },
       {
-        "strUnit": "DU",
+        "strUnit": "ER",
         "strSerialNo": "0000",
         "strFleetNo": "0000",
         "strTrainNo": "0000",
         "strTesterName": "홍길동"
       },
       {
-        "strUnit": "ER",
+        "strUnit": "DU",
         "strSerialNo": "0000",
         "strFleetNo": "0000",
         "strTrainNo": "0000",
@@ -132,7 +132,7 @@
     "LineVoltageBoard0_ComPort": "COM1",
     "LineVoltageBoard0_BaudRate": 9600,
     "LineVoltageBoard0_IDN": "3sin.phase",
-    "MVBBoard_ComPort": "COM1",
+    "MVBBoard_ComPort": "COM4",
     "MVBBoard_BaudRate": 19200,
     "MVBBoard_IDN": "MVB",
     "DPS1_ComPort": "COM100",

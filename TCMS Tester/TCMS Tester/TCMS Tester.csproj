@@ -314,6 +314,7 @@
     <Compile Include="Tools\TreeView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\CommTestUiManager.cs" />
     <Compile Include="UserClass.cs" />
     <Compile Include="Tools\UserControl1.cs">
       <SubType>Component</SubType>

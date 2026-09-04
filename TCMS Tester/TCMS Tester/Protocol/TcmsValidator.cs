@@ -70,7 +70,7 @@ namespace TCMSTester.Protocol
 
                 byte portByte = actualRaw[portNo - 1];
 
-                // ★ LSB(비트1=0x01) ~ MSB(비트8=0x80) 추출로 수정 (TcmsPacket과 연동 통일)
+                // LSB(비트1=0x01) ~ MSB(비트8=0x80) 추출로 수정 (TcmsPacket과 연동 통일)
                 bool isActualOn = ((portByte >> (bitNo - 1)) & 0x01) == 1;
                 bool isExpectedOn = expectedBits != null && expectedBits.Length > i && expectedBits[i];
 

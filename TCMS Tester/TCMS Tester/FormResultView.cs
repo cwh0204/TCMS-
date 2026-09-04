@@ -1,5 +1,4 @@
-﻿
-using DocumentFormat.OpenXml.ExtendedProperties;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,6 @@ using Color = System.Drawing.Color;
 using Control = System.Windows.Forms.Control;
 using Font = System.Drawing.Font;
 
-
 namespace CITester
 {
     public partial class FormResultView : Form
@@ -30,6 +28,7 @@ namespace CITester
         {
             InitializeComponent();
         }
+
         public FormResultView(TestResultJson objTestResult) : this()
         {
             m_objTestResult = objTestResult;
@@ -111,7 +110,6 @@ namespace CITester
                     {
                         bHasIoData = true;
 
-                        // 세부 핀 항목 중 하나라도 불합격이 존재하면 불합격 처리
                         if (objGrid.PinDetails.Exists(objPin => objPin.Result == "불합격" || objPin.MeasuredValue == "ERR"))
                         {
                             return "불합격";
@@ -143,13 +141,22 @@ namespace CITester
                         }
                         return "합격";
                     }
+
+                    if (objGrid.PinDetails != null && objGrid.PinDetails.Count > 0)
+                    {
+                        if (objGrid.PinDetails.Exists(p => p.Result == "불합격" || p.MeasuredValue == "ERR"))
+                        {
+                            return "불합격";
+                        }
+                        return "합격";
+                    }
                 }
             }
 
             return "미시험";
         }
 
-        // 시험 결과 상태에 따른 라벨 컨트롤 스타일(글자색/배경색) 변경 함수
+        // 시험 결과 상태에 따른 라벨 컨트롤 스타일 변경 함수
         private void SetResultLabelStyle(CustomIconButton lblTarget, string strResult)
         {
             if (lblTarget == null) return;
@@ -159,19 +166,19 @@ namespace CITester
             switch (lblTarget.Text)
             {
                 case "합격":
-                    lblTarget.BackColor = Color.FromArgb(229, 245, 230); 
-                    lblTarget.ForeColor = Color.FromArgb(14, 93, 24);    
+                    lblTarget.BackColor = Color.FromArgb(229, 245, 230);
+                    lblTarget.ForeColor = Color.FromArgb(14, 93, 24);
                     break;
 
                 case "불합격":
-                    lblTarget.BackColor = Color.FromArgb(255, 205, 205); 
-                    lblTarget.ForeColor = Color.FromArgb(180, 0, 0);     
+                    lblTarget.BackColor = Color.FromArgb(255, 205, 205);
+                    lblTarget.ForeColor = Color.FromArgb(180, 0, 0);
                     break;
 
                 case "미시험":
                 default:
-                    lblTarget.BackColor = Color.FromArgb(230, 230, 230); 
-                    lblTarget.ForeColor = Color.FromArgb(100, 100, 100); 
+                    lblTarget.BackColor = Color.FromArgb(230, 230, 230);
+                    lblTarget.ForeColor = Color.FromArgb(100, 100, 100);
                     break;
             }
         }
@@ -197,7 +204,6 @@ namespace CITester
                 {
                     string strGridTitle = objGrid.GridTitle;
 
-                    // 핀 상세 데이터(디지털/아날로그 입출력) 실패 항목 탐색
                     if (objGrid.PinDetails != null && objGrid.PinDetails.Count > 0)
                     {
                         var listFails = objGrid.PinDetails.FindAll(objPin => objPin.Result == "불합격" || objPin.MeasuredValue == "ERR");
@@ -212,7 +218,6 @@ namespace CITester
                         }
                     }
 
-                    // 행 데이터(통신/메모리 시험 등) 실패 항목 탐색
                     if (objGrid.RowData != null && objGrid.RowData.Count > 0)
                     {
                         foreach (var pairRow in objGrid.RowData)
@@ -253,19 +258,20 @@ namespace CITester
                 rtbTarget.ResumeLayout();
             }
         }
+
         private void InitTestDataGridViews()
         {
             int nMaxRoundCount = GetMaxRoundCount(m_objTestResult);
 
-            // 디지털 및 아날로그 입출력 그리드 구성
+            // 1. 디지털 및 아날로그 입출력 그리드 구성
             string[] arrDioRows = new string[] { "DI1", "DI2", "DI3", "DO", "아날로그" };
             SetupTestGrid(dataGridViewDIO, arrDioRows, nMaxRoundCount, (strTitle, nRound) => GetDioRoundResult(m_objTestResult, strTitle, nRound));
 
-            // 통신 시험 그리드 구성
-            string[] arrCommRows = new string[] { "WTB", "MVB", "RS-485" };
+            // 2. 통신 시험 그리드 구성 (JSON RowData Key 규격과 일치: WTB, MVB, RS485-1~3)
+            string[] arrCommRows = new string[] { "WTB", "MVB", "RS485-1", "RS485-2", "RS485-3" };
             SetupTestGrid(dataGridViewComm, arrCommRows, nMaxRoundCount, (strTitle, nRound) => GetGenericRoundResult(m_objTestResult, "통신 시험", strTitle, nRound));
 
-            // 메모리 시험 그리드 구성
+            // 3. 메모리 시험 그리드 구성
             string[] arrMemoryRows = new string[] { "임시1", "임시2", "임시3" };
             SetupTestGrid(dataGridViewMemory, arrMemoryRows, nMaxRoundCount, (strTitle, nRound) => GetGenericRoundResult(m_objTestResult, "메모리 시험", strTitle, nRound));
         }
@@ -342,7 +348,6 @@ namespace CITester
                     dgvTarget.Columns[nColIndex].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
 
-                // 시험 결과 바인딩
                 if (arrRowHeaderTitles != null && arrRowHeaderTitles.Length > 0)
                 {
                     foreach (string strRowTitle in arrRowHeaderTitles)
@@ -375,7 +380,6 @@ namespace CITester
 
                     actAdjustRowHeights();
 
-                    // 중복 이벤트 핸들러 등록 방지 처리 (핸들러 누수 차단)
                     EventHandler actResizeHandler = (s, e) => { actAdjustRowHeights(); };
                     if (dgvTarget.Tag is EventHandler objOldHandler)
                     {
@@ -455,29 +459,53 @@ namespace CITester
                 }
             }
 
-            // 해당 회차 및 그룹에 측정 데이터가 없는 경우
             if (listMatchedPins.Count == 0) return "-";
 
-            // 핀 중 하나라도 불합격 또는 ERR이 존재하면 불합격 처리
             bool bHasFail = listMatchedPins.Exists(objPin => objPin.Result == "불합격" || objPin.MeasuredValue == "ERR");
             return bHasFail ? "불합격" : "합격";
         }
 
-        // 통신/메모리 등 일반 RowData 형태의 회차별 결과 산출 함수
+        // 통신/메모리 등 일반 RowData 형태의 회차별 결과 산출 함수 (특수문자 및 공백 유연 매칭 지원)
         private string GetGenericRoundResult(TestResultJson objTestResult, string strGridTitle, string strRowTitle, int nRound)
         {
             if (objTestResult?.GridResults == null) return "-";
 
             foreach (TestResultJson.GridTestResult objGrid in objTestResult.GridResults)
             {
-                if (objGrid.GridTitle == strGridTitle && objGrid.RowData != null)
+                if (objGrid.GridTitle == strGridTitle)
                 {
-                    if (objGrid.RowData.TryGetValue(strRowTitle, out List<string> listRoundResults))
+                    // 1. RowData 기반 검색
+                    if (objGrid.RowData != null && objGrid.RowData.Count > 0)
                     {
-                        int nRoundIndex = nRound - 1;
-                        if (nRoundIndex >= 0 && nRoundIndex < listRoundResults.Count)
+                        string strNormalizedTarget = strRowTitle.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "").ToUpper();
+
+                        string matchedKey = objGrid.RowData.Keys.FirstOrDefault(k =>
                         {
-                            return listRoundResults[nRoundIndex];
+                            string strNormalizedKey = k.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "").ToUpper();
+                            return strNormalizedKey == strNormalizedTarget;
+                        });
+
+                        if (matchedKey != null && objGrid.RowData.TryGetValue(matchedKey, out List<string> listRoundResults))
+                        {
+                            int nRoundIndex = nRound - 1;
+                            if (nRoundIndex >= 0 && nRoundIndex < listRoundResults.Count)
+                            {
+                                return listRoundResults[nRoundIndex];
+                            }
+                        }
+                    }
+
+                    // 2. PinDetails 기반 폴백 검색
+                    if (objGrid.PinDetails != null && objGrid.PinDetails.Count > 0)
+                    {
+                        var matchedPin = objGrid.PinDetails.FirstOrDefault(p =>
+                            p.Round == nRound &&
+                            (p.PinName.IndexOf(strRowTitle, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                             strRowTitle.IndexOf(p.PinName, StringComparison.OrdinalIgnoreCase) >= 0));
+
+                        if (matchedPin != null)
+                        {
+                            return matchedPin.Result;
                         }
                     }
                 }
@@ -541,67 +569,60 @@ namespace CITester
                 }
             }
 
-            string strUnitType = string.IsNullOrEmpty(ConfigJson.CurrentConfig.Operation.TCMSUnit) ? "TC" : ConfigJson.CurrentConfig.Operation.TCMSUnit;
-            string strSerialNo = string.IsNullOrEmpty(ConfigJson.CurrentConfig.Operation.SerialNo) ? "0000" : ConfigJson.CurrentConfig.Operation.SerialNo;
-            string strCarNo = string.IsNullOrEmpty(ConfigJson.CurrentConfig.Operation.FleetNo) ? "0000" : ConfigJson.CurrentConfig.Operation.FleetNo;
-            string strTrainNo = string.IsNullOrEmpty(ConfigJson.CurrentConfig.Operation.TrainNo) ? "0000" : ConfigJson.CurrentConfig.Operation.TrainNo;
-            string strTester = string.IsNullOrEmpty(ConfigJson.CurrentConfig.Operation.TesterName) ? "ADMIN" : ConfigJson.CurrentConfig.Operation.TesterName;
-            string strFinalDecision = "미시험";
+            // 보고서 헤더 정보 (결과 JSON 기준, 없으면 Config 기준)
+            string strUnitType = m_objTestResult?.Header?.TCMSUnit ?? ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+            string strSerialNo = m_objTestResult?.Header?.SerialNo ?? ConfigJson.CurrentConfig?.Operation?.SerialNo ?? "0000";
+            string strCarNo = m_objTestResult?.Header?.FleetNo ?? ConfigJson.CurrentConfig?.Operation?.FleetNo ?? "0000";
+            string strTrainNo = m_objTestResult?.Header?.TrainNo ?? ConfigJson.CurrentConfig?.Operation?.TrainNo ?? "0000";
+            string strTester = m_objTestResult?.Header?.TesterName ?? ConfigJson.CurrentConfig?.Operation?.TesterName ?? "ADMIN";
+            string strFinalDecision = m_objTestResult?.Header?.FinalResult ?? "미시험";
 
             List<string[]> listItems = new List<string[]>();
 
+            // 1. 입·출력 시험
             listItems.Add(new string[] { "Section", "1. 입·출력 시험" });
             listItems.Add(new string[] { "Section", "  1.1 디지털 입력 (DI)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
-            for (int nIdx = 1; nIdx <= 5; nIdx++)
-            {
-                listItems.Add(new string[] { "Row", $"디지털 입력 (DI {nIdx})", "미시험" });
-            }
-
+            listItems.Add(new string[] { "Row", "디지털 입력 (DI 1)", GetDioRoundResult(m_objTestResult, "DI1", 1) });
+            listItems.Add(new string[] { "Row", "디지털 입력 (DI 2)", GetDioRoundResult(m_objTestResult, "DI2", 1) });
+            listItems.Add(new string[] { "Row", "디지털 입력 (DI 3)", GetDioRoundResult(m_objTestResult, "DI3", 1) });
 
             listItems.Add(new string[] { "ForcePageBreak" });
 
             listItems.Add(new string[] { "Section", "  1.2 디지털 출력 (DO)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
-            for (int nIdx = 1; nIdx <= 5; nIdx++)
-            {
-                listItems.Add(new string[] { "Row", $"디지털 출력 (DO {nIdx})", "미시험" });
-            }
+            listItems.Add(new string[] { "Row", "디지털 출력 (DO)", GetDioRoundResult(m_objTestResult, "DO", 1) });
 
             listItems.Add(new string[] { "ForcePageBreak" });
 
             listItems.Add(new string[] { "Section", "  1.3 아날로그 입력 (AI)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
-            for (int nIdx = 1; nIdx <= 5; nIdx++)
-            {
-                listItems.Add(new string[] { "Row", $"아날로그 입력 (AI {nIdx})", "미시험" });
-            }
+            listItems.Add(new string[] { "Row", "아날로그 입력 (AI)", GetDioRoundResult(m_objTestResult, "아날로그", 1) });
 
             listItems.Add(new string[] { "Section", "  1.4 아날로그 출력 (AO)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
-            for (int nIdx = 1; nIdx <= 5; nIdx++)
-            {
-                listItems.Add(new string[] { "Row", $"아날로그 출력 (AO {nIdx})", "미시험" });
-            }
+            listItems.Add(new string[] { "Row", "아날로그 출력 (AO)", GetDioRoundResult(m_objTestResult, "아날로그", 1) });
 
             listItems.Add(new string[] { "ForcePageBreak" });
 
+            // 2. 통신 시험
             listItems.Add(new string[] { "Section", "2. 통신 시험" });
             listItems.Add(new string[] { "CommGrid", strUnitType });
 
             listItems.Add(new string[] { "EmptySpace", "40" });
 
+            // 3. 메모리 시험
             listItems.Add(new string[] { "Section", "3. 메모리 시험" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
-            listItems.Add(new string[] { "Row", "VAIO", "미시험" });
-            listItems.Add(new string[] { "Row", "VCPU", "미시험" });
-            listItems.Add(new string[] { "Row", "VTCN", "미시험" });
+            listItems.Add(new string[] { "Row", "VAIO", GetGenericRoundResult(m_objTestResult, "메모리 시험", "VAIO", 1) });
+            listItems.Add(new string[] { "Row", "VCPU", GetGenericRoundResult(m_objTestResult, "메모리 시험", "VCPU", 1) });
+            listItems.Add(new string[] { "Row", "VTCN", GetGenericRoundResult(m_objTestResult, "메모리 시험", "VTCN", 1) });
 
             if (strUnitType == "ER")
             {
                 listItems.Add(new string[] { "Section", "4. ER 속도 센서 시험" });
                 listItems.Add(new string[] { "Header", "시험 항목", "판정" });
-                listItems.Add(new string[] { "Row", "ER 속도 센서", "미시험" });
+                listItems.Add(new string[] { "Row", "ER 속도 센서", GetGenericRoundResult(m_objTestResult, "속도 센서 시험", "속도센서", 1) });
             }
 
             int nItemIndex = 0;
@@ -625,7 +646,7 @@ namespace CITester
                 Text = "PDF 문서를 초기화하고 있습니다...",
                 Location = new Point(25, 20),
                 Size = new Size(300, 23),
-                Font = new System.Drawing.Font("맑은 고딕", 9, FontStyle.Regular)
+                Font = new Font("맑은 고딕", 9, FontStyle.Regular)
             };
 
             YourNamespace.CustomProgressBar pgbStatus = new YourNamespace.CustomProgressBar
@@ -659,12 +680,12 @@ namespace CITester
                         pgbStatus.UseAnimation = false;
 
                         Graphics gtxCanvas = ePage.Graphics;
-                        gtxCanvas.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                        gtxCanvas.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                        System.Drawing.Font fntTitle = new System.Drawing.Font("맑은 고딕", 22, FontStyle.Bold);
-                        System.Drawing.Font fntHeader = new System.Drawing.Font("맑은 고딕", 9, FontStyle.Bold);
-                        System.Drawing.Font fntBody = new System.Drawing.Font("맑은 고딕", 9, FontStyle.Regular);
-                        System.Drawing.Font fntBodyBold = new System.Drawing.Font("맑은 고딕", 9, FontStyle.Bold);
+                        Font fntTitle = new Font("맑은 고딕", 22, FontStyle.Bold);
+                        Font fntHeader = new Font("맑은 고딕", 9, FontStyle.Bold);
+                        Font fntBody = new Font("맑은 고딕", 9, FontStyle.Regular);
+                        Font fntBodyBold = new Font("맑은 고딕", 9, FontStyle.Bold);
 
                         float fStartX = ePage.MarginBounds.Left;
                         float fCurrentY = ePage.MarginBounds.Top;
@@ -676,11 +697,11 @@ namespace CITester
                         fCurrentY += szTitle.Height + 35f;
 
                         string[,] arrInfoMatrix = new string[4, 3] {
-                    { "시험일자", "시험자명", "최종 판정 결과" },
-                    { DateTime.Now.ToString("yyyy-MM-dd"), strTester, strFinalDecision },
-                    { "편성번호", "차량번호", "유닛종류 (일련번호)" },
-                    { strTrainNo, strCarNo, strUnitType + " (" + strSerialNo + ")" }
-                };
+                            { "시험일자", "시험자명", "최종 판정 결과" },
+                            { DateTime.Now.ToString("yyyy-MM-dd"), strTester, strFinalDecision },
+                            { "편성번호", "차량번호", "유닛종류 (일련번호)" },
+                            { strTrainNo, strCarNo, strUnitType + " (" + strSerialNo + ")" }
+                        };
 
                         int nInfoRowHeight = 34;
                         int nTotalW = (int)fPageWidth;
@@ -705,12 +726,13 @@ namespace CITester
                                     gtxCanvas.DrawRectangle(Pens.Black, rectTarget);
 
                                     Brush brshText = Brushes.Black;
-                                    System.Drawing.Font fntSelect = (nRow == 0 || nRow == 2) ? fntHeader : fntBody;
+                                    Font fntSelect = (nRow == 0 || nRow == 2) ? fntHeader : fntBody;
 
                                     if (nRow == 1 && nCol == 2)
                                     {
                                         fntSelect = fntBodyBold;
-                                        brshText = Brushes.Gray;
+                                        brshText = (strFinalDecision == "합격") ? Brushes.Blue :
+                                                   (strFinalDecision == "불합격") ? Brushes.Red : Brushes.Gray;
                                     }
 
                                     gtxCanvas.DrawString(arrInfoMatrix[nRow, nCol], fntSelect, brshText, rectTarget, sfCenter);
@@ -754,96 +776,55 @@ namespace CITester
                                     continue;
                                 }
 
+                                // 통신 시험 표 출력부 (실제 판정 결과 데이터 바인딩)
                                 if (strType == "CommGrid")
                                 {
-                                    string strUnit = arrCurrentItem[1];
-                                    List<string> listMethods = new List<string>();
-                                    if (strUnit == "TC" || strUnit == "CC")
+                                    string[] arrCommItems = new string[] { "WTB 통신", "MVB 통신", "RS-485 #1", "RS-485 #2", "RS-485 #3" };
+                                    string[] arrCommKeys = new string[] { "WTB", "MVB", "RS485-1", "RS485-2", "RS485-3" };
+
+                                    float fRowH = 28f;
+                                    float fTotalGridH = fRowH * (arrCommItems.Length + 1);
+
+                                    if (fCurrentY + fTotalGridH > ePage.MarginBounds.Bottom)
                                     {
-                                        listMethods.Add("WTB 통신");
-                                        listMethods.Add("MVB 통신");
-                                        listMethods.Add("RS-485 통신");
-                                    }
-                                    else if (strUnit == "DU")
-                                    {
-                                        listMethods.Add("MVB 통신");
-                                        listMethods.Add("RS-485 통신");
-                                    }
-                                    else if (strUnit == "ER")
-                                    {
-                                        listMethods.Add("MVB 통신");
+                                        ePage.HasMorePages = true;
+                                        nPageIndex++;
+                                        return;
                                     }
 
-                                    if (listMethods.Count > 0)
+                                    // 헤더
+                                    Rectangle rectH1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, (int)fRowH);
+                                    Rectangle rectH2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, (int)fRowH);
+                                    gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH1);
+                                    gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH2);
+                                    gtxCanvas.DrawRectangle(Pens.Black, rectH1);
+                                    gtxCanvas.DrawRectangle(Pens.Black, rectH2);
+                                    gtxCanvas.DrawString("통신 시험 항목", fntHeader, Brushes.Black, rectH1, sfCenter);
+                                    gtxCanvas.DrawString("판정", fntHeader, Brushes.Black, rectH2, sfCenter);
+                                    fCurrentY += fRowH;
+
+                                    // 5개 통신 항목 행 출력
+                                    for (int i = 0; i < arrCommItems.Length; i++)
                                     {
-                                        float fGridHeight = (listMethods.Count > 1) ? 56f : 28f;
-                                        if (fCurrentY + fGridHeight > ePage.MarginBounds.Bottom)
-                                        {
-                                            ePage.HasMorePages = true;
-                                            nPageIndex++;
-                                            return;
-                                        }
+                                        Rectangle rectR1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, (int)fRowH);
+                                        Rectangle rectR2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, (int)fRowH);
+                                        gtxCanvas.DrawRectangle(Pens.Black, rectR1);
+                                        gtxCanvas.DrawRectangle(Pens.Black, rectR2);
 
-                                        int nTotalWidth = (int)fPageWidth;
+                                        Rectangle rectTextPadding = rectR1;
+                                        rectTextPadding.X += 8;
+                                        rectTextPadding.Width -= 8;
 
-                                        if (listMethods.Count == 3)
-                                        {
-                                            int nColW = nTotalWidth / 3;
-                                            for (int nCol = 0; nCol < 3; nCol++)
-                                            {
-                                                Rectangle rectH = new Rectangle((int)fStartX + (nCol * nColW), (int)fCurrentY, (nCol == 2) ? nTotalWidth - (nColW * 2) : nColW, 28);
-                                                gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH);
-                                                gtxCanvas.DrawRectangle(Pens.Black, rectH);
-                                                gtxCanvas.DrawString(listMethods[nCol], fntHeader, Brushes.Black, rectH, sfCenter);
-                                            }
-                                            fCurrentY += 28f;
+                                        string strVal = GetGenericRoundResult(m_objTestResult, "통신 시험", arrCommKeys[i], 1);
+                                        if (string.IsNullOrWhiteSpace(strVal)) strVal = "-";
 
-                                            for (int nCol = 0; nCol < 3; nCol++)
-                                            {
-                                                Rectangle rectR = new Rectangle((int)fStartX + (nCol * nColW), (int)fCurrentY, (nCol == 2) ? nTotalWidth - (nColW * 2) : nColW, 28);
-                                                gtxCanvas.DrawRectangle(Pens.Black, rectR);
-                                                gtxCanvas.DrawString("미시험", fntBody, Brushes.Gray, rectR, sfCenter);
-                                            }
-                                            fCurrentY += 28f;
-                                        }
-                                        else if (listMethods.Count == 2)
-                                        {
-                                            int nColW = nTotalWidth / 2;
-                                            for (int nCol = 0; nCol < 2; nCol++)
-                                            {
-                                                Rectangle rectH = new Rectangle((int)fStartX + (nCol * nColW), (int)fCurrentY, (nCol == 1) ? nTotalWidth - nColW : nColW, 28);
-                                                gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH);
-                                                gtxCanvas.DrawRectangle(Pens.Black, rectH);
-                                                gtxCanvas.DrawString(listMethods[nCol], fntHeader, Brushes.Black, rectH, sfCenter);
-                                            }
-                                            fCurrentY += 28f;
+                                        Brush brshText = (strVal == "합격" || strVal == "PASS") ? Brushes.Blue :
+                                                         (strVal == "불합격" || strVal == "FAIL") ? Brushes.Red : Brushes.Gray;
 
-                                            for (int nCol = 0; nCol < 2; nCol++)
-                                            {
-                                                Rectangle rectR = new Rectangle((int)fStartX + (nCol * nColW), (int)fCurrentY, (nCol == 1) ? nTotalWidth - nColW : nColW, 28);
-                                                gtxCanvas.DrawRectangle(Pens.Black, rectR);
-                                                gtxCanvas.DrawString("미시험", fntBody, Brushes.Gray, rectR, sfCenter);
-                                            }
-                                            fCurrentY += 28f;
-                                        }
-                                        else if (listMethods.Count == 1)
-                                        {
-                                            int nColW = nTotalWidth / 2;
-                                            Rectangle rectR1 = new Rectangle((int)fStartX, (int)fCurrentY, nColW, 28);
-                                            Rectangle rectR2 = new Rectangle((int)fStartX + nColW, (int)fCurrentY, nTotalWidth - nColW, 28);
+                                        gtxCanvas.DrawString(arrCommItems[i], fntBody, Brushes.Black, rectTextPadding, sfLeft);
+                                        gtxCanvas.DrawString(strVal, (strVal == "합격" || strVal == "불합격") ? fntBodyBold : fntBody, brshText, rectR2, sfCenter);
 
-                                            gtxCanvas.DrawRectangle(Pens.Black, rectR1);
-                                            gtxCanvas.DrawRectangle(Pens.Black, rectR2);
-
-                                            Rectangle rectTextPadding = rectR1;
-                                            rectTextPadding.X += 8;
-                                            rectTextPadding.Width -= 8;
-
-                                            gtxCanvas.DrawString(listMethods[0], fntBody, Brushes.Black, rectTextPadding, sfLeft);
-                                            gtxCanvas.DrawString("미시험", fntBody, Brushes.Gray, rectR2, sfCenter);
-
-                                            fCurrentY += 28f;
-                                        }
+                                        fCurrentY += fRowH;
                                     }
 
                                     nItemIndex++;
@@ -894,8 +875,10 @@ namespace CITester
                                     gtxCanvas.DrawString(arrCurrentItem[1], fntBody, Brushes.Black, rectTextPadding, sfLeft);
 
                                     string strVal = arrCurrentItem[2];
-                                    Brush brshText = Brushes.Gray;
-                                    gtxCanvas.DrawString(strVal, fntBody, brshText, rectR2, sfCenter);
+                                    Brush brshText = (strVal == "합격" || strVal == "PASS") ? Brushes.Blue :
+                                                     (strVal == "불합격" || strVal == "FAIL") ? Brushes.Red : Brushes.Gray;
+
+                                    gtxCanvas.DrawString(strVal, (strVal == "합격" || strVal == "불합격") ? fntBodyBold : fntBody, brshText, rectR2, sfCenter);
 
                                     fCurrentY += fItemHeight;
                                 }

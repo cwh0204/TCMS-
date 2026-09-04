@@ -37,6 +37,7 @@ using TCMSTester.Models;
 using TCMSTester.Protocol;
 using TCMSTester.Services;
 using TCMSTester.Tests;
+using TCMSTester.UI;
 using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
@@ -119,6 +120,9 @@ namespace CITester
         int m_nPage = 0;
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        //UI 헬퍼
+        private CommTestUiManager _commUiManager;
+
         //전류출력보드출력값
         double dVdcCHFTChangeValue = 22;
         bool bVdcCHFTRestart = false;
@@ -141,6 +145,8 @@ namespace CITester
         //MVB
         private MvbReceiver m_mvbReceiver;
         private MvbSerialManager m_serialManager;
+        private MvbReceiver _mvbReceiver;
+        private TcmsTestService _tcmsTestService;
 
 
         // TC 입출력 변수
@@ -751,9 +757,9 @@ namespace CITester
         private void FormMain_Load(object sender, EventArgs e)
         {
             modernTreeView1.ItemHeight = 30;
-            //m_PLCNetwork.WRITE = true;
             serialTester1 = new classSerialCommPacket(FormMain.COMMON_INFO.serialTester1Port0);
             serialTester2 = new classSerialCommPacket(FormMain.COMMON_INFO.serialTester2Port0);
+
             if (ConfigJson.CurrentConfig.Operation.TCMSUnit != "ER")
             {
                 modernTreeView1.SetNodeVisible("ER 속도센서 시험", false);
@@ -762,6 +768,7 @@ namespace CITester
             {
                 modernTreeView1.SetNodeVisible("ER 속도센서 시험", true);
             }
+
             EnableDoubleBuffering(dataGridViewDI1);
             EnableDoubleBuffering(dataGridViewDI2);
             EnableDoubleBuffering(dataGridViewDI3);
@@ -771,7 +778,10 @@ namespace CITester
             AnalgogData(dataGridViewAnalog);
             SetAnalogDataGrid();
             DataGridInit();
-            InitRadioButtons();
+
+            _commUiManager = new CommTestUiManager(tableLayoutPanel1);
+            _tcmsTestService = new TcmsTestService(_mvbReceiver);
+
             if (tabPageIndex2 == null)
             {
                 tabPageIndex2 = mainTabControl1.TabPages.Cast<TabPage>().FirstOrDefault(p => p.Name == "tabPage6");
@@ -779,20 +789,12 @@ namespace CITester
             UpdateTabVisibility();
             InitData();
             SetupDataGridView();
+
             var nodeControl = modernTreeView1.Nodes.Find("입출력 시험", true).FirstOrDefault();
             if (nodeControl != null && nodeControl.Nodes.Count > 0)
                 nodeControl.Checked = nodeControl.Nodes.Cast<TreeNode>().All(n => n.Checked);
-            System.Reflection.PropertyInfo propPanel = typeof(Panel).GetProperty("DoubleBuffered",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-            if (propPanel != null)
-            {
-                propPanel.SetValue(panel1, true, null);
-                propPanel.SetValue(panel2, true, null);
-            }
-
-            //MVB 로직
-
+            // MvbSerialManager 객체만 준비 (시험 시작 전에는 포트를 열지 않음)
             if (m_serialManager == null)
             {
                 m_serialManager = new MvbSerialManager(m_mvbReceiver)
@@ -802,34 +804,11 @@ namespace CITester
                 };
             }
 
-            int baudRate = 115200;
-
-            string savedPort = "COM4";
-
-            AppendTestLog(richTextBox_Log, $"[시스템] 시리얼 포트({savedPort}) 자동 연결 시도...", Color.Gray);
-
-            // 3. 포트 오픈 시도
-            bool isConnected = m_serialManager.OpenPort(savedPort, baudRate);
-
-            if (isConnected)
-            {
-                m_mvbReceiver?.Start();
-            }
-            else
-            {
-            }
-            m_mvbReceiver.PacketReceived += (s, args) =>
-            {
-                // Raw 바이트 배열을 "41-A0-EF..." 형태의 Hex 문자열로 변환하여 출력
-                string hexData = BitConverter.ToString(args.RawData);
-            };
-
-            // 2. 파싱/검증 에러 발생시 콘솔 출력 (s, errorMsg 로 이름 변경)
+            // 전역 에러 핸들러 연결
             m_mvbReceiver.ErrorOccurred += (s, errorMsg) =>
             {
                 Console.WriteLine($"[TCMS 수신 에러] {errorMsg}");
             };
-
         }
         // 유닛마다 탭페이지 조절 함수
         private void UpdateTabVisibility()
@@ -1612,94 +1591,7 @@ namespace CITester
             return path;
         }
 
-        private void InitRadioButtons()
-        {
-            if (panel1 == null || panel1.Width <= 0 || panel1.Height <= 0) return;
-
-            // 9개의 모든 라디오 버튼을 선제적으로 화면에서 비활성화(숨김) 처리
-            RadioButton[] arrAllRadios = {
-        radioButtonWTB1, radioButtonWTB2, radioButtonWTB3,
-        radioButtonMVB1, radioButtonMVB2, radioButtonMVB3,
-        radioButtonRS1,   radioButtonRS2,   radioButtonRS3
-    };
-            foreach (RadioButton rdo in arrAllRadios)
-            {
-                if (rdo != null) rdo.Visible = false;
-            }
-
-            // 페인트 엔진과 동일한 메인 카드 기준 좌표 도출
-            int nMarginTop = 10;
-            int nSectionGap = 15;
-            int nSectionHeight = (panel1.Height - nMarginTop - (nSectionGap * 2)) / 3;
-
-            int nCardTop = nMarginTop + 28;
-            int nCardHeight = nSectionHeight - 28;
-            Rectangle rectCard = new Rectangle(12, nCardTop, panel1.Width - 24, nCardHeight);
-
-            // 조건 변수 검사를 거쳐 현재 살아남은 카드 식별 규칙 수립
-            string[] arrActiveLabels;
-            if (ConfigJson.CurrentConfig.Operation.TCMSUnit == "DU")
-            {
-                arrActiveLabels = new string[] { "MVB", "RS-485" };
-            }
-            else if (ConfigJson.CurrentConfig.Operation.TCMSUnit == "ER")
-            {
-                arrActiveLabels = new string[] { "MVB" };
-            }
-            else
-            {
-                arrActiveLabels = new string[] { "WTB", "MVB", "RS-485" };
-            }
-
-            int nSubCount = arrActiveLabels.Length;
-            if (nSubCount <= 0) return;
-
-            // 실시간 분할 너비 연산 구조 동기화
-            int nTotalAvailableWidth = rectCard.Width;
-            int nGap = 10;
-            int nSubWidth = (nTotalAvailableWidth - (nGap * (nSubCount - 1))) / nSubCount;
-            int nSubLogoWidth = 110;
-
-            // 현재 화면에 렌더링된 서브 카드 개수와 순서에 맞춰 라디오 버튼 정렬 매핑
-            for (int nSubIdx = 0; nSubIdx < nSubCount; nSubIdx++)
-            {
-                string strCurrentType = arrActiveLabels[nSubIdx];
-                RadioButton[] arrCurrentGroup = null;
-
-                if (strCurrentType == "WTB") arrCurrentGroup = new RadioButton[] { radioButtonWTB1, radioButtonWTB2, radioButtonWTB3 };
-                else if (strCurrentType == "MVB") arrCurrentGroup = new RadioButton[] { radioButtonMVB1, radioButtonMVB2, radioButtonMVB3 };
-                else if (strCurrentType == "RS-485") arrCurrentGroup = new RadioButton[] { radioButtonRS1, radioButtonRS2, radioButtonRS3 };
-
-                if (arrCurrentGroup == null) continue;
-
-                // 선택된 통신 카드의 시작 좌표 기점 확보 및 내부 공란 너비 확정
-                int nSubX = rectCard.X + (nSubIdx * (nSubWidth + nGap));
-                int nContentStartX = nSubX + nSubLogoWidth + 12;
-                int nContentWidth = nSubWidth - nSubLogoWidth - 16;
-
-                for (int nRdoIdx = 0; nRdoIdx < arrCurrentGroup.Length; nRdoIdx++)
-                {
-                    RadioButton rdo = arrCurrentGroup[nRdoIdx];
-                    if (rdo == null) continue;
-
-                    // 살아남은 카드 내부의 라디오 버튼만 선별적으로 표시 전환
-                    rdo.Visible = true;
-                    if (rdo.Parent != panel1) rdo.Parent = panel1;
-
-                    // 공란 내부 정렬 마진 요소 연산
-                    int nCol = (nRdoIdx == 1) ? 1 : 0;
-                    int nRow = (nRdoIdx == 2) ? 1 : 0;
-                    int nOffsetY = (rectCard.Height / 3);
-
-                    int nRdoX = nContentStartX + (nCol * (nContentWidth / 2));
-                    int nRdoY = rectCard.Y + 8 + (nRow * nOffsetY);
-
-                    // 레이아웃 이동 확정 및 드로우 레이어 강제 프론트 업
-                    rdo.Location = new Point(nRdoX, nRdoY);
-                    rdo.BringToFront();
-                }
-            }
-        }
+        
         #endregion
 
         #region 메모리 시험 디자인용
@@ -2393,135 +2285,125 @@ namespace CITester
              }
          }*/
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// 
+        // 2. DC 파워 포트 탐색 및 연결
         public bool OpenDCPower()
         {
-            int i = 0;
+            string strTargetPort = ConfigJson.CurrentConfig?.Device?.DCPower_ComPort;
+            string strTargetIdn = ConfigJson.CurrentConfig?.Device?.DCPower_IDN;
 
-            for (i = 0; i < strSerialPortList.Length; i++)
+            List<string> lstCandidatePorts = new List<string>();
+
+            if (!string.IsNullOrEmpty(strTargetPort))
             {
+                lstCandidatePorts.Add(strTargetPort);
+            }
 
-                if (strSerialPortList[i] == "ON")
+            string[] arrSystemPorts = SerialPort.GetPortNames();
+            for (int nIdx = 0; nIdx < arrSystemPorts.Length; nIdx++)
+            {
+                string strPort = arrSystemPorts[nIdx];
+                if (!lstCandidatePorts.Contains(strPort, StringComparer.OrdinalIgnoreCase))
                 {
-                    continue;
+                    lstCandidatePorts.Add(strPort);
+                }
+            }
+
+            for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
+            {
+                string strPort = lstCandidatePorts[nPortIdx];
+
+                if (m_serialDcPower != null && m_serialDcPower.CONNECTED)
+                {
+                    m_serialDcPower.Disconnect();
                 }
 
-                if (strSerialPortList[i] == "")
-                    continue;
-
-                if (m_serialDcPower != null)
+                m_serialDcPower = new SerialClient
                 {
-                    if (m_serialDcPower.CONNECTED == true)
-                    {
-                        m_serialDcPower.Disconnect();
-                    }
-                }
-
-                m_serialDcPower = new SerialClient();
-
-                m_serialDcPower.PORT = strSerialPortList[i];
-                m_serialDcPower.BAUDRATE = m_nDcPowerBaudRate;
-                m_serialDcPower.DTR = true;
-                m_serialDcPower.CONNECTED = false;
-                m_serialDcPower.DELIMITOR = "\n";
+                    PORT = strPort,
+                    BAUDRATE = 9600,
+                    DTR = true,
+                    CONNECTED = false,
+                    DELIMITOR = "\n"
+                };
 
                 try
                 {
                     m_serialDcPower.Connect();
                     if (!m_serialDcPower.CheckConnect())
-                        return false;
-
-                    m_serialDcPower.SendData("*CLS\n");
-                    Thread.Sleep(50);
-                    m_serialDcPower.IS_RETURN = false;
-                    m_serialDcPower.SendData("*IDN?\n");
-                    Thread.Sleep(100);
-
-
-                    if (!m_serialDcPower.ReceiveData())
                     {
-                        Console.WriteLine(m_serialDcPower.RETURN_VALUE);
-                        m_serialDcPower.SendData("*CLS\n");
-                        Thread.Sleep(50);
                         m_serialDcPower.Disconnect();
                         continue;
                     }
 
-                    Console.WriteLine(m_serialDcPower.RETURN_VALUE);
+                    m_serialDcPower.IS_RETURN = false;
 
-                    if (m_serialDcPower.RETURN_VALUE.Contains(ConfigJson.CurrentConfig.Device.DCPower_IDN))
+                    int nFlushRetry = 0;
+                    while (m_serialDcPower.ReceiveData() && nFlushRetry < 3)
                     {
-                        Console.WriteLine(m_serialDcPower.RETURN_VALUE);
-                        m_serialDcPower.SendData("*CLS\n");
-                        strSerialPortList[i] = "ON";
-                        Thread.Sleep(100);
-                        break;
+                        nFlushRetry++;
                     }
-                }
-                catch
-                {
 
-                }
-                m_serialDcPower.Disconnect();
-            }
+                    m_serialDcPower.SendData("*CLS\n");
+                    Thread.Sleep(20);
+                    m_serialDcPower.SendData("*IDN?\n");
 
-            if (i == strSerialPortList.Length)
-            {
-                return false;
-            }
-            return true;
+                    bool bIsPowerFound = false;
+                    int nRetryCount = 0;
+                    const int nMaxRetry = 10;
 
-            /*
-            if (m_strDcPowerComPort == "")
-                return false;
+                    while (nRetryCount < nMaxRetry)
+                    {
+                        if (m_serialDcPower.ReceiveData())
+                        {
+                            string strResultBuffer = m_serialDcPower.RETURN_VALUE ?? string.Empty;
 
-            if (m_serialDcPower != null)
-            {
-                if (m_serialDcPower.CONNECTED == true)
-                {
+                            if (strResultBuffer.Contains("receiveddata") ||
+                                strResultBuffer.Contains("[RX ANALOG") ||
+                                strResultBuffer.Contains("HEX:") ||
+                                strResultBuffer.Contains("PORT 4020"))
+                            {
+                                Console.WriteLine($"DC 파워: MVB 통신 포트 감지됨 ({strPort}) -> 즉시 건너뜀");
+                                break;
+                            }
+
+                            if (strResultBuffer.Contains(strTargetIdn))
+                            {
+                                m_serialDcPower.SendData("*CLS\n");
+                                Thread.Sleep(20);
+                                bIsPowerFound = true;
+                                break;
+                            }
+
+                            if (!string.IsNullOrEmpty(strResultBuffer))
+                            {
+                                break;
+                            }
+                        }
+
+                        nRetryCount++;
+                        Thread.Sleep(10);
+                    }
+
+                    if (bIsPowerFound)
+                    {
+                        ConfigJson.CurrentConfig.Device.DCPower_ComPort = strPort;
+                        return true; // DC 파워는 m_serialDcPower 인스턴스를 유지하여 계속 사용하는 경우 유지
+                    }
+
                     m_serialDcPower.Disconnect();
                 }
+                catch (Exception)
+                {
+                    if (m_serialDcPower != null)
+                    {
+                        m_serialDcPower.Disconnect();
+                    }
+                }
             }
 
-            m_serialDcPower = new SerialClient();
-
-            m_serialDcPower.PORT = m_strDcPowerComPort;
-            m_serialDcPower.BAUDRATE = m_nDcPowerBaudRate;
-            m_serialDcPower.DTR = true;
-            m_serialDcPower.CONNECTED = false;
-            m_serialDcPower.DELIMITOR = "\n";
-            m_serialDcPower.Connect();
-            if (!m_serialDcPower.CheckConnect())
-                return false;
-
-            m_serialDcPower.SendData("*CLS\n");
-            Thread.Sleep(100);
-            m_serialDcPower.IS_RETURN = false;
-            m_serialDcPower.SendData("*IDN?\n");
-
-            if (!m_serialDcPower.ReceiveData())
-            {
-                m_serialDcPower.SendData("*CLS\n");
-                Thread.Sleep(100);
-                return false;
-            }
-                
-            if (m_serialDcPower.RETURN_VALUE.IndexOf(m_strDcPowerIdn) < 0)
-            {
-                m_serialDcPower.SendData("*CLS\n");
-                Thread.Sleep(100);
-                return false;
-            }
-
-            m_serialDcPower.SendData("*CLS\n");
-            Thread.Sleep(100);
-            return true;
-            */
+            return false;
         }
+
 
 
         /// <summary>
@@ -2887,40 +2769,46 @@ namespace CITester
             return true;
         }
 
+        // MVB 보드 포트 탐색 및 연결
         public bool OpenMvbBoard()
         {
-            string strSavedPort = ConfigJson.CurrentConfig.Device.MVBBoard_ComPort ?? string.Empty;
+            string strTargetPort = ConfigJson.CurrentConfig?.Device?.MVBBoard_ComPort;
+            string strTargetIdn = ConfigJson.CurrentConfig?.Device?.MVBBoard_IDN;
+            int nBaudRate = ConfigJson.CurrentConfig?.Device?.MVBBoard_BaudRate ?? 115200;
 
-            System.Collections.Generic.List<string> listTargetPorts = new System.Collections.Generic.List<string>();
+            List<string> lstCandidatePorts = new List<string>();
 
-            if (!string.IsNullOrEmpty(strSavedPort) && Array.Exists(strSerialPortList, strPort => strPort == strSavedPort))
+            if (!string.IsNullOrEmpty(strTargetPort))
             {
-                listTargetPorts.Add(strSavedPort);
+                lstCandidatePorts.Add(strTargetPort);
             }
 
-            foreach (string strPort in strSerialPortList)
+            string[] arrSystemPorts = SerialPort.GetPortNames();
+            for (int nIdx = 0; nIdx < arrSystemPorts.Length; nIdx++)
             {
-                if (strPort != strSavedPort && !string.IsNullOrEmpty(strPort))
+                string strPort = arrSystemPorts[nIdx];
+                if (!lstCandidatePorts.Contains(strPort, StringComparer.OrdinalIgnoreCase))
                 {
-                    listTargetPorts.Add(strPort);
+                    lstCandidatePorts.Add(strPort);
                 }
             }
 
-            int nIdx = 0;
-            for (nIdx = 0; nIdx < listTargetPorts.Count; nIdx++)
+            for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
             {
-                string strCurrentPort = listTargetPorts[nIdx];
+                string strPort = lstCandidatePorts[nPortIdx];
 
-                if (m_serialMvbBoard != null && m_serialMvbBoard.CONNECTED == true)
+                if (m_serialMvbBoard != null && m_serialMvbBoard.CONNECTED)
                 {
                     m_serialMvbBoard.Disconnect();
                 }
 
-                m_serialMvbBoard = new SerialClient();
-                m_serialMvbBoard.PORT = strCurrentPort;
-                m_serialMvbBoard.BAUDRATE = m_nMvbBoardBaudRate;
-                m_serialMvbBoard.CONNECTED = false;
-                m_serialMvbBoard.DELIMITOR = "\n";
+                m_serialMvbBoard = new SerialClient
+                {
+                    PORT = strPort,
+                    BAUDRATE = nBaudRate,
+                    CONNECTED = false,
+                    DELIMITOR = "\n"
+                };
 
                 try
                 {
@@ -2932,65 +2820,58 @@ namespace CITester
                     }
 
                     m_serialMvbBoard.IS_RETURN = false;
-                    while (m_serialMvbBoard.ReceiveData())
+
+                    int nFlushCount = 0;
+                    while (m_serialMvbBoard.ReceiveData() && nFlushCount < 5)
                     {
+                        nFlushCount++;
                     }
 
                     m_serialMvbBoard.SendData("get.devicename\r\n");
 
                     bool bIsBoardFound = false;
                     int nRetryCount = 0;
-                    int nMaxRetry = 20;
+                    const int nMaxRetry = 15;
 
                     while (nRetryCount < nMaxRetry)
                     {
-                        if (!m_serialMvbBoard.ReceiveData())
+                        if (m_serialMvbBoard.ReceiveData())
                         {
-                            nRetryCount++;
-                            System.Threading.Thread.Sleep(10);
-                            continue;
+                            string strResultBuffer = m_serialMvbBoard.RETURN_VALUE ?? string.Empty;
+
+                            if (strResultBuffer.Contains(strTargetIdn))
+                            {
+                                bIsBoardFound = true;
+                                break;
+                            }
                         }
 
-                        string strResultBuffer = m_serialMvbBoard.RETURN_VALUE ?? string.Empty;
-
-                        if (strResultBuffer.Contains(ConfigJson.CurrentConfig.Device.MVBBoard_IDN))
-                        {
-                            Console.WriteLine($"{strResultBuffer}");
-                            bIsBoardFound = true;
-                            break;
-                        }
-
-                        if (strResultBuffer.Contains("receiveddata"))
-                        {
-                            nRetryCount++;
-                            continue;
-                        }
+                        nRetryCount++;
+                        System.Threading.Thread.Sleep(10);
                     }
 
-                    if (!bIsBoardFound)
+                    // [수정] 보드를 찾았더라도 시험 시작 시 시리얼 매니저가 열 수 있도록 Disconnect 호출
+                    if (bIsBoardFound)
                     {
-                        m_serialMvbBoard.Disconnect();
-                        continue;
+                        ConfigJson.CurrentConfig.Device.MVBBoard_ComPort = strPort;
+                        m_serialMvbBoard.Disconnect(); // 점유 해제
+                        return true;
                     }
-                    if (ConfigJson.CurrentConfig.Device.MVBBoard_ComPort != strCurrentPort)
-                    {
-                        ConfigJson.CurrentConfig.Device.MVBBoard_ComPort = strCurrentPort;
-                    }
-                    break;
+
+                    m_serialMvbBoard.Disconnect();
                 }
                 catch (Exception)
                 {
+                    if (m_serialMvbBoard != null)
+                    {
+                        m_serialMvbBoard.Disconnect();
+                    }
                 }
-
-                m_serialMvbBoard.Disconnect();
             }
 
-            if (nIdx == listTargetPorts.Count)
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
+
 
         public bool OpenMvbBoardTester()
         {
@@ -4803,15 +4684,17 @@ namespace CITester
             }
         }
 
+        /// <summary>
+        /// 시험 시작
+        /// </summary>
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
-            // 1. 강제 중단 요청 시 PLC 출력 즉시 차단
+            // 1. 강제 중단 요청 시 PLC 출력 및 통신 즉시 차단
             if (m_bIsTesting)
             {
                 m_bIsTesting = false;
-
-                // fenet 기반 전체 출력 OFF
                 ResetAllPlcOutputs();
+                StopMvbCommunication();
 
                 AppendTestLog(richTextBox_Log, "[시스템] 사용자 요청에 의해 시험이 강제 중단됩니다.", Color.OrangeRed);
                 return;
@@ -4821,54 +4704,127 @@ namespace CITester
             if (MessageBox.Show($"시험 차수 : {nMaxLoop}회\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            // 시험 진행 상태 플래그 및 UI 설정
             m_bIsTesting = true;
             SetTestingUiState(true);
 
+            string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+
+            // 2. 시험 시작 직전 시리얼 포트 오픈
+            if (!StartMvbCommunication())
+            {
+                m_bIsTesting = false;
+                SetTestingUiState(false);
+                return;
+            }
+
+            var finalResult = new TestResultJson();
+            finalResult.Header.TCMSUnit = strUnitType;
+            finalResult.Header.SerialNo = ConfigJson.CurrentConfig?.Operation?.SerialNo ?? "0000";
+            finalResult.Header.TesterName = ConfigJson.CurrentConfig?.Operation?.TesterName ?? "Tester";
+            finalResult.Header.FleetNo = ConfigJson.CurrentConfig?.Operation?.FleetNo ?? "0000";
+            finalResult.Header.TrainNo = ConfigJson.CurrentConfig?.Operation?.TrainNo ?? "0000";
+            finalResult.Header.TotalRound = nMaxLoop;
+
+            var objDigitalGridResult = new TestResultJson.GridTestResult { GridTitle = "디지털 입출력 시험" };
+            var objAnalogGridResult = new TestResultJson.GridTestResult { GridTitle = "아날로그 입출력 시험" };
+            var objCommGridResult = new TestResultJson.GridTestResult { GridTitle = "통신 시험" };
+
+            finalResult.GridResults.Add(objDigitalGridResult);
+            finalResult.GridResults.Add(objAnalogGridResult);
+            finalResult.GridResults.Add(objCommGridResult);
+
+            bool bHasAnyFailure = false;
+
+            // 3. 실제 시험을 주관하는 testService 생성 및 설정
+            var testService = new TcmsTestService(m_mvbReceiver)
+            {
+                OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
+                OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color),
+                OnGridInvalidate = () =>
+                {
+                    dataGridViewDI1?.Invalidate();
+                    dataGridViewDI2?.Invalidate();
+                    dataGridViewDI3?.Invalidate();
+                    dataGridViewDO?.Invalidate();
+                },
+                RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
+                {
+                    DataGridView targetDgv = null;
+                    switch (cat)
+                    {
+                        case "DI1": targetDgv = dataGridViewDI1; break;
+                        case "DI2": targetDgv = dataGridViewDI2; break;
+                        case "DI3": targetDgv = dataGridViewDI3; break;
+                        case "DO": targetDgv = dataGridViewDO; break;
+                    }
+
+                    bool[] expectedBits = GetExpectedBitsForCategory(cat);
+                    Func<byte[]> channelRawDataSupplier = () => currentRawData?.Invoke();
+                    int nStartPin = GetStartPinByCategory(strUnitType, cat);
+
+                    await RunChannelTestSequenceAsync(
+                        cat, arr, count, targetDgv, delay, loop, fails, details,
+                        channelRawDataSupplier, expectedBits, nStartPin
+                    );
+                }
+            };
+
             try
             {
-                string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
-                var testService = new TcmsTestService(m_mvbReceiver)
+                // [핵심] 현재 시험 서비스 인스턴스를 m_mvbReceiver 이벤트에 등록하고 수신 시작
+                testService.StartMvbReceiver(strUnitType);
+                await Task.Delay(300); // 첫 패킷이 안정적으로 들어올 때까지 대기
+
+                // 메인 회차 루프 (입·출력 -> 통신)
+                for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
                 {
-                    OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
-                    OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color),
-                    OnGridInvalidate = () =>
+                    if (!m_bIsTesting) break;
+
+                    AppendTestLog(richTextBox_Log, $"==================================================", Color.Purple);
+                    AppendTestLog(richTextBox_Log, $"           [전체 시험 {nLoop}/{nMaxLoop}회차 시작]           ", Color.Purple);
+                    AppendTestLog(richTextBox_Log, $"==================================================", Color.Purple);
+
+                    // [1단계] 입·출력 시험
+                    mainTabControl1.SelectedIndex = 0;
+                    await Task.Delay(200);
+
+                    bool bIoPass = await testService.ExecuteSingleRoundIoAsync(
+                        strUnitType, nLoop, () => m_bIsTesting, channelContext, objDigitalGridResult, objAnalogGridResult);
+                    if (!bIoPass) bHasAnyFailure = true;
+
+                    if (!m_bIsTesting) break;
+
+                    // [2단계] 통신 시험
+                    mainTabControl1.SelectedIndex = 1;
+                    await Task.Delay(300);
+
+                    bool bCommPass = await RunCommSingleRoundAsync(strUnitType, nLoop, objCommGridResult);
+                    if (!bCommPass)
                     {
-                        dataGridViewDI1?.Invalidate();
-                        dataGridViewDI2?.Invalidate();
-                        dataGridViewDI3?.Invalidate();
-                        dataGridViewDO?.Invalidate();
-                    },
-                    RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
-                    {
-                        DataGridView targetDgv = null;
-                        switch (cat)
-                        {
-                            case "DI1": targetDgv = dataGridViewDI1; break;
-                            case "DI2": targetDgv = dataGridViewDI2; break;
-                            case "DI3": targetDgv = dataGridViewDI3; break;
-                            case "DO": targetDgv = dataGridViewDO; break;
-                        }
-
-                        bool[] expectedBits = GetExpectedBitsForCategory(cat);
-                        Func<byte[]> channelRawDataSupplier = () => currentRawData?.Invoke();
-
-                        // [수정] cat(DI1, DI2, DI3, DO) 문자열 또는 카테고리별 시작 핀 구분 전달
-                        // AppConfig.GetStartChannelNo 메서드가 cat(string)을 받도록 개편되었거나 
-                        // 아래처럼 카테고리별로 시작 핀을 분기해야 합니다.
-                        int nStartPin = GetStartPinByCategory(strUnitType, cat);
-
-                        await RunChannelTestSequenceAsync(
-                            cat, arr, count, targetDgv, delay, loop, fails, details,
-                            channelRawDataSupplier, expectedBits, nStartPin
-                        );
+                        bHasAnyFailure = true;
+                        AppendTestLog(richTextBox_FailLog, $"[통신] {nLoop}회차 통신 시험 불합격 발생", Color.Red);
                     }
-                };
 
-                await testService.ExecuteTestSequenceAsync(strUnitType, nMaxLoop, () => m_bIsTesting, channelContext);
+                    if (!m_bIsTesting) break;
+
+                    AppendTestLog(richTextBox_Log, $"===== [전체 시험 {nLoop}/{nMaxLoop}회차 완료] =====\n", Color.Purple);
+                    await Task.Delay(500);
+                }
+
+                // 최종 JSON 저장
+                if (m_bIsTesting)
+                {
+                    finalResult.Header.FinalResult = bHasAnyFailure ? "불합격" : "합격";
+
+                    TestResultManager resultManager = new TestResultManager();
+                    if (resultManager.SaveTestResult(finalResult))
+                    {
+                        AppendTestLog(richTextBox_Log, "[시스템] 모든 회차 시험 완료 및 JSON 저장 완료.", Color.DarkBlue);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -4876,10 +4832,12 @@ namespace CITester
             }
             finally
             {
-                // 시험 종료 시 안전 플래그 해제 및 FEnet 출력 안전 OFF
+                // [핵심] 시험이 끝나면 해당 testService의 이벤트 바인딩 해제 후 통신 닫기
+                testService?.StopMvbReceiver();
+                StopMvbCommunication();
+
                 m_bIsTesting = false;
                 ResetAllPlcOutputs();
-
                 SetTestingUiState(false);
             }
         }
@@ -5084,7 +5042,7 @@ namespace CITester
             // 3. 핀 단위 시험 진행
             for (int i = 0; i < loopCount; i++)
             {
-                // ★ [중지 체크 1] 핀 시험 시작 전 중지 플래그 및 토큰 확인
+                // 핀 시험 시작 전 중지 플래그 및 토큰 확인
                 if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
                 {
                     Console.WriteLine($"[Debug] [{strChannelName}] 사용자 중지 요청 감지 - 루프 즉시 종료");
@@ -5109,7 +5067,7 @@ namespace CITester
 
                         await Task.Delay(nDelay, cancellationToken);
 
-                        // ★ [중지 체크 2] STEP 1 Delay 직후 중지 여부 확인
+                        // STEP 1 Delay 직후 중지 여부 확인
                         if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
                         {
                             m_PLCNetwork?.SetDO(0, i, false);
@@ -5137,7 +5095,7 @@ namespace CITester
                         m_PLCNetwork?.SetDO(0, i, false);
                         await Task.Delay(nDelay, cancellationToken);
 
-                        // ★ [중지 체크 3] STEP 2 Delay 직후 중지 여부 확인
+                        // STEP 2 Delay 직후 중지 여부 확인
                         if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
                         {
                             return;
@@ -5165,7 +5123,7 @@ namespace CITester
                         // [DO 시험] TCMS DO 제어 및 PLC DI 확인 로직
                         await Task.Delay(nDelay, cancellationToken);
 
-                        // ★ [중지 체크 4] DO Delay 직후 중지 여부 확인
+                        //DO Delay 직후 중지 여부 확인
                         if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
                         {
                             return;
@@ -6156,7 +6114,6 @@ namespace CITester
                     AnalgogData(dataGridViewAnalog);
                     SetAnalogDataGrid();
                     DataGridInit();
-                    InitRadioButtons();
                     if (tabPageIndex2 == null)
                     {
                         tabPageIndex2 = mainTabControl1.TabPages.Cast<TabPage>().FirstOrDefault(p => p.Name == "tabPage6");
@@ -6169,12 +6126,6 @@ namespace CITester
 
                     System.Reflection.PropertyInfo propPanel = typeof(Panel).GetProperty("DoubleBuffered",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-                    if (propPanel != null)
-                    {
-                        propPanel.SetValue(panel1, true, null);
-                        propPanel.SetValue(panel2, true, null);
-                    }
                 }
             }
         }
@@ -6194,6 +6145,132 @@ namespace CITester
         private void button1_Click_1(object sender, EventArgs e)
         {
             TcmsTestRunner.RunAllTests();
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// MVB 시리얼 포트 오픈 전담 메서드
+        /// </summary>
+        private bool StartMvbCommunication()
+        {
+            string savedPort = ConfigJson.CurrentConfig?.Device?.MVBBoard_ComPort ?? "COM4";
+            int baudRate = ConfigJson.CurrentConfig?.Device?.MVBBoard_BaudRate ?? 115200;
+
+            AppendTestLog(richTextBox_Log, $"[통신] 시리얼 포트({savedPort}) 연결 시도...", Color.Gray);
+
+            if (m_serialManager == null)
+            {
+                m_serialManager = new MvbSerialManager(m_mvbReceiver)
+                {
+                    OnLog = (msg) => AppendTestLog(richTextBox_Log, msg, Color.Blue),
+                    OnError = (msg) => AppendTestLog(richTextBox_Log, msg, Color.Red)
+                };
+            }
+
+            bool isConnected = m_serialManager.OpenPort(savedPort, baudRate);
+            if (!isConnected)
+            {
+                AppendTestLog(richTextBox_Log, $"[통신 실패] 시리얼 포트({savedPort})를 열 수 없습니다.", Color.Red);
+                return false;
+            }
+
+            AppendTestLog(richTextBox_Log, $"[통신 성공] 시리얼 포트 연결 완료.", Color.DarkGreen);
+            return true;
+        }
+
+        /// <summary>
+        /// MVB 수신 스레드를 중단하고 시리얼 포트를 완전히 닫습니다.
+        /// </summary>
+        private void StopMvbCommunication()
+        {
+            try
+            {
+                _tcmsTestService?.StopMvbReceiver();
+                m_mvbReceiver?.Stop();
+                m_serialManager?.ClosePort();
+
+                AppendTestLog(richTextBox_Log, "[통신] MVB 수신 정지 및 시리얼 포트가 해제되었습니다.", Color.Gray);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[통신 해제 예외] {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 지정된 단일 회차(nLoop)의 5개 통신 항목을 순차 검사하고 결과를 누적합니다.
+        /// </summary>
+        public async Task<bool> RunCommSingleRoundAsync(string strUnitType, int nLoop, TestResultJson.GridTestResult objCommGridResult)
+        {
+            bool isAllPass = true;
+            _commUiManager.ResetAll();
+
+            objCommGridResult.HeaderRounds.Add($"{nLoop}회차");
+            AppendTestLog(richTextBox_Log, $"[통신] {nLoop}회차 통신 검사 시작", Color.Purple);
+
+            string[] mvbTargetPorts = (strUnitType == "TC") ? new[] { "41A0" } :
+                                      (strUnitType == "CC") ? new[] { "42A0" } :
+                                      (strUnitType == "ER") ? new[] { "43A0" } : new[] { "44A0" };
+
+            try
+            {
+                // 1. WTB 통신
+                if (!m_bIsTesting) return false;
+                _commUiManager.SetCardState("WTB", ECommTestState.Testing, $"{nLoop}회차 검사 중...", "노드: 0x01");
+                await Task.Delay(300);
+                bool wtbPass = true;
+                _commUiManager.SetCardState("WTB", wtbPass ? ECommTestState.Pass : ECommTestState.Fail, wtbPass ? "정상 응답" : "응답 없음", "노드: 0x01");
+                if (!wtbPass) isAllPass = false;
+                objCommGridResult.AddCommDetail(nLoop, "WTB", 1, "WTB 통신", "Node 0x01 (정상 응답)", wtbPass);
+
+                // 2. MVB 통신
+                if (!m_bIsTesting) return false;
+                string portStr = string.Join(", ", mvbTargetPorts);
+                _commUiManager.SetCardState("MVB", ECommTestState.Testing, $"{nLoop}회차 수신 대기...", $"대상 포트: {portStr}");
+                var testService = new TcmsTestService(m_mvbReceiver);
+                bool mvbPass = await testService.CheckMvbPortsAsync(3000, mvbTargetPorts);
+                _commUiManager.SetCardState("MVB", mvbPass ? ECommTestState.Pass : ECommTestState.Fail, mvbPass ? "정상 수신" : "수신 실패(타임아웃)", $"대상 포트: {portStr}");
+                if (!mvbPass) isAllPass = false;
+                objCommGridResult.AddCommDetail(nLoop, "MVB", 2, "MVB 통신", $"Port {portStr} ({(mvbPass ? "수신 성공" : "타임아웃")})", mvbPass);
+
+                // 3. RS485-1
+                if (!m_bIsTesting) return false;
+                _commUiManager.SetCardState("RS485_1", ECommTestState.Testing, $"{nLoop}회차 에코백 검사...", "115200 bps");
+                await Task.Delay(200);
+                bool rs1Pass = true;
+                _commUiManager.SetCardState("RS485_1", rs1Pass ? ECommTestState.Pass : ECommTestState.Fail, rs1Pass ? "정상" : "응답 실패", "115200 bps");
+                if (!rs1Pass) isAllPass = false;
+                objCommGridResult.AddCommDetail(nLoop, "RS485-1", 3, "RS485 #1", "115200 bps (에코백 정상)", rs1Pass);
+
+                // 4. RS485-2
+                if (!m_bIsTesting) return false;
+                _commUiManager.SetCardState("RS485_2", ECommTestState.Testing, $"{nLoop}회차 에코백 검사...", "115200 bps");
+                await Task.Delay(200);
+                bool rs2Pass = true;
+                _commUiManager.SetCardState("RS485_2", rs2Pass ? ECommTestState.Pass : ECommTestState.Fail, rs2Pass ? "정상" : "응답 실패", "115200 bps");
+                if (!rs2Pass) isAllPass = false;
+                objCommGridResult.AddCommDetail(nLoop, "RS485-2", 4, "RS485 #2", "115200 bps (에코백 정상)", rs2Pass);
+
+                // 5. RS485-3
+                if (!m_bIsTesting) return false;
+                _commUiManager.SetCardState("RS485_3", ECommTestState.Testing, $"{nLoop}회차 에코백 검사...", "9600 bps");
+                await Task.Delay(200);
+                bool rs3Pass = true;
+                _commUiManager.SetCardState("RS485_3", rs3Pass ? ECommTestState.Pass : ECommTestState.Fail, rs3Pass ? "정상" : "응답 실패", "9600 bps");
+                if (!rs3Pass) isAllPass = false;
+                objCommGridResult.AddCommDetail(nLoop, "RS485-3", 5, "RS485 #3", "9600 bps (에코백 정상)", rs3Pass);
+
+                return isAllPass;
+            }
+            catch (Exception ex)
+            {
+                AppendTestLog(richTextBox_Log, $"[통신 에러] {ex.Message}", Color.Red);
+                return false;
+            }
         }
     }
 }

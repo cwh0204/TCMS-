@@ -146,9 +146,9 @@
             this.roundedPanel3.Controls.Add(this.dataGridViewComm);
             this.roundedPanel3.Controls.Add(this.label2);
             this.roundedPanel3.CornerRadius = 10;
-            this.roundedPanel3.Location = new System.Drawing.Point(397, 384);
+            this.roundedPanel3.Location = new System.Drawing.Point(397, 340);
             this.roundedPanel3.Name = "roundedPanel3";
-            this.roundedPanel3.Size = new System.Drawing.Size(731, 226);
+            this.roundedPanel3.Size = new System.Drawing.Size(731, 270);
             this.roundedPanel3.TabIndex = 100;
             // 
             // TestResult_Comn
@@ -186,7 +186,7 @@
             this.dataGridViewComm.Location = new System.Drawing.Point(15, 60);
             this.dataGridViewComm.Name = "dataGridViewComm";
             this.dataGridViewComm.RowTemplate.Height = 23;
-            this.dataGridViewComm.Size = new System.Drawing.Size(700, 147);
+            this.dataGridViewComm.Size = new System.Drawing.Size(700, 190);
             this.dataGridViewComm.TabIndex = 92;
             // 
             // label2
@@ -338,7 +338,7 @@
             this.roundedPanel2.CornerRadius = 10;
             this.roundedPanel2.Location = new System.Drawing.Point(397, 59);
             this.roundedPanel2.Name = "roundedPanel2";
-            this.roundedPanel2.Size = new System.Drawing.Size(731, 319);
+            this.roundedPanel2.Size = new System.Drawing.Size(731, 270);
             this.roundedPanel2.TabIndex = 93;
             // 
             // TestResult_IO
@@ -376,7 +376,7 @@
             this.dataGridViewDIO.Location = new System.Drawing.Point(15, 60);
             this.dataGridViewDIO.Name = "dataGridViewDIO";
             this.dataGridViewDIO.RowTemplate.Height = 23;
-            this.dataGridViewDIO.Size = new System.Drawing.Size(700, 240);
+            this.dataGridViewDIO.Size = new System.Drawing.Size(700, 190);
             this.dataGridViewDIO.TabIndex = 92;
             // 
             // label1
@@ -706,7 +706,7 @@
             // FormResultView
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1156, 861);
+            this.ClientSize = new System.Drawing.Size(1148, 853);
             this.ControlBox = false;
             this.Controls.Add(this.BtnClose);
             this.Controls.Add(this.BtnConfig);

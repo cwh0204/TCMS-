@@ -8,44 +8,68 @@ namespace CITester
 {
     public class TestResultJson
     {
-        // 1. 기본 정보 (ConfigJson.OperationInfo 데이터 구조 유지 및 시험 일시/결과 ID 추가)
+        // 1. 기본 정보
         public class ResultHeaderInfo
         {
-            public string ResultID { get; set; } = Guid.NewGuid().ToString("N"); // 결과 고유 식별자
-            public string TestDateTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // 시험 수행 일시
+            public string ResultID { get; set; } = Guid.NewGuid().ToString("N");
+            public string TestDateTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             public string TesterName { get; set; } = string.Empty;
             public string FleetNo { get; set; } = string.Empty;       // 편성번호
             public string TrainNo { get; set; } = string.Empty;       // 차량번호
             public string SerialNo { get; set; } = string.Empty;      // 일련번호
             public string TCMSUnit { get; set; } = string.Empty;      // 유닛구분 (TC, CC, DU, ER)
-            public int TotalRound { get; set; } = 1; // 총 시험 회수
-            public string FinalResult { get; set; } = "미시험";         // 최종 시험 결과 (PASS / FAIL)
+            public int TotalRound { get; set; } = 1;                  // 총 시험 회수
+            public string FinalResult { get; set; } = "미시험";       // 최종 판정 (합격 / 불합격)
         }
 
-        // 2. 단일 핀/채널 세부 결과 모델 (예: TC-DI1채널-48핀 정보)
+        // 2. 단일 핀/채널 세부 결과 모델
         public class PinResultItem
         {
-            public int Round { get; set; } = 1;                         // 시험 회차 (1회차, 2회차...)
-            public string ChannelGroup { get; set; } = string.Empty;    // 채널 구분 (DI1, DI2, DO 등)
-            public int PinNo { get; set; }                              // 핀 번호 (1~48)
-            public string PinName { get; set; } = string.Empty;         // 핀 이름 또는 기능명
-            public string MeasuredValue { get; set; } = string.Empty;   // 측정값/상태 (ON, ERR 등)
-            public string Result { get; set; } = "합격";                 // 판정 (합격/불합격)
+            public int Round { get; set; } = 1;
+            public string ChannelGroup { get; set; } = string.Empty;  // DI1, DI2, COMM 등
+            public int PinNo { get; set; }                            // 핀 번호 (통신은 1~5)
+            public string PinName { get; set; } = string.Empty;       // 핀 이름 또는 통신명(WTB, MVB...)
+            public string MeasuredValue { get; set; } = string.Empty; // 측정 상태값
+            public string Result { get; set; } = "합격";              // 합격 / 불합격
         }
 
-        // 3. 단일 시험 항목 데이터 모델 (1개 DataGridView에 대응)
+        // 3. 단일 시험 항목 데이터 모델
         public class GridTestResult
         {
-            public string GridTitle { get; set; } = string.Empty; // 데이터그리드뷰 구분 (예: 입출력시험, 통신시험 등)
-            public List<string> HeaderRounds { get; set; } = new List<string>(); // 가로 머리글 (1회차, 2회차...)
-            public Dictionary<string, List<string>> RowData { get; set; } = new Dictionary<string, List<string>>(); // 세로 머리글(DI1, WTB 등)별 회차 측정 결과
-            public List<PinResultItem> PinDetails { get; set; } = new List<PinResultItem>(); // 48핀 세부 정보 목록
+            public string GridTitle { get; set; } = string.Empty;
+            public List<string> HeaderRounds { get; set; } = new List<string>();
+            public Dictionary<string, List<string>> RowData { get; set; } = new Dictionary<string, List<string>>();
+            public List<PinResultItem> PinDetails { get; set; } = new List<PinResultItem>();
+
+            /// <summary>
+            /// 통신 시험 결과를 RowData 및 PinDetails에 동시 등록하는 헬퍼 메서드
+            /// </summary>
+            public void AddCommDetail(int round, string commKey, int index, string commName, string measuredVal, bool isPass)
+            {
+                string resultStr = isPass ? "합격" : "불합격";
+
+                // RowData에 회차 요약 등록
+                if (!RowData.ContainsKey(commKey))
+                {
+                    RowData[commKey] = new List<string>();
+                }
+                RowData[commKey].Add(resultStr);
+
+                // PinDetails에 상세 등록
+                PinDetails.Add(new PinResultItem
+                {
+                    Round = round,
+                    ChannelGroup = "COMM",
+                    PinNo = index,
+                    PinName = commName,
+                    MeasuredValue = measuredVal,
+                    Result = resultStr
+                });
+            }
         }
 
-        // --- 상위 매핑 프로퍼티 ---
+        // 상위 프로퍼티
         public ResultHeaderInfo Header { get; set; } = new ResultHeaderInfo();
-
-        // TC/CC(7개), DU(5개), ER(4개) 등 유닛별 DataGridView 결과 목록
         public List<GridTestResult> GridResults { get; set; } = new List<GridTestResult>();
     }
 
@@ -61,7 +85,6 @@ namespace CITester
             }
         }
 
-        // DataGridView 및 핀 정보들을 수집하여 시험 결과 JSON 파일로 저장
         public bool SaveTestResult(TestResultJson resultData)
         {
             if (resultData == null || resultData.Header == null) return false;
@@ -84,23 +107,19 @@ namespace CITester
             }
         }
 
-        // 검색 화면(FormSearch)용: 저장된 모든 시험 결과의 기본 Header 목록만 빠르게 조회
         public List<TestResultJson.ResultHeaderInfo> LoadAllResultHeaders()
         {
             List<TestResultJson.ResultHeaderInfo> listHeaders = new List<TestResultJson.ResultHeaderInfo>();
-
             if (!Directory.Exists(strResultDirPath)) return listHeaders;
 
             try
             {
                 string[] arrFiles = Directory.GetFiles(strResultDirPath, "*.json");
-
                 foreach (string strFilePath in arrFiles)
                 {
                     string strJsonContent = File.ReadAllText(strFilePath);
                     TestResultJson objResult = JsonConvert.DeserializeObject<TestResultJson>(strJsonContent);
-
-                    if (objResult != null && objResult.Header != null)
+                    if (objResult?.Header != null)
                     {
                         listHeaders.Add(objResult.Header);
                     }
@@ -114,7 +133,6 @@ namespace CITester
             return listHeaders;
         }
 
-        // 검색 데이터그리드뷰에서 선택된 특정 결과의 전체 파일(상세 핀 정보 포함)을 로드
         public TestResultJson LoadDetailResultByHeader(string strUnit, string strSerialNo, string strTestDateTime)
         {
             if (!Directory.Exists(strResultDirPath)) return null;
@@ -122,13 +140,11 @@ namespace CITester
             try
             {
                 string[] arrFiles = Directory.GetFiles(strResultDirPath, "*.json");
-
                 foreach (string strFilePath in arrFiles)
                 {
                     string strJsonContent = File.ReadAllText(strFilePath);
                     TestResultJson objResult = JsonConvert.DeserializeObject<TestResultJson>(strJsonContent);
-
-                    if (objResult != null && objResult.Header != null)
+                    if (objResult?.Header != null)
                     {
                         if (objResult.Header.TCMSUnit == strUnit &&
                             objResult.Header.SerialNo == strSerialNo &&
