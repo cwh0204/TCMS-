@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|d:\\@workspace\\tcms \uC2DC\uD5D8\uAE30\\tcms tester\\tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|d:\\@workspace\\tcms \uC2DC\uD5D8\uAE30\\tcms tester\\tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -150,7 +150,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 1674,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -207,15 +207,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "FormMain.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\FormMain.cs",
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
               "RelativeToolTip": "TCMS Tester\\FormMain.cs",
-              "ViewState": "AgIAAM4SAAAAAAAAAAAqwNcSAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAPcTAAAAAAAAAADwvwEUAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:34:30.054Z"
+              "WhenOpened": "2026-08-25T09:34:30.054Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -237,7 +238,8 @@
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs [\uB514\uC790\uC778]",
               "RelativeToolTip": "TCMS Tester\\FormMain.cs [\uB514\uC790\uC778]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T04:09:19.819Z"
+              "WhenOpened": "2026-09-04T04:09:19.819Z",
+              "EditorCaption": " [\uB514\uC790\uC778]"
             },
             {
               "$type": "Document",
@@ -253,13 +255,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "TcmsTestService.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Services\\TcmsTestService.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\Services\\TcmsTestService.cs",
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Services\\TcmsTestService.cs",
               "RelativeToolTip": "TCMS Tester\\Services\\TcmsTestService.cs",
-              "ViewState": "AgIAAOYAAAAAAAAAAAAowPEAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAOYAAAAAAAAAAAAowPUAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-25T09:38:00.425Z",
               "EditorCaption": ""
