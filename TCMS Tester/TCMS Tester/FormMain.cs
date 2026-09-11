@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Ivi.Visa;
 using Ivi.Visa.Interop;
@@ -139,6 +140,7 @@ namespace CITester
         // PLC 관련 변수
         public UdpClient sckPlcUdp = null;
         public classFenet m_PLCNetwork = null;
+        public classCnet c_PLCNetwork = null;
         public NetworkXGT m_PLCNetworkTest = null;
         public string m_strPLCAddress = "0.0.0.0";
 
@@ -705,22 +707,6 @@ namespace CITester
             {
                 m_mvbReceiver = new MvbReceiver();
             }
-
-            try
-            {
-                if (sckPlcUdp != null)
-                {
-                    sckPlcUdp.Close();
-                    sckPlcUdp.Dispose();
-                }
-                sckPlcUdp = new UdpClient(Convert.ToInt32("2005"));
-                m_PLCNetwork = new classFenet(sckPlcUdp, "192.168.1.2", 2005);
-            }
-            catch
-            {
-
-            }
-
         }
 
         const int TIMINGCHART_MCB = 0;
@@ -4670,17 +4656,90 @@ namespace CITester
         private readonly Random m_randGenerator = new Random();
         private bool m_bIsTesting = false;
         private TestResultJson m_objTestResult = null;
-
+        private readonly object _plcInitLock = new object();
         /// <summary>
-        /// FEnet 통신을 통해 모든 PLC 출력을 OFF 상태로 초기화
+        /// Cnet 통신을 통해 장착된 모든 PLC 출력(256점, %PW005 ~ %PW020)을 즉시 OFF 상태로 초기화
         /// </summary>
-        private void ResetAllPlcOutputs(int maxChannelCount = 32)
+        /// <param name="totalPins">전체 출력 핀 수 (32점 모듈 8장 = 256점)</param>
+        /// <param name="startWord">출력 시작 워드 (%PW005)</param>
+        private void ResetAllPlcOutputs(int totalPins = 256, int startWord = 5)
         {
+            PlcStart();
+            c_PLCNetwork.SetAllOff();
+        }
 
-            for (int ch = 1; ch <= maxChannelCount; ch++)
+        private bool PlcStart()
+        {
+            lock (_plcInitLock)
             {
-                // 국번(0), 채널번호(ch), OFF(false)
-                m_PLCNetwork.SetDO(0, ch, false);
+                try
+                {
+                    string strTargetPort = ConfigJson.CurrentConfig.Device.Plc_COM;
+                    if (string.IsNullOrEmpty(strTargetPort))
+                    {
+                        Console.WriteLine("[PLC Start Error] 설정된 PLC COM 포트가 비어있습니다.");
+                        return false;
+                    }
+
+                    // 1. 이미 정상 오픈되어 있고 포트명도 같다면 중복 오픈 생략 (즉시 재사용)
+                    if (c_PLCNetwork != null &&
+                        c_PLCNetwork.serialPort != null &&
+                        c_PLCNetwork.serialPort.IsOpen &&
+                        string.Equals(c_PLCNetwork.serialPort.PortName, strTargetPort, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+
+                    // 2. UDP 소켓 안전 초기화 (예외 발생해도 시리얼 연결은 계속 진행되도록 보호)
+                    try
+                    {
+                        if (sckPlcUdp != null)
+                        {
+                            sckPlcUdp.Close();
+                            sckPlcUdp.Dispose();
+                            sckPlcUdp = null;
+                        }
+                        sckPlcUdp = new UdpClient(2005);
+                    }
+                    catch (Exception exUdp)
+                    {
+                        Console.WriteLine($"[PLC Start] UDP(2005) 바인딩 경고: {exUdp.Message}");
+                    }
+
+                    // 3. 기존 시리얼 포트 정리
+                    if (c_PLCNetwork != null && c_PLCNetwork.serialPort != null)
+                    {
+                        try
+                        {
+                            if (c_PLCNetwork.serialPort.IsOpen)
+                            {
+                                c_PLCNetwork.serialPort.Close();
+                            }
+                            c_PLCNetwork.serialPort.Dispose();
+                        }
+                        catch { }
+                        c_PLCNetwork.serialPort = null;
+                        c_PLCNetwork = null;
+                    }
+
+                    // 4. 시리얼 포트 할당 및 오픈
+                    SerialPort sp = new SerialPort(strTargetPort, 9600, Parity.None, 8, StopBits.One)
+                    {
+                        ReadTimeout = 500,
+                        WriteTimeout = 500
+                    };
+                    sp.Open();
+
+                    // 5. Cnet 인스턴스 생성
+                    c_PLCNetwork = new classCnet(sp);
+                    Console.WriteLine($"[PLC Start] {strTargetPort} 포트 연결 및 c_PLCNetwork 생성 완료");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[PLC 통신 초기화 실패] {ex.Message}");
+                    return false;
+                }
             }
         }
 
@@ -4689,33 +4748,27 @@ namespace CITester
         /// </summary>
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
-            // 1. 강제 중단 요청 시 PLC 출력 및 통신 즉시 차단
+            // 1. 강제 중단 요청 처리 (이미 시험 중인 경우 중단)
             if (m_bIsTesting)
             {
                 m_bIsTesting = false;
                 ResetAllPlcOutputs();
                 StopMvbCommunication();
-
+                SetDCPowerOFF();
                 AppendTestLog(richTextBox_Log, "[시스템] 사용자 요청에 의해 시험이 강제 중단됩니다.", Color.OrangeRed);
                 return;
             }
 
             int nMaxLoop = (int)TestCount.Value;
             if (MessageBox.Show($"시험 차수 : {nMaxLoop}회\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
+            {
+                return; // 시작 전 취소는 하드웨어를 켜기 전에 안전하게 종료
+            }
 
             m_bIsTesting = true;
             SetTestingUiState(true);
 
             string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
-
-            // 2. 시험 시작 직전 시리얼 포트 오픈
-            if (!StartMvbCommunication())
-            {
-                m_bIsTesting = false;
-                SetTestingUiState(false);
-                return;
-            }
 
             var finalResult = new TestResultJson();
             finalResult.Header.TCMSUnit = strUnitType;
@@ -4735,7 +4788,7 @@ namespace CITester
 
             bool bHasAnyFailure = false;
 
-            // 3. 실제 시험을 주관하는 testService 생성 및 설정
+            // 2. 실제 시험을 주관하는 testService 생성 및 설정
             var testService = new TcmsTestService(m_mvbReceiver)
             {
                 OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
@@ -4771,14 +4824,28 @@ namespace CITester
 
             try
             {
+                // 3. 하드웨어 전원 및 PLC 준비
+                SetDCPowerON(80, 5);
+                PlcStart();
+                c_PLCNetwork?.SetDo(240, true, 5, 0);
+
+                // 4. MVB 통신 포트 오픈 및 수신 스레드 시작 (피시험체 부팅 전에 먼저 열어 수신 대기)
+                if (!StartMvbCommunication())
+                {
+                    AppendTestLog(richTextBox_Log, "[통신 에러] MVB 보드를 열 수 없습니다.", Color.Red);
+                    return;
+                }
+
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
-                // [핵심] 현재 시험 서비스 인스턴스를 m_mvbReceiver 이벤트에 등록하고 수신 시작
                 testService.StartMvbReceiver(strUnitType);
-                await Task.Delay(300); // 첫 패킷이 안정적으로 들어올 때까지 대기
 
-                // 메인 회차 루프 (입·출력 -> 통신)
+                // 5. CC 유닛 부팅 및 MVB 통신 버퍼 정상 수신 안정화 대기 (UI 프리징 방지 await 사용)
+                AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 안정화 대기 중 ...", Color.DarkGray);
+                await Task.Delay(25000);
+
+                // 6. 메인 회차 루프 (입·출력 -> 통신)
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
                 {
                     if (!m_bIsTesting) break;
@@ -4814,7 +4881,10 @@ namespace CITester
                     await Task.Delay(500);
                 }
 
-                // 최종 JSON 저장
+                // 정상 종료 시 전원 OFF 및 PLC 제어권 해제
+                SetDCPowerOFF();
+
+                // 7. 최종 JSON 저장
                 if (m_bIsTesting)
                 {
                     finalResult.Header.FinalResult = bHasAnyFailure ? "불합격" : "합격";
@@ -4832,10 +4902,24 @@ namespace CITester
             }
             finally
             {
-                // [핵심] 시험이 끝나면 해당 testService의 이벤트 바인딩 해제 후 통신 닫기
+                // 8. 시험 종료 시 안전 정리 (예외 발생 시에도 100% 실행)
                 testService?.StopMvbReceiver();
                 StopMvbCommunication();
 
+                // PLC 리소스 안전 닫기
+                if (c_PLCNetwork != null && c_PLCNetwork.serialPort != null)
+                {
+                    try
+                    {
+                        if (c_PLCNetwork.serialPort.IsOpen) c_PLCNetwork.serialPort.Close();
+                        c_PLCNetwork.serialPort.Dispose();
+                    }
+                    catch { }
+                    c_PLCNetwork.serialPort = null;
+                    c_PLCNetwork = null;
+                }
+
+                SetDCPowerOFF();
                 m_bIsTesting = false;
                 ResetAllPlcOutputs();
                 SetTestingUiState(false);
@@ -5063,14 +5147,14 @@ namespace CITester
                     if (!isDoCategory)
                     {
                         // STEP 1: ON 검증
-                        m_PLCNetwork?.SetDO(0, i, true);
+                        c_PLCNetwork?.SetDo(nPinNo, true, 5, 0);
 
                         await Task.Delay(nDelay, cancellationToken);
 
                         // STEP 1 Delay 직후 중지 여부 확인
                         if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
                         {
-                            m_PLCNetwork?.SetDO(0, i, false);
+                            c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
                             return;
                         }
 
@@ -5092,7 +5176,7 @@ namespace CITester
                         }
 
                         // STEP 2: OFF 검증
-                        m_PLCNetwork?.SetDO(0, i, false);
+                        c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
                         await Task.Delay(nDelay, cancellationToken);
 
                         // STEP 2 Delay 직후 중지 여부 확인
@@ -5133,7 +5217,7 @@ namespace CITester
                 catch (OperationCanceledException)
                 {
                     // Task.Delay 대기 도중 정지 버튼이 눌렸을 때 안전 처리 및 PLC 출력 원복
-                    m_PLCNetwork?.SetDO(0, i, false);
+                    c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
                     arrStates[i] = default;
                     dgvTarget.Invalidate();
 
@@ -6142,9 +6226,59 @@ namespace CITester
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private bool m_bAllToggleState = false; // 현재 토글 상태 (false: 전체 OFF 상태, true: 전체 ON 상태)
+        private bool m_bIsToggling = false;     // 중복 클릭 방지 플래그
+
+        private async void button1_Click_1(object sender, EventArgs e)
         {
-            TcmsTestRunner.RunAllTests();
+
+            PlcStart();
+            
+            c_PLCNetwork?.SetDo(240, true, 5, 0);
+            //// 이미 전송 중이면 중복 클릭 무시
+            //if (m_bIsToggling) return;
+
+            //try
+            //{
+            //    m_bIsToggling = true;
+            //    button1.Enabled = false; // 버튼 비활성화
+
+            //    PlcStart();
+
+            //    // 현재 상태의 반대로 토글 (OFF -> ON, ON -> OFF)
+            //    bool bTargetState = !m_bAllToggleState;
+
+            //    await Task.Run(() =>
+            //    {
+            //        if (!bTargetState)
+            //        {
+            //            // OFF일 때는 한 번에 16워드(256점)를 밀어버리는 SetAllOff 호출이 훨씬 빠름
+            //            c_PLCNetwork?.SetAllOff(256, 5, 0);
+            //        }
+            //        else
+            //        {
+            //            // ON일 때는 256개 핀 순차 전송 (0 ~ 255)
+            //            for (int j = 0; j < 256; j++)
+            //            {
+            //                c_PLCNetwork?.SetDo(j, true, 5, 0);
+            //            }
+            //        }
+            //    });
+
+            //    // 상태 갱신 및 버튼 텍스트 변경
+            //    m_bAllToggleState = bTargetState;
+            //    button1.Text = m_bAllToggleState ? "전체 OFF" : "전체 ON";
+            //    Console.WriteLine($"[PLC] 전체 DO {(m_bAllToggleState ? "ON" : "OFF")} 완료");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"[토글 에러] {ex.Message}");
+            //}
+            //finally
+            //{
+            //    m_bIsToggling = false;
+            //    button1.Enabled = true;
+            //}
         }
 
         private void panel4_Paint(object sender, PaintEventArgs e)
@@ -6271,6 +6405,11 @@ namespace CITester
                 AppendTestLog(richTextBox_Log, $"[통신 에러] {ex.Message}", Color.Red);
                 return false;
             }
+        }
+
+        private void customIconButton1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,175 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO.Ports;
+using System.Text;
 using System.Threading;
-using System.Net;
 
-namespace main
+namespace CITester
 {
-    class classCnet
+    public class classCnet
     {
         public SerialPort serialPort = null;
-
-        public byte[] m_bDIBuffer;
-        public bool[] m_bDOValue;
-        public bool[] m_bDOFbValue;
-        public byte[] m_bDOBuffer;
-        public ushort[] m_nAIBuffer;
-        public ushort[] m_nAOBuffer;
-        public ushort[] nCnetAnswerValue = new ushort[16];
-
-        private Thread threadRun = null;
-        private ManualResetEvent threadEvent = new ManualResetEvent(true);
-        private bool bThreadRunStop = false;
-
+        public bool[] m_bDOValue = new bool[1024];
 
         public classCnet(SerialPort spHandle)
         {
             serialPort = spHandle;
-
-            m_bDIBuffer = new byte[1024];
-            m_bDOBuffer = new byte[1024];
-            m_bDOValue = new bool[1024];
-            m_bDOFbValue = new bool[1024];
-            m_nAIBuffer = new ushort[50];
-            m_nAOBuffer = new ushort[50];
-
-
-            // Thread
-
-            /*if (threadRun != null)
-            {
-                threadRun = new Thread(new ParameterizedThreadStart(ThreadRunFunc));
-                threadRun.Priority = ThreadPriority.Highest;
-                threadRun.Start(this);
-                threadRun.IsBackground = true;
-                bThreadRunStop = true;
-            }*/
-
-        }
-
-        // Receive thread
-        private void ThreadRunFunc(object objClass)
-        {
-            int i, k, n;
-            ushort wTemp;
-            string strBuf;
-            string strTemp;
-            int nCnetResult;
-            byte[] btTxBuf = new byte[1024];
-            byte[] btRxBuf = new byte[1024];
-
-            k = 0;
-            n = 0;
-            wTemp = 0x0000;
-
-            try
-            {
-                while (bThreadRunStop)
-                {
-                    threadEvent.WaitOne(Timeout.Infinite);
-
-                    for (k = 0; k < 4; k++)
-                    {
-                        // PLC로 DI입력
-                        strBuf = string.Format("{0:X2}{1}{2}{3}{4}{5}", 0, "r", "SS", "01", "06", string.Format("%PW00{0}", k));
-                        Request(strBuf.ToCharArray());
-                        Thread.Sleep(80);
-                        nCnetResult = Answer("00".ToCharArray(), 'w', "SS".ToCharArray(), out nCnetAnswerValue);
-                        if (nCnetResult >= 0)
-                        {
-                            m_bDIBuffer[k * 2] = (byte)(nCnetAnswerValue[0] >> 8);
-                            m_bDIBuffer[(k * 2) + 1] = (byte)(nCnetAnswerValue[0] & 0xFF);
-
-                            Console.WriteLine("DI{0}:{1:X}", k + 1, nCnetAnswerValue[0]);
-                        }
-                    }
-
-                    for (k = 0; k < 10; k++)
-                    {
-                        // PLC로 DO입력
-                        strBuf = string.Format("{0:X2}{1}{2}{3}{4}{5}", 0, "r", "SS", "01", "06", string.Format("%PW0{0:00}", k + 5));
-                        Request(strBuf.ToCharArray());
-                        Thread.Sleep(80);
-                        nCnetResult = Answer("00".ToCharArray(), 'w', "SS".ToCharArray(), out nCnetAnswerValue);
-                        if (nCnetResult >= 0)
-                        {
-                            if (nCnetAnswerValue[0] != 0)
-                            {
-                                for (i = 0; i < 16; i++)
-                                {
-                                    m_bDOFbValue[i + (k * 16)] = (((uint)nCnetAnswerValue[0] & (uint)(0x0001 << i)) > 0) ? true : false;
-                                }
-                                Console.WriteLine("DODB{0}:{1:X}", k + 1, nCnetAnswerValue[0]);
-                            }
-                        }
-                    }
-
-                    for (k = 0; k < 10; k++)
-                    {
-                        // PLC로 DO출력
-                        wTemp = 0x0000;
-                        for (i = 0; i < 16; i++)
-                        {
-                            wTemp |= (ushort)(m_bDOValue[i + (k * 16)] ? 0x0001 << i : 0x0000);
-                        };
-
-                        strTemp = Convert.ToString(wTemp, 16);
-                        strTemp = strTemp.PadLeft(4, '0');
-
-                        strBuf = string.Format("{0:X2}{1}{2}{3}{4}{5}{6}", 0, "w", "SS", "01", "06", string.Format("%PW0{0:00}", k + 5), strTemp);
-                        Request(strBuf.ToCharArray());
-                        Thread.Sleep(80);
-                        nCnetResult = Answer("00".ToCharArray(), 'w', "SS".ToCharArray(), out nCnetAnswerValue);
-                        if (nCnetResult >= 0)
-                        {
-
-                        }
-                    }
-                }
-            }
-            catch (ThreadInterruptedException)
-            {
-
-            }
-        }
-
-        public void SetDO(int nModule, int nPin, int nValue)
-        {
-            m_bDOValue[nPin] = (nValue == 0) ? false : true;
-        }
-        public void SetDO(int nPin, int nValue)
-        {
-            m_bDOValue[nPin] = (nValue == 0) ? false : true;
-        }
-
-        //
-        public void SetDO(int nModule, int nPin, bool bValue)
-        {
-            m_bDOValue[nPin] = bValue;
-        }
-
-        //
-        public int GetDO(int nModule, int nPin)
-        {
-            int ret = m_bDOFbValue[nPin] == true ? 1 : 0;
-            return ret;
-        }
-
-        public int GetDI(int nModule, int nPin)
-        {
-            if (nPin >= 16) return 0;
-
-            nPin = 15 - nPin;
-
-            int nByteIndex = (nPin / 8) + (nModule * 2);
-            int nBitIndex = 7 - (nPin % 8);
-
-            byte cShift = 0x01;
-            cShift <<= nBitIndex;
-            int ret = ((m_bDIBuffer[nByteIndex] & cShift) > 0) ? 1 : 0;
-            return ret;
         }
 
         private Byte GetChecksum(Byte[] btDatBuf, int nDataLen)
@@ -179,7 +23,7 @@ namespace main
 
             i = 0;
             btChecksum = 0x00;
-            while (nDataLen-- != 0) // pass through message buffer
+            while (nDataLen-- != 0) // 원본 체크섬 계산 루프
             {
                 btChecksum += btDatBuf[i++];
             }
@@ -191,7 +35,14 @@ namespace main
         {
             int nRxLen = 0;
             Byte[] btRxBuf = new byte[256];
-            if (serialPort != null) nRxLen = serialPort.Read(btRxBuf, 0, btRxBuf.Length);
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                try
+                {
+                    nRxLen = serialPort.Read(btRxBuf, 0, btRxBuf.Length);
+                }
+                catch { }
+            }
 
             return nRxLen;
         }
@@ -231,55 +82,116 @@ namespace main
             }
         }
 
+        /// <summary>
+        /// 핀 번호와 ON/OFF 상태를 받아 워드(%PW) 단위 패킷을 조합한 뒤 즉시 PLC로 전송합니다.
+        /// (bOn이 false이면 해당 핀 1개만 OFF됩니다)
+        /// </summary>
+        public void SetDo(int pinNo, bool bOn, int startWord = 5, int stationNo = 0)
+        {
+            if (m_bDOValue == null) m_bDOValue = new bool[1024];
+
+            // 1. 해당 핀 상태 업데이트 (false면 0으로 꺼짐)
+            m_bDOValue[pinNo] = bOn;
+
+            // 2. 워드 위치 및 해당 워드의 시작 핀 번호 계산
+            int wordOffset = pinNo / 16;
+            int wordIndex = startWord + wordOffset;
+            int basePin = wordOffset * 16;
+
+            // 3. 해당 워드(16개 핀) 상태를 조합하여 16비트 워드 데이터 구성
+            ushort wordVal = 0x0000;
+            for (int i = 0; i < 16; i++)
+            {
+                if (m_bDOValue[basePin + i])
+                {
+                    wordVal |= (ushort)(1 << i);
+                }
+            }
+
+            string strBitVal = wordVal.ToString("X4");
+            string strDevice = string.Format("%PW{0:D3}", wordIndex);
+
+            // 4. 개별 쓰기(wSS) 패킷 생성 (기존 정상 패킷 규격 유지)
+            string strReqPacket = string.Format("{0:X2}{1}{2}{3}{4:D2}{5}{6}",
+                stationNo,          // 국번 (00)
+                "w",                // 쓰기
+                "SS",               // 개별 쓰기
+                "01",               // 블록 수 1개
+                strDevice.Length,   // 디바이스 길이 (06)
+                strDevice,          // 디바이스명 (%PW005)
+                strBitVal           // 16진수 4자리 데이터
+            );
+
+            // 5. 전송
+            Request(strReqPacket.ToCharArray());
+
+            // 6. 시리얼 하드웨어 안정화 딜레이
+            Thread.Sleep(50);
+        }
+
+        /// <summary>
+        /// 전체 DO 출력을 모두 0(OFF)으로 초기화하고 PLC로 전송합니다.
+        /// </summary>
+        public void SetAllOff(int totalPins = 256, int startWord = 5, int stationNo = 0)
+        {
+            if (m_bDOValue == null) m_bDOValue = new bool[1024];
+            Array.Clear(m_bDOValue, 0, m_bDOValue.Length);
+
+            int wordCount = totalPins / 16;
+
+            for (int i = 0; i < wordCount; i++)
+            {
+                int wordIndex = startWord + i;
+                string strDevice = string.Format("%PW{0:D3}", wordIndex);
+
+                string strReqPacket = string.Format("{0:X2}{1}{2}{3}{4:D2}{5}{6}",
+                    stationNo,
+                    "w",
+                    "SS",
+                    "01",
+                    strDevice.Length,
+                    strDevice,
+                    "0000"
+                );
+
+                Request(strReqPacket.ToCharArray());
+                Thread.Sleep(30);
+            }
+        }
+
         public int Answer(char[] szAddr, char chCmd, char[] szCmdType, out ushort[] wReturnVal)
         {
-            int nRxLen;
+            int nRxLen = 0;
             bool bCheckSumOk;
             Byte[] btRxBuf = new byte[256];
             wReturnVal = new ushort[16];
 
-            nRxLen = 0;
-
             try
             {
-                if (serialPort != null) nRxLen = serialPort.Read(btRxBuf, 0, btRxBuf.Length);
-                if (nRxLen > 0 && btRxBuf[0] == 0x05)
-                {
-                    Thread.Sleep(100); // PLC가 진짜 응답을 보낼 시간을 벌어줌
-                    if (serialPort.BytesToRead > 0)
-                    {
-                        // 에코 백 데이터를 덮어쓰고 진짜 응답을 수신
-                        nRxLen = serialPort.Read(btRxBuf, 0, btRxBuf.Length);
-                    }
-                }
+                if (serialPort != null && serialPort.IsOpen)
+                    nRxLen = serialPort.Read(btRxBuf, 0, btRxBuf.Length);
             }
-            catch
-            {
-
-            }
+            catch { }
 
             for (int i = 0; i < wReturnVal.Length; i++)
             {
                 wReturnVal[i] = 0;
             }
 
-            // Checksum
             if (nRxLen > 4)
             {
                 bCheckSumOk = true;
                 if (btRxBuf[3] == (Byte)'r' || btRxBuf[3] == (Byte)'w')
-                //if (btRxBuf[3] == (Byte)'r' || btRxBuf[3] == (Byte)'w' || btRxBuf[3] == (Byte)'R' || btRxBuf[3] == (Byte)'W')
                 {
                     char[] szBcc = string.Format("{0:X2}", GetChecksum(btRxBuf, nRxLen - 2)).ToCharArray();
                     if (szBcc[0] != btRxBuf[nRxLen - 2] || szBcc[1] != btRxBuf[nRxLen - 1])
                     {
                         bCheckSumOk = false;
                     }
-
                     nRxLen -= 2;
                 }
 
-                if (bCheckSumOk == true)
+                if (bCheckSumOk)
                 {
                     if (btRxBuf[0] == 0x06 && btRxBuf[nRxLen - 1] == 0x03)
                     {
@@ -289,95 +201,53 @@ namespace main
                             {
                                 case (Byte)'r':
                                 case (Byte)'R':
-                                    int nPos;
-                                    int nBlockCnt;
-                                    int nDataCnt;
+                                    int nPos = 0;
                                     Byte btTemp;
-
-                                    nPos = 0;
-
                                     if (szCmdType[0] == btRxBuf[4] && szCmdType[1] == btRxBuf[5])
                                     {
-                                        nBlockCnt = Convert.ToInt32(string.Format("{0}{1}", Char.ConvertFromUtf32(btRxBuf[6]), Char.ConvertFromUtf32(btRxBuf[7])));
-
+                                        int nBlockCnt = Convert.ToInt32(string.Format("{0}{1}", (char)btRxBuf[6], (char)btRxBuf[7]));
                                         for (int i = 0; i < nBlockCnt; i++)
                                         {
                                             if (i >= wReturnVal.Length) break;
-
                                             wReturnVal[i] = 0x0000;
 
-                                            nDataCnt = Convert.ToInt32(string.Format("{0}{1}", Char.ConvertFromUtf32(btRxBuf[8 + nPos]), Char.ConvertFromUtf32(btRxBuf[9 + nPos])));
+                                            int nDataCnt = Convert.ToInt32(string.Format("{0}{1}", (char)btRxBuf[8 + nPos], (char)btRxBuf[9 + nPos]));
                                             for (int k = 0; k < nDataCnt * 2; k++)
                                             {
                                                 wReturnVal[i] <<= 4;
-
-                                                //wReturnVal[i] |= (ushort)(btRxBuf[10 + nPos] - 0x30);
-
-                                                if (btRxBuf[10 + nPos] >= 'A' && btRxBuf[10 + nPos] <= 'F')
-                                                {
-                                                    btTemp = (Byte)((char)btRxBuf[10 + nPos] - 'A' + 10);
-                                                }
-                                                else
-                                                if (btRxBuf[10 + nPos] >= 'a' && btRxBuf[10 + nPos] <= 'f')
-                                                {
-                                                    btTemp = (Byte)((char)btRxBuf[10 + nPos] - 'a' + 10);
-                                                }
-                                                else
-                                                if (btRxBuf[10 + nPos] >= '0' && btRxBuf[10 + nPos] <= '9')
-                                                {
-                                                    btTemp = (Byte)((char)btRxBuf[10 + nPos] - '0');
-                                                }
-                                                else
-                                                {
-                                                    btTemp = (Byte)((char)0x00);
-                                                }
+                                                char c = (char)btRxBuf[10 + nPos];
+                                                if (c >= 'A' && c <= 'F') btTemp = (Byte)(c - 'A' + 10);
+                                                else if (c >= 'a' && c <= 'f') btTemp = (Byte)(c - 'a' + 10);
+                                                else if (c >= '0' && c <= '9') btTemp = (Byte)(c - '0');
+                                                else btTemp = 0x00;
 
                                                 wReturnVal[i] |= (ushort)btTemp;
                                                 nPos++;
-                                                //wReturnVal[i] = (ushort)(((btRxBuf[10] - 0x30) << 12) | ((btRxBuf[11] - 0x30) << 8) | ((btRxBuf[12] - 0x30) << 4) | ((btRxBuf[13] - 0x30)));
                                             }
                                             nPos += 2;
                                         }
                                     }
-                                    else
-                                    {
-                                        return -6; // 'r' 또는 'R' Command type이 다르면..
-                                    }
+                                    else return -6;
                                     break;
 
                                 case (Byte)'w':
                                 case (Byte)'W':
-                                    if (szCmdType[0] == btRxBuf[4] && szCmdType[1] == btRxBuf[5])
-                                    {
-                                    }
-                                    else
-                                    {
-                                        return -5; // 'w' 또는 'W' Command type이 다르면..
-                                    }
+                                    if (szCmdType[0] != btRxBuf[4] || szCmdType[1] != btRxBuf[5])
+                                        return -5;
                                     break;
 
                                 default:
-                                    return -4; // 'R', 'r', 'W', 'w'이 아닐때..
-                                               //break;
+                                    return -4;
                             }
                         }
-                        else
-                        {
-                            return -3; // 국번(어드레스)가 맞지 않을때..
-                        }
+                        else return -3;
                     }
-                    else
-                    {
-                        return -2; // ACK(0x06)와 ETX(0x03)이 아닐때..
-                    }
+                    else return -2;
                 }
             }
-            else
-            {
-                return -1; // 오류검출이 되었을때..
-            }
+            else return -1;
 
-            return 1; // 정상일때..
+            return 1;
         }
     }
 }

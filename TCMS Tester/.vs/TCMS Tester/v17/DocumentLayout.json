@@ -7,8 +7,20 @@
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|d:\\@workspace\\tcms \uC2DC\uD5D8\uAE30\\tcms tester\\tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|d:\\@workspace\\tcms \uC2DC\uD5D8\uAE30\\tcms tester\\tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\cnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\cnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,12 +31,60 @@
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formdiagnosis.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formmain.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formmain.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\services\\tcmstestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\digitalitemconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\digitalitemconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\fenet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\fenet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\configjson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\configjson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\appconfigmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\appconfigmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\bin\\Debug\\Config\\AppConfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TCMS Tester\\bin\\Debug\\Config\\AppConfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\hardware\\mvbserialmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\hardware\\mvbserialmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
@@ -35,20 +95,12 @@
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formtester.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formprint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formprint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formdiagnosis.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -59,16 +111,8 @@
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formresultview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\testresultjson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\testresultjson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\configjson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\configjson.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\ui\\commtestuimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -83,32 +127,12 @@
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\protocol\\mvbreceiver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\appconfigmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\appconfigmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\appconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\protocol\\tcmsparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\protocol\\tcmsparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\hardware\\mvbserialmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\hardware\\mvbserialmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\models\\channelcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\models\\channelcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\digitalitemconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\digitalitemconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\config\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\config\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\models\\tcmspacket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -123,20 +147,8 @@
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\tools\\customtapcon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\formplc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\networkxgt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\networkxgt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\cnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\cnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\fenet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|solutionrelative:tcms tester\\fenet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{446D5C84-7E73-48A9-8336-32D61D8A3BEA}|TCMS Tester\\TCMS Tester.csproj|D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\tcms tester\\tests\\tcmstestrunner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -150,7 +162,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 1674,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -162,29 +174,69 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "FormTester.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormTester.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormTester.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormTester.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
-              "RelativeToolTip": "TCMS Tester\\FormTester.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "DocumentIndex": 0,
+              "Title": "FormMain.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormMain.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
+              "RelativeToolTip": "TCMS Tester\\FormMain.cs",
+              "ViewState": "AgIAAAEVAAAAAAAAAAAAwA4VAABVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T07:45:34.157Z"
+              "WhenOpened": "2026-08-25T09:34:30.054Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FormMain.Designer.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.Designer.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormMain.Designer.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.Designer.cs",
+              "RelativeToolTip": "TCMS Tester\\FormMain.Designer.cs",
+              "ViewState": "AgIAAAUBAAAAAAAAAAAYwCABAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-10T05:04:56.21Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "FormSerial.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormSerial.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormSerial.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormSerial.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
-              "RelativeToolTip": "TCMS Tester\\FormSerial.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "Title": "TcmsTestService.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Services\\TcmsTestService.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Services\\TcmsTestService.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Services\\TcmsTestService.cs",
+              "RelativeToolTip": "TCMS Tester\\Services\\TcmsTestService.cs",
+              "ViewState": "AgIAADwBAAAAAAAAAAAMwEkBAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T07:45:33.067Z"
+              "WhenOpened": "2026-08-25T09:38:00.425Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
+              "Title": "FormLoad.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormLoad.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormLoad.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormLoad.cs",
+              "RelativeToolTip": "TCMS Tester\\FormLoad.cs",
+              "ViewState": "AgIAAJIBAAAAAAAAAAAUwKIBAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-26T01:25:31.519Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AppConfig.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfig.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Config\\AppConfig.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfig.cs",
+              "RelativeToolTip": "TCMS Tester\\Config\\AppConfig.cs",
+              "ViewState": "AgIAALMAAAAAAAAAAAAqwMwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-26T04:25:00.826Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "FormDiagnosis.cs [\uB514\uC790\uC778]",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\FormDiagnosis.cs",
@@ -195,292 +247,92 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "FormDiagnosis.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\FormDiagnosis.cs",
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.cs",
               "RelativeToolTip": "TCMS Tester\\FormDiagnosis.cs",
-              "ViewState": "AgIAAEkBAAAAAAAAAAAWwFkBAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAHYAAAAAAAAAAAAgwH4AAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-26T00:50:17.976Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FormMain.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormMain.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
-              "RelativeToolTip": "TCMS Tester\\FormMain.cs",
-              "ViewState": "AgIAAPcTAAAAAAAAAADwvwEUAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:34:30.054Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "FormDB.cs [\uB514\uC790\uC778]",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDB.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormDB.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDB.cs [\uB514\uC790\uC778]",
-              "RelativeToolTip": "TCMS Tester\\FormDB.cs [\uB514\uC790\uC778]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T07:45:37.966Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "FormMain.cs [\uB514\uC790\uC778]",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\FormMain.cs",
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormMain.cs [\uB514\uC790\uC778]",
               "RelativeToolTip": "TCMS Tester\\FormMain.cs [\uB514\uC790\uC778]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T04:09:19.819Z",
+              "WhenOpened": "2026-09-10T05:07:15.189Z",
               "EditorCaption": " [\uB514\uC790\uC778]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "FormLoad.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormLoad.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormLoad.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormLoad.cs",
-              "RelativeToolTip": "TCMS Tester\\FormLoad.cs",
-              "ViewState": "AgIAAKEBAAAAAAAAAAAawK4BAAAvAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "config.json",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\config.json",
+              "RelativeDocumentMoniker": "TCMS Tester\\Config\\config.json",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\config.json",
+              "RelativeToolTip": "TCMS Tester\\Config\\config.json",
+              "ViewState": "AgIAAEgIAAAAAAAAAAAiwFUIAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-08-26T04:50:38.692Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "cnet.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\cnet.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\cnet.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\cnet.cs",
+              "RelativeToolTip": "TCMS Tester\\cnet.cs",
+              "ViewState": "AgIAAHcAAAAAAAAAAAASwIYAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-26T01:25:31.519Z"
+              "WhenOpened": "2026-08-26T01:31:28.888Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "TcmsTestService.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Services\\TcmsTestService.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Services\\TcmsTestService.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Services\\TcmsTestService.cs",
-              "RelativeToolTip": "TCMS Tester\\Services\\TcmsTestService.cs",
-              "ViewState": "AgIAAOYAAAAAAAAAAAAowPUAAAA8AAAAAAAAAA==",
+              "Title": "FormPLC.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPLC.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormPLC.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPLC.cs",
+              "RelativeToolTip": "TCMS Tester\\FormPLC.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAYwDAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:38:00.425Z",
+              "WhenOpened": "2026-08-26T01:08:42.973Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "FormConfig.cs [\uB514\uC790\uC778]",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormConfig.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormConfig.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormConfig.cs [\uB514\uC790\uC778]",
-              "RelativeToolTip": "TCMS Tester\\FormConfig.cs [\uB514\uC790\uC778]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T07:45:36.818Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "FormPrint.cs [\uB514\uC790\uC778]",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPrint.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormPrint.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPrint.cs [\uB514\uC790\uC778]",
-              "RelativeToolTip": "TCMS Tester\\FormPrint.cs [\uB514\uC790\uC778]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T07:45:31.526Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "AppConfig.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfig.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Config\\AppConfig.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfig.cs",
-              "RelativeToolTip": "TCMS Tester\\Config\\AppConfig.cs",
-              "ViewState": "AgIAALEAAAAAAAAAAAAkwMwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-26T04:25:00.826Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "TcmsValidator.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsValidator.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Protocol\\TcmsValidator.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsValidator.cs",
-              "RelativeToolTip": "TCMS Tester\\Protocol\\TcmsValidator.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAqwFMAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:40:40.655Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "TcmsParser.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsParser.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Protocol\\TcmsParser.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsParser.cs",
-              "RelativeToolTip": "TCMS Tester\\Protocol\\TcmsParser.cs",
-              "ViewState": "AgIAADsAAAAAAAAAAAAqwFkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:42:38.549Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "FormResultView.cs [\uB514\uC790\uC778]",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormResultView.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormResultView.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormResultView.cs [\uB514\uC790\uC778]",
-              "RelativeToolTip": "TCMS Tester\\FormResultView.cs [\uB514\uC790\uC778]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T05:43:58.108Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
               "Title": "FormResultView.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormResultView.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\FormResultView.cs",
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormResultView.cs",
               "RelativeToolTip": "TCMS Tester\\FormResultView.cs",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAawF4AAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAAAACkAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-04T05:43:59.314Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "FormPLC.cs [\uB514\uC790\uC778]",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPLC.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\FormPLC.cs",
               "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPLC.cs [\uB514\uC790\uC778]",
               "RelativeToolTip": "TCMS Tester\\FormPLC.cs [\uB514\uC790\uC778]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-26T06:32:24.898Z"
+              "WhenOpened": "2026-08-26T06:32:24.898Z",
+              "EditorCaption": " [\uB514\uC790\uC778]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "FormDiagnosis.Designer.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.Designer.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormDiagnosis.Designer.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.Designer.cs",
-              "RelativeToolTip": "TCMS Tester\\FormDiagnosis.Designer.cs",
-              "ViewState": "AgIAACwCAAAAAAAAAAAawDwCAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T07:44:07.537Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "MvbReceiver.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\MvbReceiver.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Protocol\\MvbReceiver.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\MvbReceiver.cs",
-              "RelativeToolTip": "TCMS Tester\\Protocol\\MvbReceiver.cs",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAqwHcAAAA3AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:38:11.708Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "TestResultJson.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\TestResultJson.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\TestResultJson.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\TestResultJson.cs",
-              "RelativeToolTip": "TCMS Tester\\TestResultJson.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T05:46:15.032Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "AppConfigManager.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfigManager.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Config\\AppConfigManager.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfigManager.cs",
-              "RelativeToolTip": "TCMS Tester\\Config\\AppConfigManager.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAowCoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-26T04:25:21.919Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "ConfigJson.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\ConfigJson.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\ConfigJson.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\ConfigJson.cs",
-              "RelativeToolTip": "TCMS Tester\\ConfigJson.cs",
-              "ViewState": "AgIAANsAAAAAAAAAAAAkwNgAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T05:47:32.931Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "CommTestUiManager.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\UI\\CommTestUiManager.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\UI\\CommTestUiManager.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\UI\\CommTestUiManager.cs",
-              "RelativeToolTip": "TCMS Tester\\UI\\CommTestUiManager.cs",
-              "ViewState": "AgIAANMAAAAAAAAAAAAowOkAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-04T04:52:23.542Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "MvbSerialManager.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Hardware\\MvbSerialManager.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Hardware\\MvbSerialManager.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Hardware\\MvbSerialManager.cs",
-              "RelativeToolTip": "TCMS Tester\\Hardware\\MvbSerialManager.cs",
-              "ViewState": "AgIAAFUAAAAAAAAAAAAmwHEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:55:07.981Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "ChannelContext.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\ChannelContext.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Models\\ChannelContext.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\ChannelContext.cs",
-              "RelativeToolTip": "TCMS Tester\\Models\\ChannelContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T04:41:53.063Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "TcmsPacket.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\TcmsPacket.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\Models\\TcmsPacket.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\TcmsPacket.cs",
-              "RelativeToolTip": "TCMS Tester\\Models\\TcmsPacket.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAA3wCcAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T09:41:19.93Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "config.json",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\config.json",
-              "RelativeDocumentMoniker": "TCMS Tester\\Config\\config.json",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\config.json",
-              "RelativeToolTip": "TCMS Tester\\Config\\config.json",
-              "ViewState": "AgIAAJsBAAAAAAAAAAAAALwBAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-08-26T04:50:38.692Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 13,
               "Title": "DigitalItemConfig.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\DigitalItemConfig.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\Config\\DigitalItemConfig.cs",
@@ -492,7 +344,241 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "fenet.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\fenet.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\fenet.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\fenet.cs",
+              "RelativeToolTip": "TCMS Tester\\fenet.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAwwFkAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-25T10:17:52.88Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FormConfig.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormConfig.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormConfig.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormConfig.cs",
+              "RelativeToolTip": "TCMS Tester\\FormConfig.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAAACsAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-10T09:27:49.861Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ConfigJson.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\ConfigJson.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\ConfigJson.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\ConfigJson.cs",
+              "RelativeToolTip": "TCMS Tester\\ConfigJson.cs",
+              "ViewState": "AgIAAAkBAAAAAAAAAAAYwB4BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T05:47:32.931Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AppConfigManager.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfigManager.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Config\\AppConfigManager.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Config\\AppConfigManager.cs",
+              "RelativeToolTip": "TCMS Tester\\Config\\AppConfigManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-26T04:25:21.919Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "MvbSerialManager.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Hardware\\MvbSerialManager.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Hardware\\MvbSerialManager.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Hardware\\MvbSerialManager.cs",
+              "RelativeToolTip": "TCMS Tester\\Hardware\\MvbSerialManager.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAD4vxwAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-25T09:55:07.981Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "AppConfig.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\bin\\Debug\\Config\\AppConfig.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\bin\\Debug\\Config\\AppConfig.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\bin\\Debug\\Config\\AppConfig.cs",
+              "RelativeToolTip": "TCMS Tester\\bin\\Debug\\Config\\AppConfig.cs",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-09T10:45:26.919Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "FormDB.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDB.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormDB.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDB.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "TCMS Tester\\FormDB.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T07:45:37.966Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "FormTester.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormTester.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormTester.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormTester.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "RelativeToolTip": "TCMS Tester\\FormTester.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T07:45:34.157Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "FormSerial.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormSerial.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormSerial.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormSerial.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "RelativeToolTip": "TCMS Tester\\FormSerial.cs [\uB514\uC790\uC778 - \uD55C\uAD6D\uC5B4 (\uB300\uD55C\uBBFC\uAD6D)]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T07:45:33.067Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "FormConfig.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormConfig.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormConfig.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormConfig.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "TCMS Tester\\FormConfig.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T07:45:36.818Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "FormPrint.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPrint.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormPrint.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPrint.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "TCMS Tester\\FormPrint.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T07:45:31.526Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "TcmsValidator.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsValidator.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Protocol\\TcmsValidator.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsValidator.cs",
+              "RelativeToolTip": "TCMS Tester\\Protocol\\TcmsValidator.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAqwFMAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-25T09:40:40.655Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "TcmsParser.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsParser.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Protocol\\TcmsParser.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\TcmsParser.cs",
+              "RelativeToolTip": "TCMS Tester\\Protocol\\TcmsParser.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAqwFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-25T09:42:38.549Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "FormResultView.cs [\uB514\uC790\uC778]",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormResultView.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormResultView.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormResultView.cs [\uB514\uC790\uC778]",
+              "RelativeToolTip": "TCMS Tester\\FormResultView.cs [\uB514\uC790\uC778]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T05:43:58.108Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "FormDiagnosis.Designer.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.Designer.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\FormDiagnosis.Designer.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormDiagnosis.Designer.cs",
+              "RelativeToolTip": "TCMS Tester\\FormDiagnosis.Designer.cs",
+              "ViewState": "AgIAACwCAAAAAAAAAAAawDwCAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T07:44:07.537Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "MvbReceiver.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\MvbReceiver.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Protocol\\MvbReceiver.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Protocol\\MvbReceiver.cs",
+              "RelativeToolTip": "TCMS Tester\\Protocol\\MvbReceiver.cs",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAqwHcAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-25T09:38:11.708Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "TestResultJson.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\TestResultJson.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\TestResultJson.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\TestResultJson.cs",
+              "RelativeToolTip": "TCMS Tester\\TestResultJson.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T05:46:15.032Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 28,
+              "Title": "CommTestUiManager.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\UI\\CommTestUiManager.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\UI\\CommTestUiManager.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\UI\\CommTestUiManager.cs",
+              "RelativeToolTip": "TCMS Tester\\UI\\CommTestUiManager.cs",
+              "ViewState": "AgIAANMAAAAAAAAAAAAowOkAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-04T04:52:23.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "ChannelContext.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\ChannelContext.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Models\\ChannelContext.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\ChannelContext.cs",
+              "RelativeToolTip": "TCMS Tester\\Models\\ChannelContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T04:41:53.063Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "TcmsPacket.cs",
+              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\TcmsPacket.cs",
+              "RelativeDocumentMoniker": "TCMS Tester\\Models\\TcmsPacket.cs",
+              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Models\\TcmsPacket.cs",
+              "RelativeToolTip": "TCMS Tester\\Models\\TcmsPacket.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA3wCcAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-25T09:41:19.93Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
               "Title": "CustomIconButton.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Tools\\CustomIconButton.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\Tools\\CustomIconButton.cs",
@@ -504,7 +590,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 35,
               "Title": "CustomTapCon.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Tools\\CustomTapCon.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\Tools\\CustomTapCon.cs",
@@ -516,43 +602,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "FormPLC.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPLC.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\FormPLC.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\FormPLC.cs",
-              "RelativeToolTip": "TCMS Tester\\FormPLC.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAQwFkAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-26T01:08:42.973Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "fenet.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\fenet.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\fenet.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\fenet.cs",
-              "RelativeToolTip": "TCMS Tester\\fenet.cs",
-              "ViewState": "AgIAAHoCAAAAAAAAAAAUwIwCAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-25T10:17:52.88Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "cnet.cs",
-              "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\cnet.cs",
-              "RelativeDocumentMoniker": "TCMS Tester\\cnet.cs",
-              "ToolTip": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\cnet.cs",
-              "RelativeToolTip": "TCMS Tester\\cnet.cs",
-              "ViewState": "AgIAAHcAAAAAAAAAAAApwIkAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-26T01:31:28.888Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 36,
               "Title": "NetworkXGT.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\NetworkXGT.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\NetworkXGT.cs",
@@ -564,7 +614,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 37,
               "Title": "TcmsTestRunner.cs",
               "DocumentMoniker": "D:\\@Workspace\\TCMS \uC2DC\uD5D8\uAE30\\TCMS Tester\\TCMS Tester\\Tests\\TcmsTestRunner.cs",
               "RelativeDocumentMoniker": "TCMS Tester\\Tests\\TcmsTestRunner.cs",

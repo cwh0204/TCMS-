@@ -131,7 +131,8 @@ namespace CITester
             button_PLC.StartNewDiagnosis();
             button_PLC.Enabled = false;
 
-            string strTargetPort = ConfigJson.CurrentConfig?.Device?.Plc_COM;
+            // 1. 후보 포트 수집 (기존 설정 포트 우선, 그 뒤 시스템 전체 포트)
+            string strTargetPort = ConfigJson.CurrentConfig.Device.Plc_COM;
             List<string> lstCandidatePorts = new List<string>();
 
             if (!string.IsNullOrEmpty(strTargetPort))
@@ -152,103 +153,117 @@ namespace CITester
             bool bPingSuccess = false;
             string strFoundPort = string.Empty;
 
-            try
+            await Task.Run(() =>
             {
-                await Task.Run(() =>
+                for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
                 {
+                    string strCurrentPort = lstCandidatePorts[nPortIdx];
+                    SerialPort testPort = null;
+
                     try
                     {
-                        if (serialPlcPort != null && serialPlcPort.IsOpen)
-                        {
-                            serialPlcPort.Close();
-                        }
-                    }
-                    catch { }
+                        testPort = new SerialPort(strCurrentPort, 9600, Parity.None, 8, StopBits.One);
+                        testPort.ReadTimeout = 200;
+                        testPort.WriteTimeout = 200;
+                        testPort.Open();
 
-                    for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
-                    {
-                        string strCurrentPort = lstCandidatePorts[nPortIdx];
+                        testPort.DiscardInBuffer();
+                        testPort.DiscardOutBuffer();
 
-                        using (var tempPort = new System.IO.Ports.SerialPort())
+                        // 2. PLC 전용 Cnet 읽기 핑 패킷 구성 (%PW005 1워드 읽기)
+                        // 국번(00) + 'r' + "SS" + 블록수(01) + 변수길이(06) + 변수명(%PW005)
+                        string reqBody = "00rSS0106%PW005";
+                        byte[] txBuf = new byte[reqBody.Length + 4];
+                        int txPos = 0;
+                        txBuf[txPos++] = 0x05; // ENQ
+                        for (int i = 0; i < reqBody.Length; i++) txBuf[txPos++] = (byte)reqBody[i];
+                        txBuf[txPos++] = 0x04; // EOT
+
+                        // BCC 계산
+                        byte bcc = 0;
+                        for (int i = 0; i < txPos; i++) bcc += txBuf[i];
+                        string bccHex = bcc.ToString("X2");
+                        txBuf[txPos++] = (byte)bccHex[0];
+                        txBuf[txPos++] = (byte)bccHex[1];
+
+                        // 송신
+                        testPort.Write(txBuf, 0, txPos);
+
+                        // 3. 응답 대기 (최대 250ms 동안 모으기)
+                        byte[] rxBuf = new byte[256];
+                        int totalRead = 0;
+                        DateTime dtLimit = DateTime.Now.AddMilliseconds(250);
+
+                        while (DateTime.Now < dtLimit)
                         {
-                            try
+                            if (testPort.BytesToRead > 0)
                             {
-                                tempPort.PortName = strCurrentPort;
-                                tempPort.BaudRate = 115200;
-                                tempPort.ReadTimeout = 100;
-                                tempPort.WriteTimeout = 100;
-                                tempPort.Open();
+                                int r = testPort.Read(rxBuf, totalRead, rxBuf.Length - totalRead);
+                                totalRead += r;
+                            }
+                            Thread.Sleep(15);
+                        }
 
-                                tempPort.DiscardInBuffer();
-                                tempPort.DiscardOutBuffer();
-
-                                for (int nRetry = 0; nRetry < 2; nRetry++)
+                        if (totalRead > 0)
+                        {
+                            // 4. PLC 응답 판정 (에코백 무시하고 ACK 0x06 + "00rSS"가 존재하는지 검사)
+                            int ackIdx = -1;
+                            for (int i = 0; i < totalRead; i++)
+                            {
+                                if (rxBuf[i] == 0x06) // ACK 헤더 발견
                                 {
-                                    string strReqPacket = string.Format("{0:X2}{1}{2}{3}{4}{5}", 0, "r", "SS", "01", "06", "%PX000");
-                                    cnetToPlc.Request(strReqPacket.ToCharArray());
-
-                                    int nWaitCount = 0;
-                                    const int nMaxWait = 10;
-
-                                    while (nWaitCount < nMaxWait)
-                                    {
-                                        Thread.Sleep(10);
-
-                                        if (tempPort.IsOpen && tempPort.BytesToRead >= 5)
-                                        {
-                                            ushort[] arrCnetAnswer;
-                                            int nCnetResult = cnetToPlc.Answer("00".ToCharArray(), 'w', "SS".ToCharArray(), out arrCnetAnswer);
-
-                                            if (nCnetResult >= 0)
-                                            {
-                                                bPingSuccess = true;
-                                                strFoundPort = strCurrentPort;
-                                                break;
-                                            }
-                                        }
-
-                                        nWaitCount++;
-                                    }
-
-                                    if (bPingSuccess) break;
+                                    ackIdx = i;
+                                    break;
                                 }
-
-                                tempPort.Close();
-                                if (bPingSuccess) break;
                             }
-                            catch (Exception)
+
+                            if (ackIdx != -1 && (totalRead - ackIdx) >= 7)
                             {
-                                try { if (tempPort.IsOpen) tempPort.Close(); } catch { }
+                                string respHeader = Encoding.ASCII.GetString(rxBuf, ackIdx + 1, 5); // "00rSS" 확인
+                                if (respHeader.Equals("00rSS", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Console.WriteLine($"★ [PLC 식별 완료] {strCurrentPort} -> 정상 Cnet 응답(ACK 00rSS) 수신!");
+                                    bPingSuccess = true;
+                                    strFoundPort = strCurrentPort;
+                                }
                             }
                         }
+
+                        testPort.Close();
+                        testPort.Dispose();
+
+                        if (bPingSuccess) break; // PLC를 찾았으므로 즉시 루프 종료
                     }
-                });
-            }
-            finally
-            {
-                button_PLC.Enabled = true;
-                Timer_Check.Enabled = true; // 타이머 복구
-            }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[포트 진단 스킵] {strCurrentPort}: {ex.Message}");
+                        try { testPort?.Close(); testPort?.Dispose(); } catch { }
+                    }
+                }
+            });
+
+            // 5. 결과 반영 및 영구 저장
+            button_PLC.Enabled = true;
 
             if (!bPingSuccess)
             {
                 button_PLC.BackColor = Color.Red;
                 button_PLC.CurrentStatus = eDiagStatus.Abnormal;
-                if (!m_lstFailItems.Contains("PLC"))
-                {
-                    m_lstFailItems.Add("PLC");
-                }
+                m_lstFailItems.Add("PLC");
+                Console.WriteLine("[진단 결과] 시스템 내 연결된 PLC를 찾지 못했습니다.");
             }
             else
             {
                 ConfigJson.CurrentConfig.Device.Plc_COM = strFoundPort;
                 button_PLC.BackColor = Color.GreenYellow;
                 button_PLC.CurrentStatus = eDiagStatus.Normal;
-                m_lstFailItems.Remove("PLC");
 
-                try { serialPlcPort.PortName = strFoundPort; } catch { }
+                bool bSaved = SaveCurrentJsonConfig();
+                Console.WriteLine($"[진단 결과] PLC 포트 확정: {strFoundPort} (설정 파일 저장: {(bSaved ? "성공" : "실패")})");
             }
         }
+
+
 
 
         private void button_PowerSupply_Click(object sender, EventArgs e)
