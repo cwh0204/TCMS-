@@ -121,6 +121,9 @@ namespace CITester
         int m_nPage = 0;
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        //시험관련 변수
+        private bool m_bIsManualTesting = false;
+
         //UI 헬퍼
         private CommTestUiManager _commUiManager;
 
@@ -1108,6 +1111,9 @@ namespace CITester
             dgvTarget.Rows[nHeaderRowIdx].HeaderCell.Value = "HEADER";
             dgvTarget.Rows[nHeaderRowIdx].Height = 50;
 
+            // 현재 차종 타입 가져오기
+            string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+
             // 주입된 배열 스케일에 결합하여 가변적으로 서브 채널 데이터 렌더링 공간 적재
             for (int nGroup = 0; nGroup < arrStrTypes.Length; nGroup++)
             {
@@ -1120,11 +1126,39 @@ namespace CITester
                     dgvTarget.Rows[nBlankRowIdx].Height = 35;
                 }
 
+                string strCategory = arrStrTypes[nGroup];
+                int nStartPin = GetStartPinByCategory(strUnitType, strCategory);
                 int nRows = (int)Math.Ceiling((double)arrNCounts[nGroup] / 8);
+
                 for (int nRow = 0; nRow < nRows; nRow++)
                 {
                     int nRowIdx = dgvTarget.Rows.Add();
-                    dgvTarget.Rows[nRowIdx].HeaderCell.Value = arrStrTypes[nGroup];
+                    dgvTarget.Rows[nRowIdx].HeaderCell.Value = strCategory;
+
+                    // =============================================================
+                    // [핵심 추가] 8개 셀에 실제 Pin 번호 주입
+                    // =============================================================
+                    for (int nCol = 0; nCol < nTotalCols; nCol++)
+                    {
+                        int nPinOffset = (nRow * 8) + nCol;
+
+                        if (nPinOffset < arrNCounts[nGroup])
+                        {
+                            int nActualPinNo = nStartPin + nPinOffset;
+
+                            // 1. Value에 실제 하드웨어 Pin 번호(int) 주입
+                            dgvTarget.Rows[nRowIdx].Cells[nCol].Value = nActualPinNo;
+
+                            // 2. Tag에 채널 그룹명("DI1", "DI2" 등) 주입 (수동 시험 시 유용)
+                            dgvTarget.Rows[nRowIdx].Cells[nCol].Tag = strCategory;
+                        }
+                        else
+                        {
+                            // 채널 개수를 초과하는 나머지 빈 칸
+                            dgvTarget.Rows[nRowIdx].Cells[nCol].Value = null;
+                            dgvTarget.Rows[nRowIdx].Cells[nCol].Tag = null;
+                        }
+                    }
                 }
             }
 
@@ -1150,7 +1184,7 @@ namespace CITester
             DataGridView dgv = sender as DataGridView;
             if (dgv == null || dgv.Rows.Count == 0) return;
 
-            // [핵심 수정] 숨겨진 탭에서 그리드가 깨어날 때 발생하는 컬럼 오계산 버그를 해결하기 위해
+            // 숨겨진 탭에서 그리드가 깨어날 때 발생하는 컬럼 오계산 버그를 해결하기 위해
             // 오토사이즈 모드를 잠시 꺼서 꼬인 레이아웃 캐시를 완전히 초기화합니다.
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
@@ -1440,7 +1474,9 @@ namespace CITester
             }
         }
 
-        private void DataGridViewChannel_CellClick(object sender, DataGridViewCellEventArgs eArgs)
+        //셀 클릭 이벤트
+        // 1. async void 로 선언 변경
+        private async void DataGridViewChannel_CellClick(object sender, DataGridViewCellEventArgs eArgs)
         {
             if (eArgs.RowIndex < 0 || eArgs.ColumnIndex < 0) return;
 
@@ -1450,23 +1486,55 @@ namespace CITester
 
             string strRowType = dgv.Rows[eArgs.RowIndex].HeaderCell.Value?.ToString() ?? string.Empty;
 
-            // 상단 HEADER 행 클릭 시 수동 시험 버튼 좌표 판정 수행
+            // =========================================================================
+            // 상단 HEADER 행 클릭 시 [수동 시험] 버튼 실행
+            // =========================================================================
             if (strRowType == "HEADER")
             {
                 int nBtnWidth = 100;
                 int nBtnHeight = 32;
-                int nBtnX = dgv.Width - nBtnWidth - 14;
+
+                // 1. dgv.Width 대신 dgv.ClientSize.Width 사용 (테두리/스크롤바 오차 제거)
+                int nBtnX = dgv.ClientSize.Width - nBtnWidth - 14;
                 int nBtnY = (50 - nBtnHeight) / 2;
                 Rectangle rectManualTest = new Rectangle(nBtnX, nBtnY, nBtnWidth, nBtnHeight);
 
+                // 2. 클릭 판정 영역에 상하좌우 8px 여유 마진(Tolerance) 부여
+                Rectangle hitArea = rectManualTest;
+                hitArea.Inflate(8, 8);
+
                 Point ptClient = dgv.PointToClient(Cursor.Position);
-                if (rectManualTest.Contains(ptClient))
+
+                // [디버그 확인용] 실제 마우스 좌표와 버튼 영역 비교 출력
+                Console.WriteLine($"[HEADER 클릭] 마우스: ({ptClient.X}, {ptClient.Y}) | 버튼영역: {rectManualTest} | 히트영역: {hitArea}");
+
+                if (hitArea.Contains(ptClient))
                 {
-                    // 수동 시험 비즈니스 로직 연동 핸들러 추가 가능 위치
+                    Console.WriteLine("[HEADER] 수동 시험 버튼 클릭 인식 성공!");
+
+                    // 다중 선택 리스트와 단일 선택 좌표를 모두 확인하여 선택 유무 판정
+                    bool bHasSelection = (state.listSelectedCells != null && state.listSelectedCells.Count > 0) ||
+                                         (state.nSelectedRowIdx >= 0 && state.nSelectedColIdx >= 0);
+
+                    if (!bHasSelection)
+                    {
+                        MessageBox.Show("수동 시험을 진행할 핀을 먼저 그리드에서 선택해 주세요.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
+                    // state 객체를 통째로 넘겨 다중/단일 통합 수동 시험 실행
+                    await RunManualTestAsync(dgv, state);
+                }
+                else
+                {
+                    Console.WriteLine("[HEADER] 버튼 외 영역 클릭됨 (무시)");
                 }
                 return;
             }
 
+            // =========================================================================
+            // 일반 핀 셀 클릭 시 (선택 처리 및 하단 상태 표시)
+            // =========================================================================
             if (TryGetChannelRuntimeInfo(dgv, eArgs.RowIndex, eArgs.ColumnIndex, out int nChannelNo, out EChannelState eState, out string strTypeName))
             {
                 Point ptCurrent = new Point(eArgs.ColumnIndex, eArgs.RowIndex);
@@ -1479,6 +1547,7 @@ namespace CITester
                     state.listSelectedCells.Add(ptCurrent);
                 }
 
+                // 현재 선택된 셀 좌표 갱신 (수동 시험 시 이 좌표를 참조함)
                 state.nSelectedRowIdx = eArgs.RowIndex;
                 state.nSelectedColIdx = eArgs.ColumnIndex;
 
@@ -1487,7 +1556,191 @@ namespace CITester
                 strSelectedState = GetStateString(eState);
                 strSelectedTestResult = (eState == EChannelState.Err) ? "FAIL" : (eState == EChannelState.Off ? "미시험" : "PASS");
 
+                // 확인용 팝업은 실제 조작을 방해하므로 콘솔 로그로 대체하거나 제거
+                object objPinVal = dgv.Rows[eArgs.RowIndex].Cells[eArgs.ColumnIndex].Value;
+                if (objPinVal != null)
+                {
+                    Console.WriteLine($"[핀 선택] PIN: {objPinVal}번, 채널: {strTypeName}");
+                }
+
                 dgv.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// 선택된 다중 핀(1개 ~ N개)에 대해 자동검사와 동일한 환경에서 순차 수동 시험 수행
+        /// </summary>
+        private async Task RunManualTestAsync(DataGridView dgv, ChannelGridState state)
+        {
+            if (m_bIsTesting || m_bIsManualTesting) return;
+
+            // 1. 시험 대상 좌표 수집
+            var targetPoints = new List<Point>();
+            if (state.listSelectedCells != null && state.listSelectedCells.Count > 0)
+            {
+                targetPoints.AddRange(state.listSelectedCells);
+            }
+            else if (state.nSelectedRowIdx >= 0 && state.nSelectedColIdx >= 0)
+            {
+                targetPoints.Add(new Point(state.nSelectedColIdx, state.nSelectedRowIdx));
+            }
+
+            if (targetPoints.Count == 0)
+            {
+                MessageBox.Show("수동 시험을 진행할 핀을 먼저 선택해 주세요.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+
+            var channelContext = GetChannelContextByUnit(strUnitType);
+            if (channelContext == null) return;
+
+            var listPinsToTest = new List<(int Row, int Col, int PinNo, string Category, int BitIndex)>();
+            foreach (var pt in targetPoints)
+            {
+                if (pt.Y < 0 || pt.Y >= dgv.RowCount || pt.X < 0 || pt.X >= dgv.ColumnCount) continue;
+                var cell = dgv.Rows[pt.Y].Cells[pt.X];
+                if (cell.Value == null) continue;
+
+                int nPinNo = Convert.ToInt32(cell.Value);
+                string strCategory = cell.Tag?.ToString() ?? "DI1";
+                int nStartPin = GetStartPinByCategory(strUnitType, strCategory);
+                int nBitIndex = nPinNo - nStartPin;
+
+                listPinsToTest.Add((pt.Y, pt.X, nPinNo, strCategory, nBitIndex));
+            }
+
+            if (listPinsToTest.Count == 0) return;
+            listPinsToTest = listPinsToTest.OrderBy(p => p.PinNo).ToList();
+
+            // finally 블록에서도 접근 가능하도록 try 밖에서 선언
+            TcmsTestService manualTestService = null;
+
+            try
+            {
+                m_bIsManualTesting = true;
+
+                // 2. 선택 하이라이트(볼드/외곽선) 해제 및 대상 핀 초기 상태(Off) 리셋
+                state.listSelectedCells.Clear();
+                state.nSelectedRowIdx = -1;
+                state.nSelectedColIdx = -1;
+
+                foreach (var pin in listPinsToTest)
+                {
+                    UpdateChannelContextState(channelContext, pin.Category, pin.BitIndex, EChannelState.Off);
+                }
+                dgv.Invalidate();
+                await Task.Delay(100);
+
+                // 3. 하드웨어 통신 및 전원 기동
+                PlcStart();
+
+                if (m_serialManager == null || !m_serialManager.IsOpen)
+                {
+                    OpenMvbBoard();
+                }
+
+                if (m_mvbReceiver == null)
+                {
+                    m_mvbReceiver = new MvbReceiver();
+                }
+                m_mvbReceiver.Start();
+
+                SetDCPowerON(80, 5);
+                await Task.Delay(500);
+                c_PLCNetwork?.SetDo(240, true, 5, 0);
+
+                // 4. 수동 시험 전용 TestService 인스턴스 생성 및 MVB 리시버 바인딩
+                manualTestService = new TcmsTestService(m_mvbReceiver)
+                {
+                    OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
+                    OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color),
+                    OnGridInvalidate = () => dgv?.Invalidate()
+                };
+                manualTestService.StartMvbReceiver(strUnitType);
+
+                // 5. MVB 통신 링크 대기 (최대 25초)
+                AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 링크 연결 대기 중...", Color.DarkGray);
+
+                bool bMvbLinkReady = false;
+                DateTime dtTimeout = DateTime.Now.AddSeconds(25);
+                while (DateTime.Now < dtTimeout)
+                {
+                    byte[] rawCheck = manualTestService.GetCurrentRawData("DI1");
+                    if (rawCheck != null && rawCheck.Length >= 6)
+                    {
+                        bMvbLinkReady = true;
+                        AppendTestLog(richTextBox_Log, "[시스템] ★ MVB 통신 링크 연결 확인 완료!", Color.DarkGreen);
+                        break;
+                    }
+                    await Task.Delay(100);
+                }
+
+                if (!bMvbLinkReady)
+                {
+                    AppendTestLog(richTextBox_Log, "[수동 통신 실패] CC 유닛 MVB 응답 없음 (타임아웃).", Color.Red);
+                    return;
+                }
+
+                // 6. 순차 검증 및 실시간 색상 갱신 (합격: On/초록, 실패: Err/빨강)
+                AppendTestLog(richTextBox_Log, $"[수동 시험] 총 {listPinsToTest.Count}개 핀 검증 시작", Color.SteelBlue);
+
+                for (int i = 0; i < listPinsToTest.Count; i++)
+                {
+                    var pinItem = listPinsToTest[i];
+
+                    AppendTestLog(richTextBox_Log, $"[{i + 1}/{listPinsToTest.Count}] {pinItem.Category} {pinItem.PinNo}번 핀 인가 중...", Color.DarkBlue);
+
+                    bool isPass = await manualTestService.ExecuteSinglePinTestAsync(
+                        pinItem.Category,
+                        pinItem.PinNo,
+                        pinItem.BitIndex,
+                        (pin, bState) => c_PLCNetwork?.SetDo(pin, bState, 5, 0)
+                    );
+
+                    // 결과 상태 반영 (On = 녹색, Err = 적색)
+                    EChannelState resultState = isPass ? EChannelState.On : EChannelState.Err;
+                    UpdateChannelContextState(channelContext, pinItem.Category, pinItem.BitIndex, resultState);
+
+                    dgv.Invalidate();
+                    await Task.Delay(50);
+                }
+
+                AppendTestLog(richTextBox_Log, "[수동 시험] 모든 선택 핀 검증 완료", Color.DarkGreen);
+            }
+            catch (Exception ex)
+            {
+                AppendTestLog(richTextBox_Log, $"[수동 시험 에러] {ex.Message}", Color.Red);
+            }
+            finally
+            {
+                manualTestService?.StopMvbReceiver();
+                ResetAllPlcOutputs();
+                m_bIsManualTesting = false;
+                dgv.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// ChannelContext 내 상태 배열에 시험 결과(On=초록, Err=빨강, Off=기본) 반영
+        /// </summary>
+        private void UpdateChannelContextState(ChannelContext context, string strCategory, int nBitIndex, EChannelState state)
+        {
+            if (context == null) return;
+
+            EChannelState[] targetArr = null;
+            switch (strCategory.ToUpper())
+            {
+                case "DI1": targetArr = context.ActiveDi1; break;
+                case "DI2": targetArr = context.ActiveDi2; break;
+                case "DI3": targetArr = context.ActiveDi3; break;
+                case "DO": targetArr = context.ActiveDo; break;
+            }
+
+            if (targetArr != null && nBitIndex >= 0 && nBitIndex < targetArr.Length)
+            {
+                targetArr[nBitIndex] = state;
             }
         }
 
@@ -1773,127 +2026,6 @@ namespace CITester
 
 
         #region CONFIG
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// 
-        private void WriteConfig()
-        {
-            string strFullPath = Application.StartupPath + "\\config.xml";
-
-            try
-            {
-                XmlTextWriter xtw = new XmlTextWriter(strFullPath, Encoding.Unicode);
-
-                xtw.Formatting = Formatting.Indented;
-                xtw.WriteStartDocument();
-
-                xtw.WriteStartElement("HertzConfig");
-                xtw.WriteStartElement("General");
-
-                xtw.WriteElementString("시험자명", null, m_Config.strTester);
-                xtw.WriteElementString("사원번호", null, m_Config.strID);
-                xtw.WriteElementString("부서명", null, m_Config.strDepartment);
-
-                xtw.WriteElementString("편성번호", null, m_Config.strGroupNo);
-                xtw.WriteElementString("차량번호", null, m_Config.strTrainNo);
-                xtw.WriteElementString("일련번호", null, m_Config.strSerialNo);
-                xtw.WriteElementString("제어편성", null, m_Config.strControlUnit);
-
-                xtw.WriteElementString("제어편성표시", null, m_Config.bControlUnit == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("전원유니트시험", null, m_Config.bMeasurePowerUnit == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("시퀀스시험기동", null, m_Config.bMeasureSequenceRun == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("시퀀스시험고장정지", null, m_Config.bMeasureSequenceBrake == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("시퀀스시험중고장", null, m_Config.bMeasureSequenceStop == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("보호동작시험", null, m_Config.bMeasureProtect == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("컨버터인버터시험", null, m_Config.bMeasureConvInverter == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("기동정지시퀀스시험", null, m_Config.bMeasureSeqRunStop == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("주회로출력시험", null, m_Config.bMeasureMainCircuitOut == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("GDU시험", null, m_Config.bMeasureGDU == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("전압전류시험", null, m_Config.bMeasureVI == true ? "TRUE" : "FALSE");
-                xtw.WriteElementString("통신시험", null, m_Config.bMeasureComm == true ? "TRUE" : "FALSE");
-
-
-                xtw.WriteElementString("P24_Std", null, string.Format("{0:0.0}", m_Config.dP24_Unit_Std));
-                xtw.WriteElementString("P24_Pmt", null, string.Format("{0:0.0}", m_Config.dP24_Unit_Pmt));
-                xtw.WriteElementString("N24_Std", null, string.Format("{0:0.0}", m_Config.dN24_Unit_Std));
-                xtw.WriteElementString("N24_Pmt", null, string.Format("{0:0.0}", m_Config.dN24_Unit_Pmt));
-                xtw.WriteElementString("P12_Std", null, string.Format("{0:0.0}", m_Config.dP12_Unit_Std));
-                xtw.WriteElementString("P12_Pmt", null, string.Format("{0:0.0}", m_Config.dP12_Unit_Pmt));
-
-                xtw.WriteElementString("Inverter_ON_Std", null, string.Format("{0:0.0}", m_Config.dInverter_ON_Std));
-                xtw.WriteElementString("Inverter_ON_Pmt", null, string.Format("{0:0.0}", m_Config.dInverter_ON_Pmt));
-                xtw.WriteElementString("Inverter_OFF_Std", null, string.Format("{0:0.0}", m_Config.dInverter_OFF_Std));
-                xtw.WriteElementString("Inverter_OFF_Pmt", null, string.Format("{0:0.0}", m_Config.dInverter_OFF_Pmt));
-
-                xtw.WriteElementString("BPSF_123_Std", null, string.Format("{0:0.00}", m_Config.dBPSF_123_Std));
-                xtw.WriteElementString("BPSF_123_Pmt", null, string.Format("{0:0.00}", m_Config.dBPSF_123_Pmt));
-                xtw.WriteElementString("ACOV_123_Std", null, string.Format("{0:0.00}", m_Config.dACOV_123_Std));
-                xtw.WriteElementString("ACOV_123_Pmt", null, string.Format("{0:0.00}", m_Config.dACOV_123_Pmt));
-                xtw.WriteElementString("ACLV_123_Std", null, string.Format("{0:0.00}", m_Config.dACLV_123_Std));
-                xtw.WriteElementString("ACLV_123_Pmt", null, string.Format("{0:0.00}", m_Config.dACLV_123_Pmt));
-                xtw.WriteElementString("VDOV_123_Std", null, string.Format("{0:0.00}", m_Config.dVDOV_123_Std));
-                xtw.WriteElementString("VDOV_123_Pmt", null, string.Format("{0:0.00}", m_Config.dVDOV_123_Pmt));
-                xtw.WriteElementString("VDLV_123_Std", null, string.Format("{0:0.00}", m_Config.dVDLV_123_Std));
-                xtw.WriteElementString("VDLV_123_Pmt", null, string.Format("{0:0.00}", m_Config.dVDLV_123_Pmt));
-                xtw.WriteElementString("ISOC1_123_Std", null, string.Format("{0:0.00}", m_Config.dISOC1_123_Std));
-                xtw.WriteElementString("ISOC1_123_Pmt", null, string.Format("{0:0.00}", m_Config.dISOC1_123_Pmt));
-                xtw.WriteElementString("ISOC2_123_Std", null, string.Format("{0:0.00}", m_Config.dISOC2_123_Std));
-                xtw.WriteElementString("ISOC2_123_Pmt", null, string.Format("{0:0.00}", m_Config.dISOC2_123_Pmt));
-                xtw.WriteElementString("MOCD_123_Std", null, string.Format("{0:0.00}", m_Config.dMOCD_123_Std));
-                xtw.WriteElementString("MOCD_123_Pmt", null, string.Format("{0:0.00}", m_Config.dMOCD_123_Pmt));
-                xtw.WriteElementString("PUD_123_Std", null, string.Format("{0:0.00}", m_Config.dPUD_123_Std));
-                xtw.WriteElementString("PUD_123_Pmt", null, string.Format("{0:0.00}", m_Config.dPUD_123_Pmt));
-                xtw.WriteElementString("FCDF_123_Std", null, string.Format("{0:0.00}", m_Config.dFCDF_123_Std));
-                xtw.WriteElementString("FCDF_123_Pmt", null, string.Format("{0:0.00}", m_Config.dFCDF_123_Pmt));
-                xtw.WriteElementString("IGOC_123_Std", null, string.Format("{0:0.00}", m_Config.dIGOC_123_Std));
-                xtw.WriteElementString("IGOC_123_Pmt", null, string.Format("{0:0.00}", m_Config.dIGOC_123_Pmt));
-                xtw.WriteElementString("BSD_123_Std", null, string.Format("{0:0.00}", m_Config.dBSD_123_Std));
-                xtw.WriteElementString("BSD_123_Pmt", null, string.Format("{0:0.00}", m_Config.dBSD_123_Pmt));
-                xtw.WriteElementString("IDOC_123_Std", null, string.Format("{0:0.00}", m_Config.dIDOC_123_Std));
-                xtw.WriteElementString("IDOC_123_Pmt", null, string.Format("{0:0.00}", m_Config.dIDOC_123_Pmt));
-                xtw.WriteElementString("ZCDFP_123_Std", null, string.Format("{0:0.00}", m_Config.dZCDFP_123_Std));
-                xtw.WriteElementString("ZCDFP_123_Pmt", null, string.Format("{0:0.00}", m_Config.dZCDFP_123_Pmt));
-                xtw.WriteElementString("ZCDFM_123_Std", null, string.Format("{0:0.00}", m_Config.dZCDFM_123_Std));
-                xtw.WriteElementString("ZCDFM_123_Pmt", null, string.Format("{0:0.00}", m_Config.dZCDFM_123_Pmt));
-                xtw.WriteElementString("BPSF_54_Std", null, string.Format("{0:0.00}", m_Config.dBPSF_54_Std));
-                xtw.WriteElementString("BPSF_54_Pmt", null, string.Format("{0:0.00}", m_Config.dBPSF_54_Pmt));
-                xtw.WriteElementString("ACOV_54_Std", null, string.Format("{0:0.00}", m_Config.dACOV_54_Std));
-                xtw.WriteElementString("ACOV_54_Pmt", null, string.Format("{0:0.00}", m_Config.dACOV_54_Pmt));
-                xtw.WriteElementString("ACLV_54_Std", null, string.Format("{0:0.00}", m_Config.dACLV_54_Std));
-                xtw.WriteElementString("ACLV_54_Pmt", null, string.Format("{0:0.00}", m_Config.dACLV_54_Pmt));
-                xtw.WriteElementString("ISOC_54_Std", null, string.Format("{0:0.00}", m_Config.dISOC_54_Std));
-                xtw.WriteElementString("ISOC_54_Pmt", null, string.Format("{0:0.00}", m_Config.dISOC_54_Pmt));
-                xtw.WriteElementString("MOCD_54_Std", null, string.Format("{0:0.00}", m_Config.dMOCD_54_Std));
-                xtw.WriteElementString("MOCD_54_Pmt", null, string.Format("{0:0.00}", m_Config.dMOCD_54_Pmt));
-                xtw.WriteElementString("FCOV_54_Std", null, string.Format("{0:0.00}", m_Config.dFCOV_54_Std));
-                xtw.WriteElementString("FCOV_54_Pmt", null, string.Format("{0:0.00}", m_Config.dFCOV_54_Pmt));
-                xtw.WriteElementString("FCLV_54_Std", null, string.Format("{0:0.00}", m_Config.dFCLV_54_Std));
-                xtw.WriteElementString("FCLV_54_Pmt", null, string.Format("{0:0.00}", m_Config.dFCLV_54_Pmt));
-                xtw.WriteElementString("LGD_54_Std", null, string.Format("{0:0.00}", m_Config.dLGD_54_Std));
-                xtw.WriteElementString("LGD_54_Pmt", null, string.Format("{0:0.00}", m_Config.dLGD_54_Pmt));
-                xtw.WriteElementString("BOCD_54_Std", null, string.Format("{0:0.00}", m_Config.dBOCD_54_Std));
-                xtw.WriteElementString("BOCD_54_Pmt", null, string.Format("{0:0.00}", m_Config.dBOCD_54_Pmt));
-                xtw.WriteElementString("PUD_54_Std", null, string.Format("{0:0.00}", m_Config.dPUD_54_Std));
-                xtw.WriteElementString("PUD_54_Pmt", null, string.Format("{0:0.00}", m_Config.dPUD_54_Pmt));
-
-                xtw.WriteElementString("GDU_ON_Std", null, string.Format("{0:0.00}", m_Config.dIDU_ON_Std));
-                xtw.WriteElementString("GDU_ON_Pmt", null, string.Format("{0:0.00}", m_Config.dIDU_ON_Pmt));
-                xtw.WriteElementString("GDU_OFF_Std", null, string.Format("{0:0.00}", m_Config.dIDU_OFF_Std));
-                xtw.WriteElementString("GDU_OFF_Pmt", null, string.Format("{0:0.00}", m_Config.dIDU_OFF_Pmt));
-
-                xtw.WriteEndElement();
-
-                xtw.Flush();
-                xtw.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
 
         /// <summary>
         /// 
@@ -2755,7 +2887,7 @@ namespace CITester
             return true;
         }
 
-        // MVB 보드 포트 탐색 및 연결
+        // MVB 보드 포트 탐색 및 실제 수신 포트 상시 오픈
         public bool OpenMvbBoard()
         {
             string strTargetPort = ConfigJson.CurrentConfig?.Device?.MVBBoard_ComPort;
@@ -2836,12 +2968,29 @@ namespace CITester
                         System.Threading.Thread.Sleep(10);
                     }
 
-                    // [수정] 보드를 찾았더라도 시험 시작 시 시리얼 매니저가 열 수 있도록 Disconnect 호출
+                    // =============================================================
+                    // 탐색용 클라이언트 해제 후, 실제 수신용 매니저로 포트 오픈!
+                    // =============================================================
                     if (bIsBoardFound)
                     {
                         ConfigJson.CurrentConfig.Device.MVBBoard_ComPort = strPort;
-                        m_serialMvbBoard.Disconnect(); // 점유 해제
-                        return true;
+                        m_serialMvbBoard.Disconnect(); // 1. 탐색용 임시 세션 해제
+
+                        // 2. 실제 데이터 파싱을 담당하는 MvbSerialManager 오픈
+                        if (m_serialManager == null)
+                        {
+                            m_serialManager = new MvbSerialManager(m_mvbReceiver)
+                            {
+                                OnLog = (msg) => AppendTestLog(richTextBox_Log, msg, Color.Gray),
+                                OnError = (err) => AppendTestLog(richTextBox_Log, err, Color.Red)
+                            };
+                        }
+
+                        // 포트를 실제로 열어 상시 대기 상태로 유지
+                        bool bOpenSuccess = m_serialManager.OpenPort(strPort, nBaudRate);
+                        Console.WriteLine($"[MVB 보드] 탐색 완료: {strPort}, 수신 매니저 오픈 결과: {bOpenSuccess}");
+
+                        return bOpenSuccess;
                     }
 
                     m_serialMvbBoard.Disconnect();
@@ -4230,7 +4379,6 @@ namespace CITester
             {
                 m_Config = frmConfig.m_Config;
                 DisplayConfig();
-                WriteConfig();
                 RefreshMainUI();
             }
         }
@@ -4664,11 +4812,10 @@ namespace CITester
         /// <param name="startWord">출력 시작 워드 (%PW005)</param>
         private void ResetAllPlcOutputs(int totalPins = 256, int startWord = 5)
         {
-            PlcStart();
             c_PLCNetwork.SetAllOff();
         }
 
-        private bool PlcStart()
+        public bool PlcStart()
         {
             lock (_plcInitLock)
             {
@@ -4753,7 +4900,6 @@ namespace CITester
             {
                 m_bIsTesting = false;
                 ResetAllPlcOutputs();
-                StopMvbCommunication();
                 SetDCPowerOFF();
                 AppendTestLog(richTextBox_Log, "[시스템] 사용자 요청에 의해 시험이 강제 중단됩니다.", Color.OrangeRed);
                 return;
@@ -4824,26 +4970,50 @@ namespace CITester
 
             try
             {
-                // 3. 하드웨어 전원 및 PLC 준비
-                SetDCPowerON(80, 5);
+                // 3. 자가진단 미수행 상태 대비 안전 가드 (열려있으면 내부에서 Bypass됨)
                 PlcStart();
-                c_PLCNetwork?.SetDo(240, true, 5, 0);
 
-                // 4. MVB 통신 포트 오픈 및 수신 스레드 시작 (피시험체 부팅 전에 먼저 열어 수신 대기)
-                if (!StartMvbCommunication())
-                {
-                    AppendTestLog(richTextBox_Log, "[통신 에러] MVB 보드를 열 수 없습니다.", Color.Red);
-                    return;
-                }
+                // 4. CC 유닛 전원 투입 및 구동 접점 인가
+                SetDCPowerON(80, 5);
+                c_PLCNetwork?.SetDo(240, true, 5, 0);
 
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
+                // MVB 수신 이벤트 등록 (보드는 이미 열려있음)
                 testService.StartMvbReceiver(strUnitType);
 
-                // 5. CC 유닛 부팅 및 MVB 통신 버퍼 정상 수신 안정화 대기 (UI 프리징 방지 await 사용)
-                AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 안정화 대기 중 ...", Color.DarkGray);
-                await Task.Delay(25000);
+                // 5. 능동 폴링: 유효 패킷 수신 즉시 시험 진입 (최대 30초 대기)
+                AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 링크 연결 대기 중...", Color.DarkGray);
+
+                bool bMvbLinkReady = false;
+                DateTime dtTimeout = DateTime.Now.AddSeconds(30);
+
+                while (DateTime.Now < dtTimeout)
+                {
+                    if (!m_bIsTesting) break;
+
+                    byte[] rawCheck = testService.GetCurrentRawData("DI1");
+
+                    // 시험 전에는 접점이 모두 OFF이므로 0x00이 정상입니다.
+                    // TryParse를 통과한 정상 크기(6바이트 이상)의 프레임이 들어오면 바로 시작합니다.
+                    if (rawCheck != null && rawCheck.Length >= 6)
+                    {
+                        bMvbLinkReady = true;
+                        AppendTestLog(richTextBox_Log, "[시스템] MVB 유효 패킷 확인 완료 시험을 시작합니다.", Color.DarkGreen);
+                        break;
+                    }
+
+                    await Task.Delay(100);
+                }
+
+                if (!bMvbLinkReady)
+                {
+                    AppendTestLog(richTextBox_Log, "[통신 에러] CC 유닛 MVB 응답 없음 (30초 초과). 배선 및 전원을 확인하세요.", Color.Red);
+                    return;
+                }
+
+                await Task.Delay(200);
 
                 // 6. 메인 회차 루프 (입·출력 -> 통신)
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
@@ -4881,7 +5051,7 @@ namespace CITester
                     await Task.Delay(500);
                 }
 
-                // 정상 종료 시 전원 OFF 및 PLC 제어권 해제
+                // 시험 종료 후 CC 유닛 전원만 OFF (통신 포트는 닫지 않음)
                 SetDCPowerOFF();
 
                 // 7. 최종 JSON 저장
@@ -4902,26 +5072,14 @@ namespace CITester
             }
             finally
             {
-                // 8. 시험 종료 시 안전 정리 (예외 발생 시에도 100% 실행)
+                // 8. 하드웨어 상태 안전 복구
+                // 주의: 자가진단에서 열어둔 포트(MVB, PLC)는 유지하고 전원/접점만 차단함
                 testService?.StopMvbReceiver();
-                StopMvbCommunication();
-
-                // PLC 리소스 안전 닫기
-                if (c_PLCNetwork != null && c_PLCNetwork.serialPort != null)
-                {
-                    try
-                    {
-                        if (c_PLCNetwork.serialPort.IsOpen) c_PLCNetwork.serialPort.Close();
-                        c_PLCNetwork.serialPort.Dispose();
-                    }
-                    catch { }
-                    c_PLCNetwork.serialPort = null;
-                    c_PLCNetwork = null;
-                }
 
                 SetDCPowerOFF();
-                m_bIsTesting = false;
                 ResetAllPlcOutputs();
+
+                m_bIsTesting = false;
                 SetTestingUiState(false);
             }
         }
@@ -6346,8 +6504,8 @@ namespace CITester
             objCommGridResult.HeaderRounds.Add($"{nLoop}회차");
             AppendTestLog(richTextBox_Log, $"[통신] {nLoop}회차 통신 검사 시작", Color.Purple);
 
-            string[] mvbTargetPorts = (strUnitType == "TC") ? new[] { "41A0" } :
-                                      (strUnitType == "CC") ? new[] { "42A0" } :
+            string[] mvbTargetPorts = (strUnitType == "TC") ? new[] { "42A0" } :
+                                      (strUnitType == "CC") ? new[] { "41A0" } :
                                       (strUnitType == "ER") ? new[] { "43A0" } : new[] { "44A0" };
 
             try

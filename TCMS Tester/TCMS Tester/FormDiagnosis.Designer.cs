@@ -599,7 +599,6 @@
             this.buttonTestStart.TextLocation = new System.Drawing.Point(85, 14);
             this.buttonTestStart.UseHoverBackColor = false;
             this.buttonTestStart.UseVisualStyleBackColor = false;
-            this.buttonTestStart.Click += new System.EventHandler(this.buttonTestStart_Click);
             // 
             // buttonClose
             // 

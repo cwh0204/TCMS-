@@ -256,7 +256,7 @@ namespace TCMSTester.Services
 
         private void OnMvbErrorOccurred(object sender, string errorMessage)
         {
-            OnLog?.Invoke($"[MVB 수신 에러] {errorMessage}", Color.Red);
+            //OnLog?.Invoke($"[MVB 수신 에러] {errorMessage}", Color.Red);
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace TCMSTester.Services
         /// 현재 카테고리(DI1, DI2, DI3, DO)에 해당하는 최신 Raw 바이트를 반환합니다.
         /// (시험 시작 직후 첫 패킷 수신 지연 시 최대 500ms 동안 대기합니다.)
         /// </summary>
-        private byte[] GetCurrentRawData(string category)
+        public byte[] GetCurrentRawData(string category)
         {
             // 첫 패킷 미도착 시 최대 500ms 동기 폴링 대기
             int waitLimit = 50; // 10ms * 50 = 500ms
@@ -341,7 +341,7 @@ namespace TCMSTester.Services
                 if (_latestPacket == null)
                 {
                     Debug.WriteLine($"[MVB Getter] _latestPacket 수신 대기 실패 (category={category})");
-                    OnLog?.Invoke($"[디버그] GetCurrentRawData({category}) 호출됨 -> 패킷 미수신(NULL)", Color.Orange);
+                    //OnLog?.Invoke($"[디버그] GetCurrentRawData({category}) 호출됨 -> 패킷 미수신(NULL)", Color.Orange);
                     return null;
                 }
 
@@ -394,6 +394,120 @@ namespace TCMSTester.Services
             if (context.ActiveDi2 != null) Array.Clear(context.ActiveDi2, 0, context.ActiveDi2.Length);
             if (context.ActiveDi3 != null) Array.Clear(context.ActiveDi3, 0, context.ActiveDi3.Length);
             if (context.ActiveDo != null) Array.Clear(context.ActiveDo, 0, context.ActiveDo.Length);
+        }
+
+
+        /// <summary>
+        /// 단일 핀 수동 입·출력 시험 (서비스 로직)
+        /// </summary>
+        public async Task<bool> ExecuteSinglePinTestAsync(
+            string strCategory,
+            int nPinNo,
+            int nBitIndex,
+            Action<int, bool> setPlcDo,
+            int nDelay = 200,
+            CancellationToken cancellationToken = default)
+        {
+            OnLog?.Invoke($"[수동 시험] {strCategory} {nPinNo}번 핀 단독 검증 시작", Color.SteelBlue);
+
+            bool isOnOk = false;
+            bool isOffOk = false;
+            bool isDoCategory = strCategory.Equals("DO", StringComparison.OrdinalIgnoreCase);
+
+            try
+            {
+                if (!isDoCategory)
+                {
+                    // ==========================================
+                    // STEP 1: PLC ON 및 MVB 검증
+                    // ==========================================
+                    setPlcDo?.Invoke(nPinNo, true);
+                    await Task.Delay(nDelay, cancellationToken);
+
+                    DateTime dtWaitOn = DateTime.Now.AddMilliseconds(300);
+                    while (DateTime.Now < dtWaitOn)
+                    {
+                        byte[] rawDataOn = GetCurrentRawData(strCategory);
+                        if (rawDataOn != null)
+                        {
+                            int nCheckCount = Math.Max(nBitIndex + 1, 8);
+                            EChannelState[] tempStates = new EChannelState[nCheckCount];
+                            bool[] patternOn = new bool[nCheckCount];
+                            patternOn[nBitIndex] = true;
+
+                            TcmsValidator.ValidateGroup(strCategory, rawDataOn, patternOn, tempStates, nCheckCount);
+
+                            if (tempStates[nBitIndex] == EChannelState.On)
+                            {
+                                isOnOk = true;
+                                break;
+                            }
+                        }
+                        await Task.Delay(20, cancellationToken);
+                    }
+
+                    // ==========================================
+                    // STEP 2: PLC OFF 및 MVB 검증
+                    // ==========================================
+                    setPlcDo?.Invoke(nPinNo, false);
+                    await Task.Delay(nDelay, cancellationToken);
+
+                    DateTime dtWaitOff = DateTime.Now.AddMilliseconds(300);
+                    while (DateTime.Now < dtWaitOff)
+                    {
+                        byte[] rawDataOff = GetCurrentRawData(strCategory);
+                        if (rawDataOff != null)
+                        {
+                            int nCheckCount = Math.Max(nBitIndex + 1, 8);
+                            EChannelState[] tempStates = new EChannelState[nCheckCount];
+                            bool[] patternOff = new bool[nCheckCount];
+                            patternOff[nBitIndex] = false;
+
+                            TcmsValidator.ValidateGroup(strCategory, rawDataOff, patternOff, tempStates, nCheckCount);
+
+                            if (tempStates[nBitIndex] == EChannelState.Off || tempStates[nBitIndex] == default)
+                            {
+                                isOffOk = true;
+                                break;
+                            }
+                        }
+                        await Task.Delay(20, cancellationToken);
+                    }
+                }
+                else
+                {
+                    // DO 채널 대응 영역
+                    await Task.Delay(nDelay, cancellationToken);
+                }
+
+                bool isFinalSuccess = isOnOk && isOffOk;
+
+                if (isFinalSuccess)
+                {
+                    OnLog?.Invoke($"[수동 시험] {strCategory} {nPinNo}번 핀 ON/OFF (성공)", Color.DarkGreen);
+                }
+                else
+                {
+                    OnFailLog?.Invoke($"[수동 실패] {strCategory} {nPinNo}번 핀 (ON:{isOnOk}, OFF:{isOffOk})", Color.Red);
+                }
+
+                return isFinalSuccess;
+            }
+            catch (OperationCanceledException)
+            {
+                OnLog?.Invoke($"[수동 시험] {strCategory} {nPinNo}번 핀 시험 취소됨", Color.OrangeRed);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                OnFailLog?.Invoke($"[수동 에러] {strCategory} {nPinNo}번: {ex.Message}", Color.Red);
+                return false;
+            }
+            finally
+            {
+                // 안전 보장: 시험 종료 시 해당 핀 접점은 항상 OFF
+                setPlcDo?.Invoke(nPinNo, false);
+            }
         }
 
         #endregion
