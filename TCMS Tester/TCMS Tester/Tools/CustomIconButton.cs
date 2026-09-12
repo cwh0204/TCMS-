@@ -31,12 +31,12 @@ public class CustomIconButton : Button
     private bool isPressed = false;
 
     // ─────────────────────────────────────────────
-    // ★ 부모 배경 캐시 (OnPaint마다 Bitmap 생성 방지)
+    // 부모 배경 캐시 (OnPaint마다 Bitmap 생성 방지)
     // ─────────────────────────────────────────────
     private Bitmap _parentBgCache = null;
     private Rectangle _cachedBounds = Rectangle.Empty; // 캐시가 유효한 조건 추적
 
-    // ★ 디자인 모드 판별 (DesignMode만으론 불안정)
+    // 디자인 모드 판별 (DesignMode만으론 불안정)
     private bool IsDesignMode => DesignMode || LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
     #region [ 커스텀 속성 - 디자인 창 ]
@@ -94,7 +94,7 @@ public class CustomIconButton : Button
             ControlStyles.UserPaint |
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.OptimizedDoubleBuffer |
-            ControlStyles.ResizeRedraw |                  // ★ 크기 변경 시 잔상 방지
+            ControlStyles.ResizeRedraw |                  // 크기 변경 시 잔상 방지
             ControlStyles.SupportsTransparentBackColor,
             true);
 
@@ -106,7 +106,7 @@ public class CustomIconButton : Button
     }
 
     // ─────────────────────────────────────────────
-    // ★ 디자인창 투명 버그 수정
+    // 디자인창 투명 버그 수정
     //   - 런타임: 비워둬서 깜박임 방지 (OnPaint가 전부 처리)
     //   - 디자인타임: base 호출해야 디자이너가 배경을 정상 렌더링
     // ─────────────────────────────────────────────
@@ -118,7 +118,7 @@ public class CustomIconButton : Button
     }
 
     // ─────────────────────────────────────────────
-    // ★ 부모 배경 캐시 무효화 타이밍 관리
+    // 부모 배경 캐시 무효화 타이밍 관리
     // ─────────────────────────────────────────────
     protected override void OnResize(EventArgs e)
     {
@@ -181,7 +181,7 @@ public class CustomIconButton : Button
         // ─────────────────────────────────────────────
         if (IsDesignMode)
         {
-            // ★ 디자인타임: 명시적 클리어로 이전 프레임 잔상 및 이미지 깨짐 방지
+            // 디자인타임: 명시적 클리어로 이전 프레임 잔상 및 이미지 깨짐 방지
             g.Clear(this.Parent?.BackColor ?? SystemColors.Control);
         }
         else if (this.Parent != null)

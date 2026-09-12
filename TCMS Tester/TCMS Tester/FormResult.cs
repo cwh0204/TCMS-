@@ -233,7 +233,7 @@ namespace CITester
                 }
             }
             dgv.ClearSelection();
-            // ★ [추가] 이벤트 중복 등록을 방지하기 위해 해제 후 다시 연결합니다.
+            // [추가] 이벤트 중복 등록을 방지하기 위해 해제 후 다시 연결합니다.
             dgv.SelectionChanged -= Dgv_SelectionChanged;
             dgv.SelectionChanged += Dgv_SelectionChanged;
         }

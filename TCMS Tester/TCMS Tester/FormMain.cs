@@ -1671,7 +1671,7 @@ namespace CITester
                     if (rawCheck != null && rawCheck.Length >= 6)
                     {
                         bMvbLinkReady = true;
-                        AppendTestLog(richTextBox_Log, "[시스템] ★ MVB 통신 링크 연결 확인 완료!", Color.DarkGreen);
+                        AppendTestLog(richTextBox_Log, "[시스템] MVB 통신 링크 연결 확인 완료!", Color.DarkGreen);
                         break;
                     }
                     await Task.Delay(100);
@@ -4891,11 +4891,65 @@ namespace CITester
         }
 
         /// <summary>
+        /// 노드의 Name 또는 Text를 기준으로 트리 전체에서 체크 상태 확인
+        /// </summary>
+        private bool IsTreeNodeChecked(string nodeName)
+        {
+            // 1. Name 기준으로 전체 재귀 탐색
+            var found = modernTreeView1.Nodes.Find(nodeName, true);
+            if (found.Length > 0) return found[0].Checked;
+
+            // 2. Name과 Text가 다를 경우를 대비해 Text로 전체 노드 순회 확인
+            return CheckNodeTextRecursive(modernTreeView1.Nodes, nodeName);
+        }
+
+        private bool CheckNodeTextRecursive(TreeNodeCollection nodes, string text)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                if (node.Text == text) return node.Checked;
+                if (node.Nodes.Count > 0 && CheckNodeTextRecursive(node.Nodes, text)) return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// 유닛별(TC/CC/DU/ER)로 달라지는 탭 구성에서 아날로그 탭을 동적으로 찾아 전환
+        /// </summary>
+        private void SwitchToAnalogTab()
+        {
+            int targetTabIndex = -1;
+            string[] analogKeywords = { "아날로그", "ANALOG", "AI" };
+
+            for (int t = 0; t < flatTabControl1.TabPages.Count; t++)
+            {
+                TabPage page = flatTabControl1.TabPages[t];
+                string tabText = page.Text?.ToUpper().Trim() ?? "";
+                string tabName = page.Name?.ToUpper().Trim() ?? "";
+
+                if (analogKeywords.Any(key => tabText.Contains(key) || tabName.Contains(key)))
+                {
+                    targetTabIndex = t;
+                    break;
+                }
+            }
+
+            if (targetTabIndex >= 0 && flatTabControl1.SelectedIndex != targetTabIndex)
+            {
+                flatTabControl1.SelectedIndex = targetTabIndex;
+                Application.DoEvents();
+            }
+        }
+
+        /// <summary>
         /// 시험 시작
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
-            // 1. 강제 중단 요청 처리 (이미 시험 중인 경우 중단)
+            // 1. 강제 중단 요청 처리
             if (m_bIsTesting)
             {
                 m_bIsTesting = false;
@@ -4905,10 +4959,24 @@ namespace CITester
                 return;
             }
 
-            int nMaxLoop = (int)TestCount.Value;
-            if (MessageBox.Show($"시험 차수 : {nMaxLoop}회\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            // =========================================================================
+            // 2. 트리뷰 체크 상태 확인 (시험 스코프 결정)
+            // =========================================================================
+            bool bDoDigitalTest = IsTreeNodeChecked("디지털 입출력 시험");
+            bool bDoAnalogTest = IsTreeNodeChecked("아날로그 입출력 시험");
+            bool bDoCommTest = IsTreeNodeChecked("통신 시험");
+
+            if (!bDoDigitalTest && !bDoAnalogTest && !bDoCommTest)
             {
-                return; // 시작 전 취소는 하드웨어를 켜기 전에 안전하게 종료
+                MessageBox.Show("선택된 시험 항목이 없습니다.\n트리 목록에서 최소 1개 이상의 시험을 체크해 주세요.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int nMaxLoop = (int)TestCount.Value;
+            string strScopeSummary = $"[디지털: {bDoDigitalTest}, 아날로그: {bDoAnalogTest}, 통신: {bDoCommTest}]";
+            if (MessageBox.Show($"시험 차수 : {nMaxLoop}회\n선택 항목: {strScopeSummary}\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
             }
 
             m_bIsTesting = true;
@@ -4924,17 +4992,19 @@ namespace CITester
             finalResult.Header.TrainNo = ConfigJson.CurrentConfig?.Operation?.TrainNo ?? "0000";
             finalResult.Header.TotalRound = nMaxLoop;
 
+            // NullReferenceException 방지: ExecuteSingleRoundIoAsync 전달용 인스턴스는 항상 생성
             var objDigitalGridResult = new TestResultJson.GridTestResult { GridTitle = "디지털 입출력 시험" };
             var objAnalogGridResult = new TestResultJson.GridTestResult { GridTitle = "아날로그 입출력 시험" };
             var objCommGridResult = new TestResultJson.GridTestResult { GridTitle = "통신 시험" };
 
-            finalResult.GridResults.Add(objDigitalGridResult);
-            finalResult.GridResults.Add(objAnalogGridResult);
-            finalResult.GridResults.Add(objCommGridResult);
+            // 최종 JSON 리포트에는 사용자가 체크한 항목만 담음
+            if (bDoDigitalTest) finalResult.GridResults.Add(objDigitalGridResult);
+            if (bDoAnalogTest) finalResult.GridResults.Add(objAnalogGridResult);
+            if (bDoCommTest) finalResult.GridResults.Add(objCommGridResult);
 
             bool bHasAnyFailure = false;
 
-            // 2. 실제 시험을 주관하는 testService 생성 및 설정
+            // 실제 시험을 주관하는 testService 생성
             var testService = new TcmsTestService(m_mvbReceiver)
             {
                 OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
@@ -4945,11 +5015,17 @@ namespace CITester
                     dataGridViewDI2?.Invalidate();
                     dataGridViewDI3?.Invalidate();
                     dataGridViewDO?.Invalidate();
-                },
-                RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
+                    dataGridViewAnalog?.Invalidate();
+                }
+            };
+
+            // ★ C# 7.3 삼항 연산자 오류 해결: if 분기로 명시적 할당
+            if (bDoDigitalTest)
+            {
+                testService.RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
                 {
                     DataGridView targetDgv = null;
-                    switch (cat)
+                    switch (cat.ToUpper())
                     {
                         case "DI1": targetDgv = dataGridViewDI1; break;
                         case "DI2": targetDgv = dataGridViewDI2; break;
@@ -4965,25 +5041,34 @@ namespace CITester
                         cat, arr, count, targetDgv, delay, loop, fails, details,
                         channelRawDataSupplier, expectedBits, nStartPin
                     );
-                }
-            };
+                };
+            }
+
+            if (bDoAnalogTest)
+            {
+                testService.RunAnalogSequenceFunc = async (delay, loop, fails, details) =>
+                {
+                    SwitchToAnalogTab();
+                    await Task.Delay(200);
+
+                    // 아날로그 시험 시퀀스 실행
+                    await RunAnalogTestSequenceAsync(dataGridViewAnalog, delay, loop, fails, details);
+                };
+            }
 
             try
             {
-                // 3. 자가진단 미수행 상태 대비 안전 가드 (열려있으면 내부에서 Bypass됨)
+                // 3. 하드웨어 기동
                 PlcStart();
-
-                // 4. CC 유닛 전원 투입 및 구동 접점 인가
                 SetDCPowerON(80, 5);
                 c_PLCNetwork?.SetDo(240, true, 5, 0);
 
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
-                // MVB 수신 이벤트 등록 (보드는 이미 열려있음)
                 testService.StartMvbReceiver(strUnitType);
 
-                // 5. 능동 폴링: 유효 패킷 수신 즉시 시험 진입 (최대 30초 대기)
+                // 4. MVB 통신 링크 확인
                 AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 링크 연결 대기 중...", Color.DarkGray);
 
                 bool bMvbLinkReady = false;
@@ -4994,13 +5079,10 @@ namespace CITester
                     if (!m_bIsTesting) break;
 
                     byte[] rawCheck = testService.GetCurrentRawData("DI1");
-
-                    // 시험 전에는 접점이 모두 OFF이므로 0x00이 정상입니다.
-                    // TryParse를 통과한 정상 크기(6바이트 이상)의 프레임이 들어오면 바로 시작합니다.
                     if (rawCheck != null && rawCheck.Length >= 6)
                     {
                         bMvbLinkReady = true;
-                        AppendTestLog(richTextBox_Log, "[시스템] MVB 유효 패킷 확인 완료 시험을 시작합니다.", Color.DarkGreen);
+                        AppendTestLog(richTextBox_Log, "[시스템] ★ MVB 유효 패킷 확인 완료! 시험을 시작합니다.", Color.DarkGreen);
                         break;
                     }
 
@@ -5015,7 +5097,7 @@ namespace CITester
 
                 await Task.Delay(200);
 
-                // 6. 메인 회차 루프 (입·출력 -> 통신)
+                // 5. 메인 회차 루프
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
                 {
                     if (!m_bIsTesting) break;
@@ -5024,25 +5106,32 @@ namespace CITester
                     AppendTestLog(richTextBox_Log, $"           [전체 시험 {nLoop}/{nMaxLoop}회차 시작]           ", Color.Purple);
                     AppendTestLog(richTextBox_Log, $"==================================================", Color.Purple);
 
-                    // [1단계] 입·출력 시험
-                    mainTabControl1.SelectedIndex = 0;
-                    await Task.Delay(200);
+                    // [1단계] 디지털 / 아날로그 입·출력 시험
+                    if (bDoDigitalTest || bDoAnalogTest)
+                    {
+                        mainTabControl1.SelectedIndex = 0;
+                        await Task.Delay(200);
 
-                    bool bIoPass = await testService.ExecuteSingleRoundIoAsync(
-                        strUnitType, nLoop, () => m_bIsTesting, channelContext, objDigitalGridResult, objAnalogGridResult);
-                    if (!bIoPass) bHasAnyFailure = true;
+                        bool bIoPass = await testService.ExecuteSingleRoundIoAsync(
+                            strUnitType, nLoop, () => m_bIsTesting, channelContext, objDigitalGridResult, objAnalogGridResult);
+
+                        if (!bIoPass) bHasAnyFailure = true;
+                    }
 
                     if (!m_bIsTesting) break;
 
                     // [2단계] 통신 시험
-                    mainTabControl1.SelectedIndex = 1;
-                    await Task.Delay(300);
-
-                    bool bCommPass = await RunCommSingleRoundAsync(strUnitType, nLoop, objCommGridResult);
-                    if (!bCommPass)
+                    if (bDoCommTest)
                     {
-                        bHasAnyFailure = true;
-                        AppendTestLog(richTextBox_FailLog, $"[통신] {nLoop}회차 통신 시험 불합격 발생", Color.Red);
+                        mainTabControl1.SelectedIndex = 1;
+                        await Task.Delay(300);
+
+                        bool bCommPass = await RunCommSingleRoundAsync(strUnitType, nLoop, objCommGridResult);
+                        if (!bCommPass)
+                        {
+                            bHasAnyFailure = true;
+                            AppendTestLog(richTextBox_FailLog, $"[통신] {nLoop}회차 통신 시험 불합격 발생", Color.Red);
+                        }
                     }
 
                     if (!m_bIsTesting) break;
@@ -5051,10 +5140,9 @@ namespace CITester
                     await Task.Delay(500);
                 }
 
-                // 시험 종료 후 CC 유닛 전원만 OFF (통신 포트는 닫지 않음)
                 SetDCPowerOFF();
 
-                // 7. 최종 JSON 저장
+                // 6. 최종 JSON 저장
                 if (m_bIsTesting)
                 {
                     finalResult.Header.FinalResult = bHasAnyFailure ? "불합격" : "합격";
@@ -5072,13 +5160,9 @@ namespace CITester
             }
             finally
             {
-                // 8. 하드웨어 상태 안전 복구
-                // 주의: 자가진단에서 열어둔 포트(MVB, PLC)는 유지하고 전원/접점만 차단함
                 testService?.StopMvbReceiver();
-
                 SetDCPowerOFF();
                 ResetAllPlcOutputs();
-
                 m_bIsTesting = false;
                 SetTestingUiState(false);
             }
@@ -6566,6 +6650,11 @@ namespace CITester
         }
 
         private void customIconButton1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void modernTreeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
         }

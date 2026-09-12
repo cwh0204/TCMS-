@@ -119,7 +119,7 @@ public class CustomNumeric : UserControl
             {
                 Value = dRes;
             }
-            // ★ 수정: 파싱 실패 혹은 성공 후 입력 폼 버퍼 값을 정확하게 재동기화하도록 고정
+            // 수정: 파싱 실패 혹은 성공 후 입력 폼 버퍼 값을 정확하게 재동기화하도록 고정
             SyncTextBox();
         }
     }
@@ -169,7 +169,7 @@ public class CustomNumeric : UserControl
 
         txtValue.KeyPress += TxtValue_KeyPress;
         txtValue.Leave += TxtValue_Leave;
-        txtValue.KeyDown += TxtValue_KeyDown; // ★ 사용자 엔터 키 입력 편의성 확보를 위한 추가
+        txtValue.KeyDown += TxtValue_KeyDown; // 사용자 엔터 키 입력 편의성 확보를 위한 추가
 
         Controls.Add(txtValue);
     }
@@ -196,7 +196,7 @@ public class CustomNumeric : UserControl
             e.Handled = true; return;
         }
 
-        // ★ 수정: 마이너스 기호 중복 기입 방지 및 입력 커서 위치가 맨 앞(0)이 아닐 때 블록 지정이 없는 경우 제한
+        // 수정: 마이너스 기호 중복 기입 방지 및 입력 커서 위치가 맨 앞(0)이 아닐 때 블록 지정이 없는 경우 제한
         if (e.KeyChar == '-')
         {
             if (txt.Text.IndexOf('-') >= 0 || (txt.SelectionStart != 0 && txt.SelectionLength == 0))
@@ -295,7 +295,7 @@ public class CustomNumeric : UserControl
         base.OnMouseDown(e);
         if (e.Button == MouseButtons.Left)
         {
-            // ★ 수정: 부동소수점 2진수 연산 누적 오차를 사전 제거하기 위해 정밀 오프셋 보정 가미
+            // 수정: 부동소수점 2진수 연산 누적 오차를 사전 제거하기 위해 정밀 오프셋 보정 가미
             if (bIsUpHovered)
             {
                 bIsUpPressed = true;
@@ -377,7 +377,7 @@ public class CustomNumeric : UserControl
             _hoverBgBrush?.Dispose();
             _pressedBgBrush?.Dispose();
 
-            // ★ 디자이너 크래시(유령화 버그) 방지를 위해 공유 객체인 Font.Dispose() 구문을 삭제했습니다.
+            // 디자이너 크래시(유령화 버그) 방지를 위해 공유 객체인 Font.Dispose() 구문을 삭제했습니다.
         }
         base.Dispose(disposing);
     }

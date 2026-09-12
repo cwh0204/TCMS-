@@ -20,7 +20,7 @@ namespace CITester
         private SolidBrush _fillBrush;
         private Pen _borderPen;
 
-        // ★ 100% 정확한 디자이너 감지 프로퍼티
+        // 100% 정확한 디자이너 감지 프로퍼티
         private bool bIsDesignMode => DesignMode || LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         // ────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ namespace CITester
 
             Size = new Size(200, 100);
 
-            // ★ 자식 컨트롤 클리핑 버그 유발 원인인 Region 코드를 완전히 대체하기 위해 
+            // 자식 컨트롤 클리핑 버그 유발 원인인 Region 코드를 완전히 대체하기 위해 
             // 배경색을 Transparent로 안전하게 제어합니다.
             BackColor = Color.Transparent;
         }
@@ -115,7 +115,7 @@ namespace CITester
 
             _cachedPath = BuildRoundedPath();
 
-            // ★ [버그 수정] 자식 컨트롤을 가차 없이 잘라버리던 this.Region 코드를 전면 제거했습니다.
+            // [버그 수정] 자식 컨트롤을 가차 없이 잘라버리던 this.Region 코드를 전면 제거했습니다.
             // 이제 패널 본연의 부모 컨테이너 역할을 완벽하게 수행합니다.
         }
 

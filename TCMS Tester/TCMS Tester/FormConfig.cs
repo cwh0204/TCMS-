@@ -212,7 +212,7 @@ namespace CITester
             {
                 if (selectForm.ShowDialog() == DialogResult.OK)
                 {
-                    // ★ 메인 폼이 아닌 임시 변수에 저장
+                    // 메인 폼이 아닌 임시 변수에 저장
                     if (selectForm.strTCMSUnit == "Unit1")
                         tempTrainClassInfo = "1,2,3단계 전동차";
                     else
@@ -225,7 +225,7 @@ namespace CITester
         }
         private void RefreshUI()
         {
-            // ★ 추가
+            // 추가
             this.SuspendLayout();
             try
             {
@@ -392,7 +392,7 @@ namespace CITester
             }
             finally
             {
-                this.ResumeLayout(true); // ★ 추가
+                this.ResumeLayout(true); // 추가
             }
         }
         private void CheckBox_Measure_Run_CheckedChanged(object sender, EventArgs e)

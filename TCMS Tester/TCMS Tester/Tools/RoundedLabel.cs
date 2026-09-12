@@ -37,7 +37,7 @@ namespace CITester
         private Pen _cachedPen;
         private GraphicsPath _cachedPath;
 
-        // ★ 100% 정확한 디자이너 감지 프로퍼티 (투명 버그 방어용)
+        // 100% 정확한 디자이너 감지 프로퍼티 (투명 버그 방어용)
         private bool bIsDesignMode => DesignMode || LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         public RoundedLabel()
@@ -54,7 +54,7 @@ namespace CITester
             this.BackColor = Color.Transparent;
             this.TextAlign = ContentAlignment.MiddleCenter;
 
-            // ★ 생성자 시점에서 안전하게 초기 캐시 구조 매핑 
+            // 생성자 시점에서 안전하게 초기 캐시 구조 매핑 
             UpdateBrushCache();
             UpdatePenCache();
             UpdatePathCache();
@@ -236,7 +236,7 @@ namespace CITester
             bool bRoundTop = (_cornerStyle == RoundedCornerStyle.All || _cornerStyle == RoundedCornerStyle.Top);
             bool bRoundBottom = (_cornerStyle == RoundedCornerStyle.All || _cornerStyle == RoundedCornerStyle.Bottom);
 
-            // ★ 길이가 0인 의미 없는 유령 선(AddLine) 코드를 전면 제거하고 정석 좌표 회전 방식으로 리팩토링했습니다.
+            // 길이가 0인 의미 없는 유령 선(AddLine) 코드를 전면 제거하고 정석 좌표 회전 방식으로 리팩토링했습니다.
             // 1. 상단 좌측 코너
             if (bRoundTop)
                 path.AddArc(rect.X, rect.Y, fDiameter, fDiameter, 180, 90);
