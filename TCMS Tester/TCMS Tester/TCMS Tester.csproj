@@ -188,8 +188,8 @@
     <Compile Include="Protocol\TcmsParser.cs" />
     <Compile Include="Protocol\TcmsValidator.cs" />
     <Compile Include="Services\TcmsTestService.cs" />
+    <Compile Include="Services\UdpService.cs" />
     <Compile Include="TestResultJson.cs" />
-    <Compile Include="Tests\TcmsTestRunner.cs" />
     <Compile Include="Tools\CustomComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -612,6 +612,9 @@
     </Content>
     <None Include="Resources\Artboard 5%403x.png" />
     <Content Include="Resources\test.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.3912.50\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.3912.50\build\Microsoft.Web.WebView2.targets')" />

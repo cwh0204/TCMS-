@@ -42,6 +42,11 @@ namespace CITester
             frmMain?.ResetPort();
         }
 
+        public bool IsDiagnosisPassed
+        {
+            get { return (m_lstFailItems != null && m_lstFailItems.Count == 0); }
+        }
+
         private void Timer_Check_Tick(object sender, EventArgs e)
         {
             if (m_nStep >= 5)
@@ -80,7 +85,12 @@ namespace CITester
                     string strSummaryHead = "[자가진단 결과]";
                     string strCheckCable = "위에 나열된 장치들의 케이블 연결 상태를 확인해 주십시오.";
 
-                    if (m_lstFailItems.Count > 0)
+                    bool bAllPassed = (m_lstFailItems.Count == 0);
+
+                    // 메인 폼에 자가진단 최종 결과 전달 (버튼 색상 변경 및 시험 버튼 활성화)
+                    frmMain?.UpdateDiagnosisResultState(bAllPassed);
+
+                    if (!bAllPassed)
                     {
                         string strMessage = $"{strSummaryHead}\n" + string.Join("\n", m_lstFailItems) + $"\n\n{strCheckCable}";
                         MessageBox.Show(strMessage, "자가진단 알림", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -108,7 +118,14 @@ namespace CITester
             button_PLC.StartNewDiagnosis();
             button_PLC.Enabled = false;
 
-            string strTargetPort = ConfigJson.CurrentConfig.Device.Plc_COM;
+            // 재진단 시 메인 폼이 점유 중인 PLC 포트를 먼저 닫아 충돌 방지
+            frmMain?.ClosePlc();
+            await Task.Delay(50); // OS 커널의 COM 포트 핸들 반환 대기
+
+            // 재시험을 고려하여 이전 실패 목록에서 PLC 제거
+            m_lstFailItems.Remove("PLC");
+
+            string strTargetPort = ConfigJson.CurrentConfig?.Device?.Plc_COM;
             List<string> lstCandidatePorts = new List<string>();
 
             if (!string.IsNullOrEmpty(strTargetPort))
@@ -135,77 +152,76 @@ namespace CITester
                 for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
                 {
                     string strCurrentPort = lstCandidatePorts[nPortIdx];
-                    SerialPort testPort = null;
 
                     try
                     {
-                        testPort = new SerialPort(strCurrentPort, 9600, Parity.None, 8, StopBits.One)
+                        using (SerialPort testPort = new SerialPort(strCurrentPort, 9600, Parity.None, 8, StopBits.One)
                         {
                             ReadTimeout = 200,
                             WriteTimeout = 200
-                        };
-                        testPort.Open();
-                        testPort.DiscardInBuffer();
-                        testPort.DiscardOutBuffer();
-
-                        // PLC 읽기(%PW005) Cnet 프레임 송신
-                        string reqBody = "00rSS0106%PW005";
-                        byte[] txBuf = new byte[reqBody.Length + 4];
-                        int txPos = 0;
-                        txBuf[txPos++] = 0x05; // ENQ
-                        for (int i = 0; i < reqBody.Length; i++) txBuf[txPos++] = (byte)reqBody[i];
-                        txBuf[txPos++] = 0x04; // EOT
-
-                        byte bcc = 0;
-                        for (int i = 0; i < txPos; i++) bcc += txBuf[i];
-                        string bccHex = bcc.ToString("X2");
-                        txBuf[txPos++] = (byte)bccHex[0];
-                        txBuf[txPos++] = (byte)bccHex[1];
-
-                        testPort.Write(txBuf, 0, txPos);
-
-                        byte[] rxBuf = new byte[256];
-                        int totalRead = 0;
-                        DateTime dtLimit = DateTime.Now.AddMilliseconds(250);
-
-                        while (DateTime.Now < dtLimit)
+                        })
                         {
-                            if (testPort.BytesToRead > 0)
-                            {
-                                int r = testPort.Read(rxBuf, totalRead, rxBuf.Length - totalRead);
-                                totalRead += r;
-                            }
-                            Thread.Sleep(15);
-                        }
+                            testPort.Open();
+                            testPort.DiscardInBuffer();
+                            testPort.DiscardOutBuffer();
 
-                        if (totalRead > 0)
-                        {
-                            int ackIdx = -1;
-                            for (int i = 0; i < totalRead; i++)
-                            {
-                                if (rxBuf[i] == 0x06) { ackIdx = i; break; }
-                            }
+                            // PLC 읽기(%PW005) Cnet 프레임 송신
+                            string reqBody = "00rSS0106%PW005";
+                            byte[] txBuf = new byte[reqBody.Length + 4];
+                            int txPos = 0;
+                            txBuf[txPos++] = 0x05; // ENQ
+                            for (int i = 0; i < reqBody.Length; i++) txBuf[txPos++] = (byte)reqBody[i];
+                            txBuf[txPos++] = 0x04; // EOT
 
-                            if (ackIdx != -1 && (totalRead - ackIdx) >= 7)
+                            byte bcc = 0;
+                            for (int i = 0; i < txPos; i++) bcc += txBuf[i];
+                            string bccHex = bcc.ToString("X2");
+                            txBuf[txPos++] = (byte)bccHex[0];
+                            txBuf[txPos++] = (byte)bccHex[1];
+
+                            testPort.Write(txBuf, 0, txPos);
+
+                            byte[] rxBuf = new byte[256];
+                            int totalRead = 0;
+                            DateTime dtLimit = DateTime.Now.AddMilliseconds(250);
+
+                            while (DateTime.Now < dtLimit)
                             {
-                                string respHeader = Encoding.ASCII.GetString(rxBuf, ackIdx + 1, 5);
-                                if (respHeader.Equals("00rSS", StringComparison.OrdinalIgnoreCase))
+                                if (testPort.BytesToRead > 0)
                                 {
-                                    bPingSuccess = true;
-                                    strFoundPort = strCurrentPort;
+                                    int r = testPort.Read(rxBuf, totalRead, rxBuf.Length - totalRead);
+                                    totalRead += r;
+                                }
+                                Thread.Sleep(15);
+                            }
+
+                            if (totalRead > 0)
+                            {
+                                int ackIdx = -1;
+                                for (int i = 0; i < totalRead; i++)
+                                {
+                                    if (rxBuf[i] == 0x06) { ackIdx = i; break; }
+                                }
+
+                                if (ackIdx != -1 && (totalRead - ackIdx) >= 7)
+                                {
+                                    string respHeader = Encoding.ASCII.GetString(rxBuf, ackIdx + 1, 5);
+                                    if (respHeader.Equals("00rSS", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        bPingSuccess = true;
+                                        strFoundPort = strCurrentPort;
+                                    }
                                 }
                             }
-                        }
 
-                        // 임시 핑용 포트는 즉시 닫아서 메인 폼이 열 수 있게 해제
-                        testPort.Close();
-                        testPort.Dispose();
+                            testPort.Close();
+                        }
 
                         if (bPingSuccess) break;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        try { testPort?.Close(); testPort?.Dispose(); } catch { }
+                        Console.WriteLine($"[PLC 핑 테스트 예외 - {strCurrentPort}] {ex.Message}");
                     }
                 }
             });
@@ -216,7 +232,7 @@ namespace CITester
             {
                 button_PLC.BackColor = Color.Red;
                 button_PLC.CurrentStatus = eDiagStatus.Abnormal;
-                m_lstFailItems.Add("PLC");
+                if (!m_lstFailItems.Contains("PLC")) m_lstFailItems.Add("PLC");
                 Console.WriteLine("[진단 결과] PLC 통신 실패");
             }
             else
@@ -279,12 +295,24 @@ namespace CITester
 
         private void button_OutputBoard_Click(object sender, EventArgs e)
         {
-            return; // 비활성화
+            // 비활성화 항목: 즉시 정상(성공) 처리
+            button_OutputBoard.BackColor = Color.GreenYellow;
+            button_OutputBoard.CurrentStatus = eDiagStatus.Normal;
+            Console.WriteLine("[진단] 출력 보드: 기본 정상 처리 완료");
         }
 
         private void button_InputBoard_Click(object sender, EventArgs e)
         {
-            return; // 비활성화
+            // 비활성화 항목: 즉시 정상(성공) 처리
+            button_InputBoard.BackColor = Color.GreenYellow;
+            button_InputBoard.CurrentStatus = eDiagStatus.Abnormal;
+
+            if (!m_lstFailItems.Contains("입력 보드"))
+            {
+                m_lstFailItems.Add("입력 보드");
+            }
+
+            Console.WriteLine("[진단] 입력 보드: 기본 실패 처리 완료");
         }
 
         private void FormDiagnosis_FormClosed(object sender, FormClosedEventArgs e)
@@ -307,5 +335,7 @@ namespace CITester
                 return false;
             }
         }
+
+
     }
 }

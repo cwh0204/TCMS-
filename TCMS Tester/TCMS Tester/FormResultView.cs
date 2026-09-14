@@ -535,6 +535,8 @@ namespace CITester
 
         private void BtnPrint_Click(object sender, EventArgs e)
         {
+
+
             DialogResult drSelect = MessageBox.Show(
                 "시험 결과를 인쇄하시겠습니까?",
                 "인쇄 확인",
@@ -542,10 +544,7 @@ namespace CITester
                 MessageBoxIcon.Question
             );
 
-            if (drSelect != DialogResult.Yes)
-            {
-                return;
-            }
+            if (drSelect != DialogResult.Yes) return;
 
             string strDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string strTimeStamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -569,7 +568,7 @@ namespace CITester
                 }
             }
 
-            // 보고서 헤더 정보 (결과 JSON 기준, 없으면 Config 기준)
+            // 보고서 헤더 정보
             string strUnitType = m_objTestResult?.Header?.TCMSUnit ?? ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
             string strSerialNo = m_objTestResult?.Header?.SerialNo ?? ConfigJson.CurrentConfig?.Operation?.SerialNo ?? "0000";
             string strCarNo = m_objTestResult?.Header?.FleetNo ?? ConfigJson.CurrentConfig?.Operation?.FleetNo ?? "0000";
@@ -577,39 +576,39 @@ namespace CITester
             string strTester = m_objTestResult?.Header?.TesterName ?? ConfigJson.CurrentConfig?.Operation?.TesterName ?? "ADMIN";
             string strFinalDecision = m_objTestResult?.Header?.FinalResult ?? "미시험";
 
+            // =========================================================================
+            // 출력 목록 구성 (불필요한 ForcePageBreak 제거 및 컴팩트화)
+            // =========================================================================
             List<string[]> listItems = new List<string[]>();
 
             // 1. 입·출력 시험
             listItems.Add(new string[] { "Section", "1. 입·출력 시험" });
-            listItems.Add(new string[] { "Section", "  1.1 디지털 입력 (DI)" });
+
+            // 1.1 DI
+            listItems.Add(new string[] { "SubSection", "1.1 디지털 입력 (DI)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
             listItems.Add(new string[] { "Row", "디지털 입력 (DI 1)", GetDioRoundResult(m_objTestResult, "DI1", 1) });
             listItems.Add(new string[] { "Row", "디지털 입력 (DI 2)", GetDioRoundResult(m_objTestResult, "DI2", 1) });
             listItems.Add(new string[] { "Row", "디지털 입력 (DI 3)", GetDioRoundResult(m_objTestResult, "DI3", 1) });
+            listItems.Add(new string[] { "Spacing", "12" });
 
-            listItems.Add(new string[] { "ForcePageBreak" });
-
-            listItems.Add(new string[] { "Section", "  1.2 디지털 출력 (DO)" });
+            // 1.2 DO
+            listItems.Add(new string[] { "SubSection", "1.2 디지털 출력 (DO)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
             listItems.Add(new string[] { "Row", "디지털 출력 (DO)", GetDioRoundResult(m_objTestResult, "DO", 1) });
+            listItems.Add(new string[] { "Spacing", "12" });
 
-            listItems.Add(new string[] { "ForcePageBreak" });
-
-            listItems.Add(new string[] { "Section", "  1.3 아날로그 입력 (AI)" });
+            // 1.3 AI / 1.4 AO
+            listItems.Add(new string[] { "SubSection", "1.3 아날로그 입출력 (AI / AO)" });
             listItems.Add(new string[] { "Header", "시험 항목", "판정" });
             listItems.Add(new string[] { "Row", "아날로그 입력 (AI)", GetDioRoundResult(m_objTestResult, "아날로그", 1) });
-
-            listItems.Add(new string[] { "Section", "  1.4 아날로그 출력 (AO)" });
-            listItems.Add(new string[] { "Header", "시험 항목", "판정" });
             listItems.Add(new string[] { "Row", "아날로그 출력 (AO)", GetDioRoundResult(m_objTestResult, "아날로그", 1) });
-
-            listItems.Add(new string[] { "ForcePageBreak" });
+            listItems.Add(new string[] { "Spacing", "18" });
 
             // 2. 통신 시험
             listItems.Add(new string[] { "Section", "2. 통신 시험" });
             listItems.Add(new string[] { "CommGrid", strUnitType });
-
-            listItems.Add(new string[] { "EmptySpace", "40" });
+            listItems.Add(new string[] { "Spacing", "18" });
 
             // 3. 메모리 시험
             listItems.Add(new string[] { "Section", "3. 메모리 시험" });
@@ -620,6 +619,7 @@ namespace CITester
 
             if (strUnitType == "ER")
             {
+                listItems.Add(new string[] { "Spacing", "18" });
                 listItems.Add(new string[] { "Section", "4. ER 속도 센서 시험" });
                 listItems.Add(new string[] { "Header", "시험 항목", "판정" });
                 listItems.Add(new string[] { "Row", "ER 속도 센서", GetGenericRoundResult(m_objTestResult, "속도 센서 시험", "속도센서", 1) });
@@ -643,7 +643,7 @@ namespace CITester
 
             Label lblStatusMessage = new Label
             {
-                Text = "PDF 문서를 초기화하고 있습니다...",
+                Text = "PDF 문서를 생성하고 있습니다...",
                 Location = new Point(25, 20),
                 Size = new Size(300, 23),
                 Font = new Font("맑은 고딕", 9, FontStyle.Regular)
@@ -661,7 +661,6 @@ namespace CITester
 
             frmProgress.Controls.Add(lblStatusMessage);
             frmProgress.Controls.Add(pgbStatus);
-
             frmProgress.Show();
             frmProgress.Refresh();
 
@@ -672,79 +671,91 @@ namespace CITester
                     prtDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
                     prtDoc.PrinterSettings.PrintToFile = true;
                     prtDoc.PrinterSettings.PrintFileName = strFilePath;
-                    prtDoc.DefaultPageSettings.Margins = new System.Drawing.Printing.Margins(50, 50, 50, 50);
+                    prtDoc.DefaultPageSettings.Margins = new System.Drawing.Printing.Margins(40, 40, 40, 40);
                     prtDoc.PrintController = new System.Drawing.Printing.StandardPrintController();
 
                     prtDoc.PrintPage += (object prtSender, System.Drawing.Printing.PrintPageEventArgs ePage) =>
                     {
                         pgbStatus.UseAnimation = false;
-
                         Graphics gtxCanvas = ePage.Graphics;
                         gtxCanvas.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                        Font fntTitle = new Font("맑은 고딕", 22, FontStyle.Bold);
+                        Font fntTitle = new Font("맑은 고딕", 18, FontStyle.Bold);
+                        Font fntSection = new Font("맑은 고딕", 10.5f, FontStyle.Bold);
+                        Font fntSubSection = new Font("맑은 고딕", 9.5f, FontStyle.Bold);
                         Font fntHeader = new Font("맑은 고딕", 9, FontStyle.Bold);
-                        Font fntBody = new Font("맑은 고딕", 9, FontStyle.Regular);
-                        Font fntBodyBold = new Font("맑은 고딕", 9, FontStyle.Bold);
+                        Font fntBody = new Font("맑은 고딕", 8.5f, FontStyle.Regular);
+                        Font fntBodyBold = new Font("맑은 고딕", 8.5f, FontStyle.Bold);
 
                         float fStartX = ePage.MarginBounds.Left;
                         float fCurrentY = ePage.MarginBounds.Top;
                         float fPageWidth = ePage.MarginBounds.Width;
 
-                        string strTitleText = "TCMS 시험기 결과 보고서";
-                        SizeF szTitle = gtxCanvas.MeasureString(strTitleText, fntTitle);
-                        gtxCanvas.DrawString(strTitleText, fntTitle, Brushes.Black, fStartX + (fPageWidth - szTitle.Width) / 2, fCurrentY);
-                        fCurrentY += szTitle.Height + 35f;
-
-                        string[,] arrInfoMatrix = new string[4, 3] {
-                            { "시험일자", "시험자명", "최종 판정 결과" },
-                            { DateTime.Now.ToString("yyyy-MM-dd"), strTester, strFinalDecision },
-                            { "편성번호", "차량번호", "유닛종류 (일련번호)" },
-                            { strTrainNo, strCarNo, strUnitType + " (" + strSerialNo + ")" }
-                        };
-
-                        int nInfoRowHeight = 34;
-                        int nTotalW = (int)fPageWidth;
-                        int nW1 = nTotalW / 3;
-                        int nW2 = nTotalW / 3;
-                        int nW3 = nTotalW - nW1 - nW2;
-                        int[] arrColWidths = new int[] { nW1, nW2, nW3 };
-
-                        int nGridY = (int)fCurrentY;
-                        using (StringFormat sfCenter = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                        // 1페이지에만 메인 타이틀 및 기본 정보 테이블 출력
+                        if (nPageIndex == 1)
                         {
-                            for (int nRow = 0; nRow < 4; nRow++)
+                            string strTitleText = "TCMS 시험기 결과 보고서";
+                            SizeF szTitle = gtxCanvas.MeasureString(strTitleText, fntTitle);
+                            gtxCanvas.DrawString(strTitleText, fntTitle, Brushes.Black, fStartX + (fPageWidth - szTitle.Width) / 2, fCurrentY);
+                            fCurrentY += szTitle.Height + 15f;
+
+                            string[,] arrInfoMatrix = new string[4, 3] {
+                        { "시험일자", "시험자명", "최종 판정 결과" },
+                        { DateTime.Now.ToString("yyyy-MM-dd"), strTester, strFinalDecision },
+                        { "편성번호", "차량번호", "유닛종류 (일련번호)" },
+                        { strTrainNo, strCarNo, strUnitType + " (" + strSerialNo + ")" }
+                    };
+
+                            int nInfoRowHeight = 24;
+                            int nTotalW = (int)fPageWidth;
+                            int nW1 = nTotalW / 3;
+                            int nW2 = nTotalW / 3;
+                            int nW3 = nTotalW - nW1 - nW2;
+                            int[] arrColWidths = new int[] { nW1, nW2, nW3 };
+
+                            int nGridY = (int)fCurrentY;
+                            using (StringFormat sfCenter = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                             {
-                                int nGridX = (int)fStartX;
-                                for (int nCol = 0; nCol < 3; nCol++)
+                                for (int nRow = 0; nRow < 4; nRow++)
                                 {
-                                    Rectangle rectTarget = new Rectangle(nGridX, nGridY, arrColWidths[nCol], nInfoRowHeight);
-                                    if (nRow == 0 || nRow == 2)
+                                    int nGridX = (int)fStartX;
+                                    for (int nCol = 0; nCol < 3; nCol++)
                                     {
-                                        gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectTarget);
+                                        Rectangle rectTarget = new Rectangle(nGridX, nGridY, arrColWidths[nCol], nInfoRowHeight);
+                                        if (nRow == 0 || nRow == 2)
+                                        {
+                                            gtxCanvas.FillRectangle(new SolidBrush(Color.FromArgb(240, 240, 240)), rectTarget);
+                                        }
+                                        gtxCanvas.DrawRectangle(Pens.DarkGray, rectTarget);
+
+                                        Brush brshText = Brushes.Black;
+                                        Font fntSelect = (nRow == 0 || nRow == 2) ? fntHeader : fntBody;
+
+                                        if (nRow == 1 && nCol == 2)
+                                        {
+                                            fntSelect = fntBodyBold;
+                                            brshText = (strFinalDecision == "합격") ? Brushes.Blue :
+                                                       (strFinalDecision == "불합격") ? Brushes.Red : Brushes.Gray;
+                                        }
+
+                                        gtxCanvas.DrawString(arrInfoMatrix[nRow, nCol], fntSelect, brshText, rectTarget, sfCenter);
+                                        nGridX += arrColWidths[nCol];
                                     }
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectTarget);
-
-                                    Brush brshText = Brushes.Black;
-                                    Font fntSelect = (nRow == 0 || nRow == 2) ? fntHeader : fntBody;
-
-                                    if (nRow == 1 && nCol == 2)
-                                    {
-                                        fntSelect = fntBodyBold;
-                                        brshText = (strFinalDecision == "합격") ? Brushes.Blue :
-                                                   (strFinalDecision == "불합격") ? Brushes.Red : Brushes.Gray;
-                                    }
-
-                                    gtxCanvas.DrawString(arrInfoMatrix[nRow, nCol], fntSelect, brshText, rectTarget, sfCenter);
-                                    nGridX += arrColWidths[nCol];
+                                    nGridY += nInfoRowHeight;
                                 }
-                                nGridY += nInfoRowHeight;
                             }
+                            fCurrentY = nGridY + 18f;
                         }
-                        fCurrentY = nGridY + 40f;
+                        else
+                        {
+                            // 2페이지 이상일 때 간이 헤더
+                            gtxCanvas.DrawString($"TCMS 시험기 결과 보고서 (페이지 {nPageIndex})", fntSubSection, Brushes.Gray, fStartX, fCurrentY);
+                            fCurrentY += 25f;
+                        }
 
                         int nColWidth1 = (int)(fPageWidth * 0.75f);
                         int nColWidth2 = (int)fPageWidth - nColWidth1;
+                        float fRowH = 22f; // 컴팩트한 행 높이
 
                         using (StringFormat sfCenter = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                         using (StringFormat sfLeft = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
@@ -754,35 +765,19 @@ namespace CITester
                                 string[] arrCurrentItem = listItems[nItemIndex];
                                 string strType = arrCurrentItem[0];
 
-                                if (strType == "ForcePageBreak")
+                                if (strType == "Spacing")
                                 {
-                                    nItemIndex++;
-                                    ePage.HasMorePages = true;
-                                    nPageIndex++;
-                                    return;
-                                }
-
-                                if (strType == "EmptySpace")
-                                {
-                                    float fSpaceHeight = float.TryParse(arrCurrentItem[1], out float fResult) ? fResult : 30f;
-                                    if (fCurrentY + fSpaceHeight > ePage.MarginBounds.Bottom)
-                                    {
-                                        ePage.HasMorePages = true;
-                                        nPageIndex++;
-                                        return;
-                                    }
-                                    fCurrentY += fSpaceHeight;
+                                    float fSpace = float.Parse(arrCurrentItem[1]);
+                                    fCurrentY += fSpace;
                                     nItemIndex++;
                                     continue;
                                 }
 
-                                // 통신 시험 표 출력부 (실제 판정 결과 데이터 바인딩)
+                                // 통신 시험 표
                                 if (strType == "CommGrid")
                                 {
                                     string[] arrCommItems = new string[] { "WTB 통신", "MVB 통신", "RS-485 #1", "RS-485 #2", "RS-485 #3" };
                                     string[] arrCommKeys = new string[] { "WTB", "MVB", "RS485-1", "RS485-2", "RS485-3" };
-
-                                    float fRowH = 28f;
                                     float fTotalGridH = fRowH * (arrCommItems.Length + 1);
 
                                     if (fCurrentY + fTotalGridH > ePage.MarginBounds.Bottom)
@@ -795,21 +790,20 @@ namespace CITester
                                     // 헤더
                                     Rectangle rectH1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, (int)fRowH);
                                     Rectangle rectH2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, (int)fRowH);
-                                    gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH1);
-                                    gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH2);
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectH1);
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectH2);
+                                    gtxCanvas.FillRectangle(new SolidBrush(Color.FromArgb(240, 240, 240)), rectH1);
+                                    gtxCanvas.FillRectangle(new SolidBrush(Color.FromArgb(240, 240, 240)), rectH2);
+                                    gtxCanvas.DrawRectangle(Pens.DarkGray, rectH1);
+                                    gtxCanvas.DrawRectangle(Pens.DarkGray, rectH2);
                                     gtxCanvas.DrawString("통신 시험 항목", fntHeader, Brushes.Black, rectH1, sfCenter);
                                     gtxCanvas.DrawString("판정", fntHeader, Brushes.Black, rectH2, sfCenter);
                                     fCurrentY += fRowH;
 
-                                    // 5개 통신 항목 행 출력
                                     for (int i = 0; i < arrCommItems.Length; i++)
                                     {
                                         Rectangle rectR1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, (int)fRowH);
                                         Rectangle rectR2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, (int)fRowH);
-                                        gtxCanvas.DrawRectangle(Pens.Black, rectR1);
-                                        gtxCanvas.DrawRectangle(Pens.Black, rectR2);
+                                        gtxCanvas.DrawRectangle(Pens.DarkGray, rectR1);
+                                        gtxCanvas.DrawRectangle(Pens.DarkGray, rectR2);
 
                                         Rectangle rectTextPadding = rectR1;
                                         rectTextPadding.X += 8;
@@ -831,7 +825,8 @@ namespace CITester
                                     continue;
                                 }
 
-                                float fItemHeight = (strType == "Section") ? 35f : 28f;
+                                // 일반 항목 높이 계산
+                                float fItemHeight = (strType == "Section") ? 26f : (strType == "SubSection" ? 22f : fRowH);
 
                                 if (fCurrentY + fItemHeight > ePage.MarginBounds.Bottom)
                                 {
@@ -842,31 +837,35 @@ namespace CITester
 
                                 if (strType == "Section")
                                 {
-                                    gtxCanvas.DrawString(arrCurrentItem[1], fntHeader, Brushes.Black, fStartX, fCurrentY + 8f);
+                                    gtxCanvas.DrawString(arrCurrentItem[1], fntSection, Brushes.Black, fStartX, fCurrentY + 4f);
+                                    fCurrentY += fItemHeight;
+                                }
+                                else if (strType == "SubSection")
+                                {
+                                    gtxCanvas.DrawString(arrCurrentItem[1], fntSubSection, Brushes.DarkSlateGray, fStartX + 5f, fCurrentY + 2f);
                                     fCurrentY += fItemHeight;
                                 }
                                 else if (strType == "Header")
                                 {
-                                    Rectangle rectH1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, 28);
-                                    Rectangle rectH2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, 28);
+                                    Rectangle rectH1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, (int)fRowH);
+                                    Rectangle rectH2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, (int)fRowH);
 
-                                    gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH1);
-                                    gtxCanvas.FillRectangle(new SolidBrush(Color.LightGray), rectH2);
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectH1);
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectH2);
+                                    gtxCanvas.FillRectangle(new SolidBrush(Color.FromArgb(240, 240, 240)), rectH1);
+                                    gtxCanvas.FillRectangle(new SolidBrush(Color.FromArgb(240, 240, 240)), rectH2);
+                                    gtxCanvas.DrawRectangle(Pens.DarkGray, rectH1);
+                                    gtxCanvas.DrawRectangle(Pens.DarkGray, rectH2);
 
                                     gtxCanvas.DrawString(arrCurrentItem[1], fntHeader, Brushes.Black, rectH1, sfCenter);
                                     gtxCanvas.DrawString(arrCurrentItem[2], fntHeader, Brushes.Black, rectH2, sfCenter);
-
-                                    fCurrentY += fItemHeight;
+                                    fCurrentY += fRowH;
                                 }
                                 else if (strType == "Row")
                                 {
-                                    Rectangle rectR1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, 28);
-                                    Rectangle rectR2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, 28);
+                                    Rectangle rectR1 = new Rectangle((int)fStartX, (int)fCurrentY, nColWidth1, (int)fRowH);
+                                    Rectangle rectR2 = new Rectangle((int)fStartX + nColWidth1, (int)fCurrentY, nColWidth2, (int)fRowH);
 
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectR1);
-                                    gtxCanvas.DrawRectangle(Pens.Black, rectR2);
+                                    gtxCanvas.DrawRectangle(Pens.DarkGray, rectR1);
+                                    gtxCanvas.DrawRectangle(Pens.DarkGray, rectR2);
 
                                     Rectangle rectTextPadding = rectR1;
                                     rectTextPadding.X += 8;
@@ -875,19 +874,18 @@ namespace CITester
                                     gtxCanvas.DrawString(arrCurrentItem[1], fntBody, Brushes.Black, rectTextPadding, sfLeft);
 
                                     string strVal = arrCurrentItem[2];
+                                    if (string.IsNullOrWhiteSpace(strVal)) strVal = "-";
+
                                     Brush brshText = (strVal == "합격" || strVal == "PASS") ? Brushes.Blue :
                                                      (strVal == "불합격" || strVal == "FAIL") ? Brushes.Red : Brushes.Gray;
 
                                     gtxCanvas.DrawString(strVal, (strVal == "합격" || strVal == "불합격") ? fntBodyBold : fntBody, brshText, rectR2, sfCenter);
-
-                                    fCurrentY += fItemHeight;
+                                    fCurrentY += fRowH;
                                 }
 
                                 nItemIndex++;
-                                pgbStatus.Value = nItemIndex;
+                                pgbStatus.Value = Math.Min(nItemIndex, pgbStatus.Maximum);
                                 pgbStatus.Update();
-                                lblStatusMessage.Text = $"PDF 파일 구성 중 ... ({nItemIndex} / {listItems.Count})";
-                                lblStatusMessage.Update();
                             }
                         }
 

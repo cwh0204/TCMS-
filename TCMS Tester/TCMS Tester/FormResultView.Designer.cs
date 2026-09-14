@@ -137,6 +137,7 @@
             this.BtnConfig.TextLocation = new System.Drawing.Point(47, 7);
             this.BtnConfig.UseHoverBackColor = false;
             this.BtnConfig.UseVisualStyleBackColor = false;
+            this.BtnConfig.Click += new System.EventHandler(this.BtnPrint_Click);
             // 
             // roundedPanel3
             // 
@@ -706,7 +707,7 @@
             // FormResultView
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1148, 853);
+            this.ClientSize = new System.Drawing.Size(1144, 849);
             this.ControlBox = false;
             this.Controls.Add(this.BtnClose);
             this.Controls.Add(this.BtnConfig);

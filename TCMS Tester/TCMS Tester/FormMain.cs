@@ -37,7 +37,6 @@ using TCMSTester.Hardware;
 using TCMSTester.Models;
 using TCMSTester.Protocol;
 using TCMSTester.Services;
-using TCMSTester.Tests;
 using TCMSTester.UI;
 using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -151,6 +150,7 @@ namespace CITester
         private MvbReceiver m_mvbReceiver;
         private MvbSerialManager m_serialManager;
         private MvbReceiver _mvbReceiver;
+        private UdpService _udpService;
         private TcmsTestService _tcmsTestService;
 
 
@@ -745,6 +745,16 @@ namespace CITester
 
         private void FormMain_Load(object sender, EventArgs e)
         {
+
+            // 초기 실행 시 자가진단 전이므로 시험 시작 버튼 비활성화
+            BtnStart.Enabled = false;
+            BtnStart.BackColor = Color.FromArgb(100, 116, 139);       // #64748B (차분한 미디엄 슬레이트)
+            BtnStart.HoverBackColor = Color.FromArgb(100, 116, 139);
+            BtnStart.ForeColor = Color.FromArgb(226, 232, 240);        // #E2E8F0 (밝은 아이스그레이 텍스트)
+            BtnStart.BaseBorderColor = Color.FromArgb(71, 85, 105);    // #475569 (선명한 외곽 테두리)
+            BtnStart.BaseBorderThickness = 1;
+            BtnStart.Invalidate();
+
             modernTreeView1.ItemHeight = 30;
             serialTester1 = new classSerialCommPacket(FormMain.COMMON_INFO.serialTester1Port0);
             serialTester2 = new classSerialCommPacket(FormMain.COMMON_INFO.serialTester2Port0);
@@ -1592,6 +1602,8 @@ namespace CITester
             }
 
             string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+            string strTargetIp = "10.0.1.11";
+            int nTargetPort = 5060;
 
             var channelContext = GetChannelContextByUnit(strUnitType);
             if (channelContext == null) return;
@@ -1614,14 +1626,13 @@ namespace CITester
             if (listPinsToTest.Count == 0) return;
             listPinsToTest = listPinsToTest.OrderBy(p => p.PinNo).ToList();
 
-            // finally 블록에서도 접근 가능하도록 try 밖에서 선언
-            TcmsTestService manualTestService = null;
+            bool hasDoPins = listPinsToTest.Any(p => p.Category.ToUpper() == "DO");
 
             try
             {
                 m_bIsManualTesting = true;
 
-                // 2. 선택 하이라이트(볼드/외곽선) 해제 및 대상 핀 초기 상태(Off) 리셋
+                // 2. 선택 하이라이트 해제 및 대상 핀 초기 상태(Off) 리셋
                 state.listSelectedCells.Clear();
                 state.nSelectedRowIdx = -1;
                 state.nSelectedColIdx = -1;
@@ -1633,75 +1644,171 @@ namespace CITester
                 dgv.Invalidate();
                 await Task.Delay(100);
 
-                // 3. 하드웨어 통신 및 전원 기동
+                // 3. 하드웨어 전원 기동
                 PlcStart();
-
-                if (m_serialManager == null || !m_serialManager.IsOpen)
-                {
-                    OpenMvbBoard();
-                }
-
-                if (m_mvbReceiver == null)
-                {
-                    m_mvbReceiver = new MvbReceiver();
-                }
-                m_mvbReceiver.Start();
-
                 SetDCPowerON(80, 5);
                 await Task.Delay(500);
                 c_PLCNetwork?.SetDo(240, true, 5, 0);
 
-                // 4. 수동 시험 전용 TestService 인스턴스 생성 및 MVB 리시버 바인딩
-                manualTestService = new TcmsTestService(m_mvbReceiver)
+                // 4. 이더넷 UDP 통신 서비스 생성 및 바인딩
+                _udpService = new TCMSTester.Services.UdpService();
+                _tcmsTestService = new TCMSTester.Services.TcmsTestService(_udpService, strTargetIp, nTargetPort)
                 {
                     OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
                     OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color),
                     OnGridInvalidate = () => dgv?.Invalidate()
                 };
-                manualTestService.StartMvbReceiver(strUnitType);
 
-                // 5. MVB 통신 링크 대기 (최대 25초)
-                AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 링크 연결 대기 중...", Color.DarkGray);
+                // 5. 이더넷 통신 링크 대기 (보드가 이미 켜져 있으면 수백 ms 내 즉시 통과)
+                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 통신 링크 연결 대기 중...", Color.DarkGray);
+                _tcmsTestService.StartUdpPolling(strUnitType);
 
-                bool bMvbLinkReady = false;
-                DateTime dtTimeout = DateTime.Now.AddSeconds(25);
+                bool bLinkReady = false;
+                DateTime dtTimeout = DateTime.Now.AddSeconds(90);
+
                 while (DateTime.Now < dtTimeout)
                 {
-                    byte[] rawCheck = manualTestService.GetCurrentRawData("DI1");
-                    if (rawCheck != null && rawCheck.Length >= 6)
+                    if (!m_bIsManualTesting) break;
+
+                    if (_tcmsTestService.IsLinkReady)
                     {
-                        bMvbLinkReady = true;
-                        AppendTestLog(richTextBox_Log, "[시스템] MVB 통신 링크 연결 확인 완료!", Color.DarkGreen);
+                        bLinkReady = true;
+                        AppendTestLog(richTextBox_Log, "[시스템] 이더넷(UDP) 통신 링크 연결 확인 완료!", Color.DarkGreen);
                         break;
                     }
-                    await Task.Delay(100);
+                    await Task.Delay(200);
                 }
 
-                if (!bMvbLinkReady)
+                if (!bLinkReady)
                 {
-                    AppendTestLog(richTextBox_Log, "[수동 통신 실패] CC 유닛 MVB 응답 없음 (타임아웃).", Color.Red);
+                    AppendTestLog(richTextBox_Log, $"[수동 통신 실패] {strUnitType} 유닛 UDP 응답 없음 (시간 초과).", Color.Red);
                     return;
                 }
 
-                // 6. 순차 검증 및 실시간 색상 갱신 (합격: On/초록, 실패: Err/빨강)
+                // DO 핀이 선택된 경우 VDO 드라이버 준비 상태 확인
+                if (hasDoPins)
+                {
+                    AppendTestLog(richTextBox_Log, "[시스템] VDO 출력 드라이버 응답 대기 중...", Color.DarkGray);
+                    bool bVdoReady = false;
+                    while (DateTime.Now < dtTimeout)
+                    {
+                        if (!m_bIsManualTesting) break;
+
+                        if (await _tcmsTestService.CheckVdoReadyAsync(500))
+                        {
+                            bVdoReady = true;
+                            AppendTestLog(richTextBox_Log, "[시스템] VDO 출력 드라이버 준비 완료.", Color.DarkGreen);
+                            break;
+                        }
+                        await Task.Delay(500);
+                    }
+
+                    if (!bVdoReady)
+                    {
+                        AppendTestLog(richTextBox_Log, "[수동 통신 실패] VDO 보드 응답 없음 (시간 초과).", Color.Red);
+                        return;
+                    }
+                }
+
+                await Task.Delay(500);
+
+                // 6. 선택 핀 개별 검증 루프
                 AppendTestLog(richTextBox_Log, $"[수동 시험] 총 {listPinsToTest.Count}개 핀 검증 시작", Color.SteelBlue);
 
                 for (int i = 0; i < listPinsToTest.Count; i++)
                 {
+                    if (!m_bIsManualTesting) break;
+
                     var pinItem = listPinsToTest[i];
+                    bool isDo = (pinItem.Category.ToUpper() == "DO");
+                    bool isPass = false;
 
-                    AppendTestLog(richTextBox_Log, $"[{i + 1}/{listPinsToTest.Count}] {pinItem.Category} {pinItem.PinNo}번 핀 인가 중...", Color.DarkBlue);
+                    AppendTestLog(richTextBox_Log, $"[{i + 1}/{listPinsToTest.Count}] {pinItem.Category} {pinItem.PinNo}번 핀 검증 중...", Color.DarkBlue);
 
-                    bool isPass = await manualTestService.ExecuteSinglePinTestAsync(
-                        pinItem.Category,
-                        pinItem.PinNo,
-                        pinItem.BitIndex,
-                        (pin, bState) => c_PLCNetwork?.SetDo(pin, bState, 5, 0)
-                    );
+                    // 해당 핀 상태를 시험 중(Test)으로 표시
+                    UpdateChannelContextState(channelContext, pinItem.Category, pinItem.BitIndex, EChannelState.Test);
+                    dgv.Invalidate();
+
+                    if (!isDo)
+                    {
+                        // =========================================================
+                        // [DI 수동 검증] PLC DO 인가 -> VDI 이더넷 버퍼 비트 검증
+                        // =========================================================
+                        int channelCount = 48;
+                        switch (pinItem.Category.ToUpper())
+                        {
+                            case "DI1": channelCount = channelContext.ActiveDi1Count; break;
+                            case "DI2": channelCount = channelContext.ActiveDi2Count; break;
+                            case "DI3": channelCount = channelContext.ActiveDi3Count; break;
+                        }
+
+                        // STEP 1: ON 검증
+                        c_PLCNetwork?.SetDo(pinItem.PinNo, true, 5, 0);
+                        await Task.Delay(150);
+
+                        bool isOnOk = false;
+                        byte[] rawOn = _tcmsTestService.GetCurrentRawData(pinItem.Category);
+                        if (rawOn != null && channelCount > 0 && pinItem.BitIndex >= 0 && pinItem.BitIndex < channelCount)
+                        {
+                            EChannelState[] tempStates = new EChannelState[channelCount];
+                            bool[] pattern = new bool[channelCount];
+                            pattern[pinItem.BitIndex] = true;
+
+                            TcmsValidator.ValidateGroup(pinItem.Category, rawOn, pattern, tempStates, channelCount);
+                            isOnOk = (tempStates[pinItem.BitIndex] == EChannelState.On);
+                        }
+
+                        // STEP 2: OFF 검증
+                        c_PLCNetwork?.SetDo(pinItem.PinNo, false, 5, 0);
+                        await Task.Delay(150);
+
+                        bool isOffOk = false;
+                        byte[] rawOff = _tcmsTestService.GetCurrentRawData(pinItem.Category);
+                        if (rawOff != null && channelCount > 0 && pinItem.BitIndex >= 0 && pinItem.BitIndex < channelCount)
+                        {
+                            EChannelState[] tempStates = new EChannelState[channelCount];
+                            bool[] pattern = new bool[channelCount];
+                            pattern[pinItem.BitIndex] = false;
+
+                            TcmsValidator.ValidateGroup(pinItem.Category, rawOff, pattern, tempStates, channelCount);
+                            isOffOk = (tempStates[pinItem.BitIndex] == EChannelState.Off || tempStates[pinItem.BitIndex] == default);
+                        }
+
+                        isPass = isOnOk && isOffOk;
+                    }
+                    else
+                    {
+                        // =========================================================
+                        // [DO 수동 검증] 0x0401 송신 및 보드 ACK 응답 검증
+                        // =========================================================
+                        int vdoChannel = pinItem.BitIndex + 1; // 1 ~ 32
+
+                        await Task.Delay(50);
+
+                        try
+                        {
+                            // STEP 1: ON 송신 및 ACK 확인
+                            bool isOnOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, true);
+                            await Task.Delay(150);
+
+                            // STEP 2: OFF 송신 및 ACK 확인
+                            bool isOffOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, false);
+                            await Task.Delay(150);
+
+                            isPass = isOnOk && isOffOk;
+                        }
+                        finally
+                        {
+                        }
+                    }
 
                     // 결과 상태 반영 (On = 녹색, Err = 적색)
                     EChannelState resultState = isPass ? EChannelState.On : EChannelState.Err;
                     UpdateChannelContextState(channelContext, pinItem.Category, pinItem.BitIndex, resultState);
+
+                    Color logColor = isPass ? Color.Black : Color.Red;
+                    string strResult = isPass ? "성공" : "실패";
+                    AppendTestLog(richTextBox_Log, $"  -> {pinItem.Category} {pinItem.PinNo}번 핀 ON/OFF ({strResult})", logColor);
 
                     dgv.Invalidate();
                     await Task.Delay(50);
@@ -1715,7 +1822,11 @@ namespace CITester
             }
             finally
             {
-                manualTestService?.StopMvbReceiver();
+                _tcmsTestService?.StopUdpPolling();
+                _udpService?.Dispose();
+                _tcmsTestService = null;
+                _udpService = null;
+
                 ResetAllPlcOutputs();
                 m_bIsManualTesting = false;
                 dgv.Invalidate();
@@ -2890,6 +3001,9 @@ namespace CITester
         // MVB 보드 포트 탐색 및 실제 수신 포트 상시 오픈
         public bool OpenMvbBoard()
         {
+
+            CloseMvbBoard();
+
             string strTargetPort = ConfigJson.CurrentConfig?.Device?.MVBBoard_ComPort;
             string strTargetIdn = ConfigJson.CurrentConfig?.Device?.MVBBoard_IDN;
             int nBaudRate = ConfigJson.CurrentConfig?.Device?.MVBBoard_BaudRate ?? 115200;
@@ -3007,6 +3121,42 @@ namespace CITester
             return false;
         }
 
+        /// <summary>
+        /// MVB 보드 시리얼 포트 점유를 완전히 해제합니다.
+        /// </summary>
+        public void CloseMvbBoard()
+        {
+            try
+            {
+                // 1. 실제 상시 수신 매니저 포트 해제
+                if (m_serialManager != null)
+                {
+                    m_serialManager.ClosePort(); // 매니저 내부의 ClosePort 메서드 호출
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MVB 정리] SerialManager 해제 오류: {ex.Message}");
+            }
+
+            try
+            {
+                // 2. 탐색용 임시 클라이언트 점유 해제
+                if (m_serialMvbBoard != null)
+                {
+                    if (m_serialMvbBoard.CONNECTED)
+                    {
+                        m_serialMvbBoard.Disconnect();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MVB 정리] SerialClient 해제 오류: {ex.Message}");
+            }
+
+            Console.WriteLine("[MVB 정리] MVB 보드 포트 점유 해제 완료");
+        }
 
         public bool OpenMvbBoardTester()
         {
@@ -4414,12 +4564,21 @@ namespace CITester
             frmResult.ShowDialog();
         }
 
+        /// <summary>
+        /// 자가진단
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnDiagnostic_Click(object sender, EventArgs e)
         {
             strSerialPortList = System.IO.Ports.SerialPort.GetPortNames();
 
-            FormDiagnosis frmDiagnosis = new FormDiagnosis(this);
-            frmDiagnosis.ShowDialog();
+            using (FormDiagnosis frmDiagnosis = new FormDiagnosis(this))
+            {
+                frmDiagnosis.ShowDialog();
+                bool bPassed = frmDiagnosis.IsDiagnosisPassed;
+                UpdateDiagnosisResultState(bPassed);
+            }
         }
 
         private void BtnReset_Click_1(object sender, EventArgs e)
@@ -4815,37 +4974,70 @@ namespace CITester
             c_PLCNetwork.SetAllOff();
         }
 
-        public bool PlcStart()
+
+        /// <summary>
+        /// PLC 시리얼 포트 및 UDP 바인딩을 완전히 해제합니다.
+        /// </summary>
+        public void ClosePlc()
         {
             lock (_plcInitLock)
             {
                 try
                 {
-                    string strTargetPort = ConfigJson.CurrentConfig.Device.Plc_COM;
+                    // 1. 시리얼 포트 정리
+                    if (c_PLCNetwork != null && c_PLCNetwork.serialPort != null)
+                    {
+                        if (c_PLCNetwork.serialPort.IsOpen)
+                        {
+                            c_PLCNetwork.serialPort.DiscardInBuffer();
+                            c_PLCNetwork.serialPort.DiscardOutBuffer();
+                            c_PLCNetwork.serialPort.Close();
+                        }
+                        c_PLCNetwork.serialPort.Dispose();
+                        c_PLCNetwork.serialPort = null;
+                    }
+                    c_PLCNetwork = null;
+
+                    // 2. UDP 소켓 정리
+                    if (sckPlcUdp != null)
+                    {
+                        sckPlcUdp.Close();
+                        sckPlcUdp.Dispose();
+                        sckPlcUdp = null;
+                    }
+
+                    Console.WriteLine("[PLC Close] PLC 포트 및 소켓 점유 완전 해제 완료");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[PLC Close 예외] {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 기존 PLC 연결을 리셋하고 새로 포트를 오픈합니다.
+        /// </summary>
+        public bool PlcStart()
+        {
+            // 1. 시작 전 기존 연결 완전히 종료 및 리소스 반환
+            ClosePlc();
+            System.Threading.Thread.Sleep(50); // OS 커널의 COM 포트 핸들 반환 대기
+
+            lock (_plcInitLock)
+            {
+                try
+                {
+                    string strTargetPort = ConfigJson.CurrentConfig?.Device?.Plc_COM;
                     if (string.IsNullOrEmpty(strTargetPort))
                     {
                         Console.WriteLine("[PLC Start Error] 설정된 PLC COM 포트가 비어있습니다.");
                         return false;
                     }
 
-                    // 1. 이미 정상 오픈되어 있고 포트명도 같다면 중복 오픈 생략 (즉시 재사용)
-                    if (c_PLCNetwork != null &&
-                        c_PLCNetwork.serialPort != null &&
-                        c_PLCNetwork.serialPort.IsOpen &&
-                        string.Equals(c_PLCNetwork.serialPort.PortName, strTargetPort, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return true;
-                    }
-
-                    // 2. UDP 소켓 안전 초기화 (예외 발생해도 시리얼 연결은 계속 진행되도록 보호)
+                    // 2. UDP 소켓 안전 바인딩
                     try
                     {
-                        if (sckPlcUdp != null)
-                        {
-                            sckPlcUdp.Close();
-                            sckPlcUdp.Dispose();
-                            sckPlcUdp = null;
-                        }
                         sckPlcUdp = new UdpClient(2005);
                     }
                     catch (Exception exUdp)
@@ -4853,23 +5045,7 @@ namespace CITester
                         Console.WriteLine($"[PLC Start] UDP(2005) 바인딩 경고: {exUdp.Message}");
                     }
 
-                    // 3. 기존 시리얼 포트 정리
-                    if (c_PLCNetwork != null && c_PLCNetwork.serialPort != null)
-                    {
-                        try
-                        {
-                            if (c_PLCNetwork.serialPort.IsOpen)
-                            {
-                                c_PLCNetwork.serialPort.Close();
-                            }
-                            c_PLCNetwork.serialPort.Dispose();
-                        }
-                        catch { }
-                        c_PLCNetwork.serialPort = null;
-                        c_PLCNetwork = null;
-                    }
-
-                    // 4. 시리얼 포트 할당 및 오픈
+                    // 3. 시리얼 포트 할당 및 오픈
                     SerialPort sp = new SerialPort(strTargetPort, 9600, Parity.None, 8, StopBits.One)
                     {
                         ReadTimeout = 500,
@@ -4877,7 +5053,7 @@ namespace CITester
                     };
                     sp.Open();
 
-                    // 5. Cnet 인스턴스 생성
+                    // 4. Cnet 인스턴스 생성
                     c_PLCNetwork = new classCnet(sp);
                     Console.WriteLine($"[PLC Start] {strTargetPort} 포트 연결 및 c_PLCNetwork 생성 완료");
                     return true;
@@ -4943,10 +5119,8 @@ namespace CITester
         }
 
         /// <summary>
-        /// 시험 시작
+        /// 시험 시작 (이더넷 UDP 기반 전환 버전)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
             // 1. 강제 중단 요청 처리
@@ -4959,9 +5133,7 @@ namespace CITester
                 return;
             }
 
-            // =========================================================================
             // 2. 트리뷰 체크 상태 확인 (시험 스코프 결정)
-            // =========================================================================
             bool bDoDigitalTest = IsTreeNodeChecked("디지털 입출력 시험");
             bool bDoAnalogTest = IsTreeNodeChecked("아날로그 입출력 시험");
             bool bDoCommTest = IsTreeNodeChecked("통신 시험");
@@ -4983,8 +5155,10 @@ namespace CITester
             SetTestingUiState(true);
 
             string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+            string strTargetIp = "10.0.1.11";
+            int nTargetPort = 5060;
 
-            var finalResult = new TestResultJson();
+            var finalResult = new CITester.TestResultJson();
             finalResult.Header.TCMSUnit = strUnitType;
             finalResult.Header.SerialNo = ConfigJson.CurrentConfig?.Operation?.SerialNo ?? "0000";
             finalResult.Header.TesterName = ConfigJson.CurrentConfig?.Operation?.TesterName ?? "Tester";
@@ -4992,20 +5166,33 @@ namespace CITester
             finalResult.Header.TrainNo = ConfigJson.CurrentConfig?.Operation?.TrainNo ?? "0000";
             finalResult.Header.TotalRound = nMaxLoop;
 
-            // NullReferenceException 방지: ExecuteSingleRoundIoAsync 전달용 인스턴스는 항상 생성
-            var objDigitalGridResult = new TestResultJson.GridTestResult { GridTitle = "디지털 입출력 시험" };
-            var objAnalogGridResult = new TestResultJson.GridTestResult { GridTitle = "아날로그 입출력 시험" };
-            var objCommGridResult = new TestResultJson.GridTestResult { GridTitle = "통신 시험" };
+            var objDigitalGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "디지털 입출력 시험" };
+            var objAnalogGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "아날로그 입출력 시험" };
+            var objCommGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "통신 시험" };
 
-            // 최종 JSON 리포트에는 사용자가 체크한 항목만 담음
             if (bDoDigitalTest) finalResult.GridResults.Add(objDigitalGridResult);
             if (bDoAnalogTest) finalResult.GridResults.Add(objAnalogGridResult);
             if (bDoCommTest) finalResult.GridResults.Add(objCommGridResult);
 
             bool bHasAnyFailure = false;
 
-            // 실제 시험을 주관하는 testService 생성
-            var testService = new TcmsTestService(m_mvbReceiver)
+            // 멤버 변수 초기화 및 UDP 실시간 패킷 모니터링 연결
+            _udpService = new TCMSTester.Services.UdpService();
+
+            // 50ms 고속 VDI 폴링(0x0301) 로그는 UI 프리징을 유발하므로 제외하고 VDO 제어/에러 로그만 출력
+            _udpService.LogMessage += (s, log) =>
+            {
+                if (log.Contains("0x0301")) return;
+
+                Color c = Color.Gray;
+                if (log.StartsWith("[TX]")) c = Color.DarkBlue;
+                else if (log.StartsWith("[RX]")) c = Color.DarkSlateGray;
+                else if (log.StartsWith("[ERR]")) c = Color.Red;
+
+                AppendTestLog(richTextBox_Log, log, c);
+            };
+
+            _tcmsTestService = new TCMSTester.Services.TcmsTestService(_udpService, strTargetIp, nTargetPort)
             {
                 OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
                 OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color),
@@ -5019,10 +5206,9 @@ namespace CITester
                 }
             };
 
-            // ★ C# 7.3 삼항 연산자 오류 해결: if 분기로 명시적 할당
             if (bDoDigitalTest)
             {
-                testService.RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
+                _tcmsTestService.RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
                 {
                     DataGridView targetDgv = null;
                     switch (cat.ToUpper())
@@ -5046,19 +5232,17 @@ namespace CITester
 
             if (bDoAnalogTest)
             {
-                testService.RunAnalogSequenceFunc = async (delay, loop, fails, details) =>
+                _tcmsTestService.RunAnalogSequenceFunc = async (delay, loop, fails, details) =>
                 {
                     SwitchToAnalogTab();
                     await Task.Delay(200);
-
-                    // 아날로그 시험 시퀀스 실행
                     await RunAnalogTestSequenceAsync(dataGridViewAnalog, delay, loop, fails, details);
                 };
             }
 
             try
             {
-                // 3. 하드웨어 기동
+                // 3. 하드웨어 전원 및 PLC 인가
                 PlcStart();
                 SetDCPowerON(80, 5);
                 c_PLCNetwork?.SetDo(240, true, 5, 0);
@@ -5066,53 +5250,82 @@ namespace CITester
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
-                testService.StartMvbReceiver(strUnitType);
+                // 4. UDP 통신 개시 및 2단계 하드웨어(VCPUT 통신 + VDO 릴레이 33초 사전 예열) 대기
+                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 전원 인가 완료. VCPUT 기본 링크 연결 대기 중...", Color.DarkGray);
+                _tcmsTestService.StartUdpPolling(strUnitType);
 
-                // 4. MVB 통신 링크 확인
-                AppendTestLog(richTextBox_Log, "[시스템] CC 유닛 부팅 및 MVB 통신 링크 연결 대기 중...", Color.DarkGray);
-
-                bool bMvbLinkReady = false;
+                // STEP 4-1: VCPUT 기본 통신 링크 응답 대기 (최대 30초)
+                bool bLinkReady = false;
                 DateTime dtTimeout = DateTime.Now.AddSeconds(30);
-
                 while (DateTime.Now < dtTimeout)
                 {
                     if (!m_bIsTesting) break;
 
-                    byte[] rawCheck = testService.GetCurrentRawData("DI1");
-                    if (rawCheck != null && rawCheck.Length >= 6)
+                    if (_tcmsTestService.IsLinkReady)
                     {
-                        bMvbLinkReady = true;
-                        AppendTestLog(richTextBox_Log, "[시스템] ★ MVB 유효 패킷 확인 완료! 시험을 시작합니다.", Color.DarkGreen);
+                        bLinkReady = true;
                         break;
                     }
-
-                    await Task.Delay(100);
+                    await Task.Delay(200);
                 }
 
-                if (!bMvbLinkReady)
+                if (!bLinkReady)
                 {
-                    AppendTestLog(richTextBox_Log, "[통신 에러] CC 유닛 MVB 응답 없음 (30초 초과). 배선 및 전원을 확인하세요.", Color.Red);
+                    AppendTestLog(richTextBox_Log, $"[통신 에러] {strUnitType} 유닛 응답 없음. VCPUT 네트워크 및 전원을 확인하세요.", Color.Red);
                     return;
                 }
 
-                await Task.Delay(200);
+                AppendTestLog(richTextBox_Log, "[시스템] [1/2단계] VCPUT 이더넷 통신 감지 완료.", Color.DarkGreen);
+
+                // STEP 4-2: VDO 릴레이 하드웨어 사전 예열 (타깃 내부의 33초 기동 타이머 백그라운드 소진)
+                if (bDoDigitalTest)
+                {
+                    AppendTestLog(richTextBox_Log, "[시스템] [2/2단계] VDO 릴레이 회로 활성화 트리거 전송 (10초 예열 대기)...", Color.DarkGray);
+
+                    // VDO 1번 핀 ON 명령을 전송하여 타깃 내부의 33초 릴레이 초기화 시퀀스를 즉시 가동시킴
+                    await _tcmsTestService.SetVdoPinAsync(1, true, 100);
+
+                    for (int sec = 10; sec > 0; sec--)
+                    {
+                        if (!m_bIsTesting) return;
+
+                        if (sec % 10 == 0 || sec <= 5)
+                        {
+                            AppendTestLog(richTextBox_Log, $"[시스템] VDO 릴레이 회로 충전 중... (남은 시간: {sec}초)", Color.DarkGray);
+                        }
+                        await Task.Delay(1000);
+                    }
+
+                    // 예열용 1번 핀 원복(OFF) 및 릴레이 드라이버 정상 응답(ACK) 확인
+                    bool bVdoReady = await _tcmsTestService.SetVdoPinAsync(1, false, 1000);
+                    if (!bVdoReady)
+                    {
+                        AppendTestLog(richTextBox_Log, "[경고] VDO 릴레이 정상화 응답 지연 (단자 상태 확인 필요)", Color.OrangeRed);
+                    }
+                    else
+                    {
+                        AppendTestLog(richTextBox_Log, "[시스템]  VDO 릴레이 하드웨어 기동 확인 완료!", Color.DarkGreen);
+                    }
+                }
+
+                AppendTestLog(richTextBox_Log, "[시스템]  하드웨어(VCPUT/VDO) 부팅 및 예열 완료! 본 시험을 시작합니다.", Color.DarkGreen);
+                await Task.Delay(1000);
 
                 // 5. 메인 회차 루프
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
                 {
                     if (!m_bIsTesting) break;
 
-                    AppendTestLog(richTextBox_Log, $"==================================================", Color.Purple);
+                    AppendTestLog(richTextBox_Log, "==================================================", Color.Purple);
                     AppendTestLog(richTextBox_Log, $"           [전체 시험 {nLoop}/{nMaxLoop}회차 시작]           ", Color.Purple);
-                    AppendTestLog(richTextBox_Log, $"==================================================", Color.Purple);
+                    AppendTestLog(richTextBox_Log, "==================================================", Color.Purple);
 
-                    // [1단계] 디지털 / 아날로그 입·출력 시험
                     if (bDoDigitalTest || bDoAnalogTest)
                     {
                         mainTabControl1.SelectedIndex = 0;
                         await Task.Delay(200);
 
-                        bool bIoPass = await testService.ExecuteSingleRoundIoAsync(
+                        bool bIoPass = await _tcmsTestService.ExecuteSingleRoundIoAsync(
                             strUnitType, nLoop, () => m_bIsTesting, channelContext, objDigitalGridResult, objAnalogGridResult);
 
                         if (!bIoPass) bHasAnyFailure = true;
@@ -5120,7 +5333,6 @@ namespace CITester
 
                     if (!m_bIsTesting) break;
 
-                    // [2단계] 통신 시험
                     if (bDoCommTest)
                     {
                         mainTabControl1.SelectedIndex = 1;
@@ -5160,7 +5372,9 @@ namespace CITester
             }
             finally
             {
-                testService?.StopMvbReceiver();
+                _tcmsTestService?.StopUdpPolling();
+                _udpService?.Dispose();
+
                 SetDCPowerOFF();
                 ResetAllPlcOutputs();
                 m_bIsTesting = false;
@@ -5330,18 +5544,16 @@ namespace CITester
 
             int loopCount = Math.Min(nActiveCount, arrStates.Length);
 
-            // 1. 차종/편성별 탭 개수 변화에 대응하는 동적 탭 전환
+            // 1. 탭 전환
             int targetTabIndex = -1;
             if (!string.IsNullOrEmpty(strChannelName))
             {
                 string chKey = strChannelName.ToUpper().Trim();
-
                 for (int t = 0; t < flatTabControl1.TabPages.Count; t++)
                 {
                     TabPage page = flatTabControl1.TabPages[t];
                     string tabText = page.Text?.ToUpper().Trim() ?? "";
                     string tabName = page.Name?.ToUpper().Trim() ?? "";
-
                     if (tabText.Contains(chKey) || tabName.Contains(chKey))
                     {
                         targetTabIndex = t;
@@ -5357,23 +5569,37 @@ namespace CITester
             }
 
             // 2. 상태 배열 초기화
-            for (int k = 0; k < loopCount; k++)
-            {
-                arrStates[k] = default;
-            }
+            for (int k = 0; k < loopCount; k++) arrStates[k] = default;
             dgvTarget.Invalidate();
 
             bool isDoCategory = (strChannelName?.ToUpper() == "DO");
 
+            // =========================================================================
+            // DO 시험 진입 전 타깃 VDO 드라이버 기동 동기화 (최대 40초 대기)
+            // 0~25번 핀을 성급하게 쏘지 않고, 첫 응답이 올 때까지 대기하여 소켓 큐잉을 원천 차단
+            // =========================================================================
+            if (isDoCategory && _tcmsTestService != null)
+            {
+                AppendTestLog(richTextBox_Log, "[시스템] VDO 릴레이 하드웨어 기동 동기화 대기 중 (최대 40초 소요)...", Color.DarkGray);
+
+                // 40초 타임아웃으로 VDO 초기화 명령(전체 OFF) 전송 및 첫 ACK 대기
+                bool bVdoAwake = await _tcmsTestService.SetVdoPinAsync(0, false, 40000);
+
+                if (bVdoAwake)
+                {
+                    AppendTestLog(richTextBox_Log, "[시스템]  VDO 릴레이 하드웨어 응답 수신 완료! 0번 핀부터 검사 시작", Color.DarkGreen);
+                }
+                else
+                {
+                    AppendTestLog(richTextBox_Log, "[경고] VDO 릴레이 응답 시간 초과 (단자 전원 확인 필요)", Color.Red);
+                }
+                await Task.Delay(300, cancellationToken);
+            }
+
             // 3. 핀 단위 시험 진행
             for (int i = 0; i < loopCount; i++)
             {
-                // 핀 시험 시작 전 중지 플래그 및 토큰 확인
-                if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
-                {
-                    Console.WriteLine($"[Debug] [{strChannelName}] 사용자 중지 요청 감지 - 루프 즉시 종료");
-                    return;
-                }
+                if (!m_bIsTesting || cancellationToken.IsCancellationRequested) return;
 
                 int nPinNo = nStartPin + i;
                 arrStates[i] = EChannelState.Test;
@@ -5382,96 +5608,85 @@ namespace CITester
                 bool isOnOk = false;
                 bool isOffOk = false;
 
-                Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 시험 시작 (PLC DO index: {i})");
-
                 try
                 {
                     if (!isDoCategory)
                     {
-                        // STEP 1: ON 검증
+                        // [DI 시험] 조건부 폴링 감시 (143/144개 통과 검증 완료)
                         c_PLCNetwork?.SetDo(nPinNo, true, 5, 0);
 
-                        await Task.Delay(nDelay, cancellationToken);
-
-                        // STEP 1 Delay 직후 중지 여부 확인
-                        if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                        DateTime dtOnTimeout = DateTime.Now.AddMilliseconds(350);
+                        while (DateTime.Now < dtOnTimeout)
                         {
-                            c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
-                            return;
+                            if (!m_bIsTesting || cancellationToken.IsCancellationRequested) break;
+                            byte[] raw = getRawDataFunc?.Invoke();
+                            if (raw != null)
+                            {
+                                int portByteIdx = i / 8;
+                                int bitIdx = i % 8;
+                                if (portByteIdx < raw.Length && (((raw[portByteIdx] >> bitIdx) & 0x01) == 1))
+                                {
+                                    isOnOk = true;
+                                    break;
+                                }
+                            }
+                            await Task.Delay(20, cancellationToken);
                         }
 
-                        byte[] rawDataOn = getRawDataFunc?.Invoke();
-                        if (rawDataOn != null)
-                        {
-                            EChannelState[] tempStatesOn = new EChannelState[loopCount];
-                            bool[] patternOn = new bool[loopCount];
-                            patternOn[i] = true;
-
-                            TcmsValidator.ValidateGroup(strChannelName, rawDataOn, patternOn, tempStatesOn, nActiveCount);
-                            isOnOk = (tempStatesOn[i] == EChannelState.On);
-
-                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 1(ON) - 결과: {isOnOk}, RawData: {BitConverter.ToString(rawDataOn)}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 1(ON) - RawData 수신 Null");
-                        }
-
-                        // STEP 2: OFF 검증
                         c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
-                        await Task.Delay(nDelay, cancellationToken);
 
-                        // STEP 2 Delay 직후 중지 여부 확인
-                        if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                        DateTime dtOffTimeout = DateTime.Now.AddMilliseconds(350);
+                        while (DateTime.Now < dtOffTimeout)
                         {
-                            return;
-                        }
-
-                        byte[] rawDataOff = getRawDataFunc?.Invoke();
-                        if (rawDataOff != null)
-                        {
-                            EChannelState[] tempStatesOff = new EChannelState[loopCount];
-                            bool[] patternOff = new bool[loopCount];
-                            patternOff[i] = false;
-
-                            TcmsValidator.ValidateGroup(strChannelName, rawDataOff, patternOff, tempStatesOff, nActiveCount);
-                            isOffOk = (tempStatesOff[i] == EChannelState.Off || tempStatesOff[i] == default);
-
-                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 2(OFF) - 결과: {isOffOk}, RawData: {BitConverter.ToString(rawDataOff)}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 STEP 2(OFF) - RawData 수신 Null");
+                            if (!m_bIsTesting || cancellationToken.IsCancellationRequested) break;
+                            byte[] raw = getRawDataFunc?.Invoke();
+                            if (raw != null)
+                            {
+                                int portByteIdx = i / 8;
+                                int bitIdx = i % 8;
+                                if (portByteIdx < raw.Length && (((raw[portByteIdx] >> bitIdx) & 0x01) == 0))
+                                {
+                                    isOffOk = true;
+                                    break;
+                                }
+                            }
+                            await Task.Delay(20, cancellationToken);
                         }
                     }
                     else
                     {
-                        // [DO 시험] TCMS DO 제어 및 PLC DI 확인 로직
+                        // [DO 시험] 보드가 이미 깨어있으므로 500ms 이내에 즉각 응답
+                        int vdoChannel = i + 1; // 1 ~ 32
+
+                        // STEP 1: ON 송신 및 릴레이 점등 ACK 대기
+                        if (_tcmsTestService != null)
+                        {
+                            isOnOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, true, 500);
+                        }
                         await Task.Delay(nDelay, cancellationToken);
 
-                        //DO Delay 직후 중지 여부 확인
-                        if (!m_bIsTesting || cancellationToken.IsCancellationRequested)
+                        // STEP 2: OFF 송신 및 릴레이 소등 ACK 대기
+                        if (_tcmsTestService != null)
                         {
-                            return;
+                            isOffOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, false, 500);
                         }
+                        await Task.Delay(nDelay, cancellationToken);
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    // Task.Delay 대기 도중 정지 버튼이 눌렸을 때 안전 처리 및 PLC 출력 원복
                     c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
+                    if (isDoCategory && _tcmsTestService != null)
+                    {
+                        var _ = _tcmsTestService.SetVdoPinAsync(i + 1, false);
+                    }
                     arrStates[i] = default;
                     dgvTarget.Invalidate();
-
-                    Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 진행 중 정지 예외 수신");
                     return;
                 }
 
-                // STEP 3: 최종 결과 처리
+                // STEP 3: 결과 판정
                 bool isFinalSuccess = isOnOk && isOffOk;
-
-                Console.WriteLine($"[Debug] [{strChannelName}] {nPinNo}번 핀 최종 결과: {(isFinalSuccess ? "합격" : "불합격")} (ON:{isOnOk}, OFF:{isOffOk})");
-
                 if (isFinalSuccess)
                 {
                     arrStates[i] = EChannelState.On;
@@ -5484,7 +5699,7 @@ namespace CITester
                     listFailedPins.Add($"{strChannelName}_{nPinNo}번");
                 }
 
-                TestResultJson.PinResultItem objPinResult = new TestResultJson.PinResultItem
+                var objPinResult = new TestResultJson.PinResultItem
                 {
                     Round = nRound,
                     ChannelGroup = strChannelName,
@@ -6474,7 +6689,7 @@ namespace CITester
         private async void button1_Click_1(object sender, EventArgs e)
         {
 
-            PlcStart();
+            //PlcStart();
             
             c_PLCNetwork?.SetDo(240, true, 5, 0);
             //// 이미 전송 중이면 중복 클릭 무시
@@ -6657,6 +6872,108 @@ namespace CITester
         private void modernTreeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
+        }
+
+        public void UpdateDiagnosisResultState(bool bAllPassed)
+        {
+            Console.WriteLine($"[DEBUG] UpdateDiagnosisResultState 호출됨! bAllPassed = {bAllPassed}");
+
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action(() => UpdateDiagnosisResultState(bAllPassed)));
+                return;
+            }
+
+            if (bAllPassed)
+            {
+                // 1. 자가진단 버튼: 정상 (딥 에메랄드)
+                BtnDiagnostic.BackColor = Color.FromArgb(22, 101, 52);
+                BtnDiagnostic.HoverBackColor = Color.FromArgb(34, 139, 34);
+                BtnDiagnostic.ForeColor = Color.White;
+                BtnDiagnostic.BaseBorderColor = Color.FromArgb(74, 222, 128);
+                BtnDiagnostic.HoverBorderColor = Color.FromArgb(134, 239, 172);
+                BtnDiagnostic.BaseBorderThickness = 1;
+
+                // 2. 시험 시작 버튼(BtnStart) 활성화 및 활성 스타일 적용 (로열 블루 테마)
+                BtnStart.Enabled = true;
+                BtnStart.BackColor = Color.FromArgb(37, 99, 235);          // #2563EB (모던 로열 블루)
+                BtnStart.HoverBackColor = Color.FromArgb(29, 78, 216);     // 마우스 올렸을 때 살짝 딥한 블루
+                BtnStart.ForeColor = Color.White;
+                BtnStart.BaseBorderColor = Color.FromArgb(96, 165, 250);   // 부드러운 스카이블루 테두리
+                BtnStart.HoverBorderColor = Color.FromArgb(191, 219, 254);
+                BtnStart.BaseBorderThickness = 1;
+            }
+            else
+            {
+                // 1. 자가진단 버튼: 실패 (딥 크림슨)
+                BtnDiagnostic.BackColor = Color.FromArgb(153, 27, 27);
+                BtnDiagnostic.HoverBackColor = Color.FromArgb(185, 28, 28);
+                BtnDiagnostic.ForeColor = Color.White;
+                BtnDiagnostic.BaseBorderColor = Color.FromArgb(248, 113, 113);
+                BtnDiagnostic.HoverBorderColor = Color.FromArgb(252, 165, 165);
+                BtnDiagnostic.BaseBorderThickness = 1;
+
+                // 2. 시험 시작 버튼(BtnStart) 비활성화 유지 및 회색 처리
+                BtnStart.Enabled = false;
+                BtnStart.BackColor = Color.FromArgb(100, 116, 139);       // #64748B (차분한 미디엄 슬레이트)
+                BtnStart.HoverBackColor = Color.FromArgb(100, 116, 139);
+                BtnStart.ForeColor = Color.FromArgb(226, 232, 240);        // #E2E8F0 (밝은 아이스그레이 텍스트)
+                BtnStart.BaseBorderColor = Color.FromArgb(71, 85, 105);    // #475569 (선명한 외곽 테두리)
+                BtnStart.BaseBorderThickness = 1;
+            }
+
+            // 컨트롤 갱신
+            BtnDiagnostic.Invalidate();
+            BtnDiagnostic.Update();
+
+            BtnStart.Invalidate();
+            BtnStart.Update();
+        }
+
+        /// <summary>
+        /// 전체 항목 선택 (모든 노드 Checked = true)
+        /// </summary>
+        private void Button_Select_All_Click_1(object sender, EventArgs e)
+        {
+            SetAllTreeNodesChecked(modernTreeView1.Nodes, true);
+        }
+
+        /// <summary>
+        /// 전체 항목 해제 (모든 노드 Checked = false)
+        /// </summary>
+        private void Button_DeSelect_All_Click_1(object sender, EventArgs e)
+        {
+            SetAllTreeNodesChecked(modernTreeView1.Nodes, false);
+        }
+
+        /// <summary>
+        /// 트리뷰 노드 전체를 재귀 순회하여 체크 상태 일괄 적용
+        /// </summary>
+        private void SetAllTreeNodesChecked(TreeNodeCollection nodes, bool isChecked)
+        {
+            modernTreeView1.BeginUpdate();
+            try
+            {
+                ApplyNodeCheckedRecursive(nodes, isChecked);
+            }
+            finally
+            {
+                modernTreeView1.EndUpdate();
+            }
+        }
+
+        private void ApplyNodeCheckedRecursive(TreeNodeCollection nodes, bool isChecked)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                node.Checked = isChecked;
+
+                // 하위 자식 노드가 있으면 재귀 호출
+                if (node.Nodes.Count > 0)
+                {
+                    ApplyNodeCheckedRecursive(node.Nodes, isChecked);
+                }
+            }
         }
     }
 }
