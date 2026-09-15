@@ -5250,13 +5250,12 @@ namespace CITester
                 var channelContext = GetChannelContextByUnit(strUnitType);
                 if (channelContext == null) return;
 
-                // 4. UDP 통신 개시 및 2단계 하드웨어(VCPUT 통신 + VDO 릴레이 33초 사전 예열) 대기
-                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 전원 인가 완료. VCPUT 기본 링크 연결 대기 중...", Color.DarkGray);
+                // 4. UDP 통신 개시 및 VCPUT 기본 통신 링크 감지 대기
+                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 전원 인가 완료. VCPUT 이더넷 링크 연결 대기 중...", Color.DarkGray);
                 _tcmsTestService.StartUdpPolling(strUnitType);
 
-                // STEP 4-1: VCPUT 기본 통신 링크 응답 대기 (최대 30초)
                 bool bLinkReady = false;
-                DateTime dtTimeout = DateTime.Now.AddSeconds(30);
+                DateTime dtTimeout = DateTime.Now.AddSeconds(45);
                 while (DateTime.Now < dtTimeout)
                 {
                     if (!m_bIsTesting) break;
@@ -5275,41 +5274,14 @@ namespace CITester
                     return;
                 }
 
-                AppendTestLog(richTextBox_Log, "[시스템] [1/2단계] VCPUT 이더넷 통신 감지 완료.", Color.DarkGreen);
+                AppendTestLog(richTextBox_Log, "[시스템] ★ VCPUT 이더넷 통신 감지 완료! 본 시험을 시작합니다.", Color.DarkGreen);
 
-                // STEP 4-2: VDO 릴레이 하드웨어 사전 예열 (타깃 내부의 33초 기동 타이머 백그라운드 소진)
+                // VDO 전체 OFF 초기화 패킷 1회 전송 (대기 블로킹 없이 즉시 전송)
                 if (bDoDigitalTest)
                 {
-                    AppendTestLog(richTextBox_Log, "[시스템] [2/2단계] VDO 릴레이 회로 활성화 트리거 전송 (10초 예열 대기)...", Color.DarkGray);
-
-                    // VDO 1번 핀 ON 명령을 전송하여 타깃 내부의 33초 릴레이 초기화 시퀀스를 즉시 가동시킴
-                    await _tcmsTestService.SetVdoPinAsync(1, true, 100);
-
-                    for (int sec = 10; sec > 0; sec--)
-                    {
-                        if (!m_bIsTesting) return;
-
-                        if (sec % 10 == 0 || sec <= 5)
-                        {
-                            AppendTestLog(richTextBox_Log, $"[시스템] VDO 릴레이 회로 충전 중... (남은 시간: {sec}초)", Color.DarkGray);
-                        }
-                        await Task.Delay(1000);
-                    }
-
-                    // 예열용 1번 핀 원복(OFF) 및 릴레이 드라이버 정상 응답(ACK) 확인
-                    bool bVdoReady = await _tcmsTestService.SetVdoPinAsync(1, false, 1000);
-                    if (!bVdoReady)
-                    {
-                        AppendTestLog(richTextBox_Log, "[경고] VDO 릴레이 정상화 응답 지연 (단자 상태 확인 필요)", Color.OrangeRed);
-                    }
-                    else
-                    {
-                        AppendTestLog(richTextBox_Log, "[시스템]  VDO 릴레이 하드웨어 기동 확인 완료!", Color.DarkGreen);
-                    }
+                    await _tcmsTestService.SetVdoPinAsync(0, false);
                 }
-
-                AppendTestLog(richTextBox_Log, "[시스템]  하드웨어(VCPUT/VDO) 부팅 및 예열 완료! 본 시험을 시작합니다.", Color.DarkGreen);
-                await Task.Delay(1000);
+                await Task.Delay(500);
 
                 // 5. 메인 회차 루프
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
@@ -5574,28 +5546,6 @@ namespace CITester
 
             bool isDoCategory = (strChannelName?.ToUpper() == "DO");
 
-            // =========================================================================
-            // DO 시험 진입 전 타깃 VDO 드라이버 기동 동기화 (최대 40초 대기)
-            // 0~25번 핀을 성급하게 쏘지 않고, 첫 응답이 올 때까지 대기하여 소켓 큐잉을 원천 차단
-            // =========================================================================
-            if (isDoCategory && _tcmsTestService != null)
-            {
-                AppendTestLog(richTextBox_Log, "[시스템] VDO 릴레이 하드웨어 기동 동기화 대기 중 (최대 40초 소요)...", Color.DarkGray);
-
-                // 40초 타임아웃으로 VDO 초기화 명령(전체 OFF) 전송 및 첫 ACK 대기
-                bool bVdoAwake = await _tcmsTestService.SetVdoPinAsync(0, false, 40000);
-
-                if (bVdoAwake)
-                {
-                    AppendTestLog(richTextBox_Log, "[시스템]  VDO 릴레이 하드웨어 응답 수신 완료! 0번 핀부터 검사 시작", Color.DarkGreen);
-                }
-                else
-                {
-                    AppendTestLog(richTextBox_Log, "[경고] VDO 릴레이 응답 시간 초과 (단자 전원 확인 필요)", Color.Red);
-                }
-                await Task.Delay(300, cancellationToken);
-            }
-
             // 3. 핀 단위 시험 진행
             for (int i = 0; i < loopCount; i++)
             {
@@ -5612,7 +5562,10 @@ namespace CITester
                 {
                     if (!isDoCategory)
                     {
-                        // [DI 시험] 조건부 폴링 감시 (143/144개 통과 검증 완료)
+                        // =============================================================
+                        // [DI 시험] 조건부 폴링 감시 (최대 350ms 대기)
+                        // =============================================================
+                        // STEP 1: ON 검증
                         c_PLCNetwork?.SetDo(nPinNo, true, 5, 0);
 
                         DateTime dtOnTimeout = DateTime.Now.AddMilliseconds(350);
@@ -5633,6 +5586,7 @@ namespace CITester
                             await Task.Delay(20, cancellationToken);
                         }
 
+                        // STEP 2: OFF 검증
                         c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
 
                         DateTime dtOffTimeout = DateTime.Now.AddMilliseconds(350);
@@ -5655,22 +5609,25 @@ namespace CITester
                     }
                     else
                     {
-                        // [DO 시험] 보드가 이미 깨어있으므로 500ms 이내에 즉각 응답
+                        // =============================================================
+                        // [DO 시험] 단방향 즉각 송신 (ACK 대기 제거)
+                        // =============================================================
                         int vdoChannel = i + 1; // 1 ~ 32
-
-                        // STEP 1: ON 송신 및 릴레이 점등 ACK 대기
+                        
+                        
+                        // STEP 1: ON 송신 및 실제 ACK 확인
                         if (_tcmsTestService != null)
                         {
-                            isOnOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, true, 500);
+                            isOnOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, true, 300);
                         }
-                        await Task.Delay(nDelay, cancellationToken);
+                        await Task.Delay(nDelay, cancellationToken); // 접점 유지 딜레이 (100ms)
 
-                        // STEP 2: OFF 송신 및 릴레이 소등 ACK 대기
+                        // STEP 2: OFF 송신 및 실제 ACK 확인
                         if (_tcmsTestService != null)
                         {
-                            isOffOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, false, 500);
+                            isOffOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, false, 300);
                         }
-                        await Task.Delay(nDelay, cancellationToken);
+                        await Task.Delay(nDelay, cancellationToken); // 접점 원복 딜레이 (100ms)
                     }
                 }
                 catch (OperationCanceledException)

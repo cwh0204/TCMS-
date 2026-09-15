@@ -32,9 +32,9 @@ namespace TCMSTester.Services
         /// </summary>
         public bool IsLinkReady => _isFirstPacketReceived;
 
-        // VDO 비동기 응답 대기 및 엇박자 방지용 기대 패턴
+        // VDO 비동기 응답 대기 및 동기화 락
         private TaskCompletionSource<bool> _vdoResponseTcs;
-        private uint _expectedVdoPattern = 0xFFFFFFFF;
+        private readonly object _vdoLock = new object();
 
         // Command 상수
         private const ushort CMD_DO_WRITE = 0x0101;
@@ -71,11 +71,11 @@ namespace TCMSTester.Services
         {
             _strUnitType = strUnitType.ToUpper();
             _isPollingPaused = false;
-            _isFirstPacketReceived = false; // 부팅 대기 플래그 초기화
+            _isFirstPacketReceived = false;
 
             lock (_lockObj)
             {
-                _latestPacket = new TcmsPacket(); // 이전 회차 버퍼 초기화
+                _latestPacket = new TcmsPacket();
             }
 
             if (_udpService != null && !_udpService.IsRunning)
@@ -101,7 +101,6 @@ namespace TCMSTester.Services
             {
                 try
                 {
-                    // 일시 정지 상태가 아닐 때만 타깃으로 VDI_READ 패킷 요청
                     if (!_isPollingPaused && _udpService != null)
                     {
                         await _udpService.SendCommandAsync(_targetIp, _targetPort, CMD_VDI_READ);
@@ -133,10 +132,11 @@ namespace TCMSTester.Services
                     break;
 
                 case CMD_VDO_WRITE:
-                    // 타깃 보드 응답 규격: [A1 53] [01 04] [01 00] (CMD: 0x0401, Result: 0x0001 성공)
-                    if (e.Payloads != null && e.Payloads.Length >= 1 && e.Payloads[0] == 0x0001)
+                    // 타깃 응답 규격: [A1 53] [01 04] [01 00] (Result: 0x0001 성공)
+                    bool isSuccess = (e.Payloads != null && e.Payloads.Length >= 1 && e.Payloads[0] == 0x0001);
+                    lock (_vdoLock)
                     {
-                        _vdoResponseTcs?.TrySetResult(true);
+                        _vdoResponseTcs?.TrySetResult(isSuccess);
                     }
                     break;
             }
@@ -147,33 +147,57 @@ namespace TCMSTester.Services
         /// </summary>
         public void ResetVdoResponseState()
         {
-            _vdoResponseTcs = null;
+            lock (_vdoLock)
+            {
+                _vdoResponseTcs?.TrySetResult(false);
+                _vdoResponseTcs = null;
+            }
         }
+
+        private volatile bool _vdiLogPrintedOnce = false; // 최초 1회 정상 수신 포맷 확인용
 
         private void ParseVdiResponse(ushort[] payloads)
         {
             if (payloads == null) return;
 
-            int expectedPayloads = (_strUnitType == "CC") ? 6 : 9;
-            if (payloads.Length < expectedPayloads) return;
-
             byte[] di1 = new byte[6];
             byte[] di2 = new byte[6];
             byte[] di3 = new byte[6];
 
-            Buffer.BlockCopy(BitConverter.GetBytes(payloads[0]), 0, di1, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(payloads[1]), 0, di1, 2, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(payloads[2]), 0, di1, 4, 2);
-
-            Buffer.BlockCopy(BitConverter.GetBytes(payloads[3]), 0, di2, 0, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(payloads[4]), 0, di2, 2, 2);
-            Buffer.BlockCopy(BitConverter.GetBytes(payloads[5]), 0, di2, 4, 2);
-
-            if (_strUnitType == "TC" && payloads.Length >= 9)
+            if (_strUnitType == "CC")
             {
-                Buffer.BlockCopy(BitConverter.GetBytes(payloads[6]), 0, di3, 0, 2);
-                Buffer.BlockCopy(BitConverter.GetBytes(payloads[7]), 0, di3, 2, 2);
-                Buffer.BlockCopy(BitConverter.GetBytes(payloads[8]), 0, di3, 4, 2);
+                // CC 유닛은 12 words 중 6~8번 워드가 DI1, 9~11번 워드가 DI2
+                if (payloads.Length >= 12)
+                {
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[6]), 0, di1, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[7]), 0, di1, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[8]), 0, di1, 4, 2);
+
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[9]), 0, di2, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[10]), 0, di2, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[11]), 0, di2, 4, 2);
+                }
+            }
+            else // TC 유닛
+            {
+                // TC 유닛은 0~2번 DI1, 3~5번 DI2, 6~8번 DI3
+                if (payloads.Length >= 6)
+                {
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[0]), 0, di1, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[1]), 0, di1, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[2]), 0, di1, 4, 2);
+
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[3]), 0, di2, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[4]), 0, di2, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[5]), 0, di2, 4, 2);
+                }
+
+                if (payloads.Length >= 9)
+                {
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[6]), 0, di3, 0, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[7]), 0, di3, 2, 2);
+                    Buffer.BlockCopy(BitConverter.GetBytes(payloads[8]), 0, di3, 4, 2);
+                }
             }
 
             lock (_lockObj)
@@ -256,9 +280,9 @@ namespace TCMSTester.Services
         }
 
         /// <summary>
-        /// VDO 32ch 제어 명령을 전송하고 타깃 응답(ACK)을 대기합니다.
+        /// VDO 32ch 제어 명령 전송 후 타깃 보드의 실제 ACK([RX] 0x0401)를 대기합니다. (응답 없거나 불일치 시 false)
         /// </summary>
-        public async Task<bool> SetVdoPinAsync(int pinNo, bool isOn, int timeoutMs = 500)
+        public async Task<bool> SetVdoPinAsync(int pinNo, bool isOn, int timeoutMs = 300)
         {
             if (_udpService == null || pinNo < 0 || pinNo > 32) return false;
 
@@ -273,27 +297,39 @@ namespace TCMSTester.Services
                     ch17To32 = (ushort)(1 << (pinNo - 17));
             }
 
-            _expectedVdoPattern = ((uint)ch17To32 << 16) | ch1To16;
-
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _vdoResponseTcs = tcs;
+
+            lock (_vdoLock)
+            {
+                _vdoResponseTcs?.TrySetResult(false);
+                _vdoResponseTcs = tcs;
+            }
 
             try
             {
+                // 패킷 송신 실패 시 즉시 false
                 bool sent = await _udpService.SendCommandAsync(_targetIp, _targetPort, CMD_VDO_WRITE, ch1To16, ch17To32);
                 if (!sent) return false;
 
+                // 타깃 보드로부터 [RX] ACK 응답이 올 때까지 timeoutMs 대기
                 using (var cts = new CancellationTokenSource(timeoutMs))
                 using (cts.Token.Register(() => tcs.TrySetResult(false)))
                 {
                     return await tcs.Task;
                 }
             }
+            catch
+            {
+                return false;
+            }
             finally
             {
-                if (_vdoResponseTcs == tcs)
+                lock (_vdoLock)
                 {
-                    _vdoResponseTcs = null;
+                    if (_vdoResponseTcs == tcs)
+                    {
+                        _vdoResponseTcs = null;
+                    }
                 }
             }
         }
@@ -326,12 +362,12 @@ namespace TCMSTester.Services
         }
 
         public async Task<bool> ExecuteSingleRoundIoAsync(
-            string strUnitType,
-            int nLoop,
-            Func<bool> checkIsTesting,
-            ChannelContext context,
-            CITester.TestResultJson.GridTestResult objDigitalGridResult,
-            CITester.TestResultJson.GridTestResult objAnalogGridResult)
+    string strUnitType,
+    int nLoop,
+    Func<bool> checkIsTesting,
+    ChannelContext context,
+    CITester.TestResultJson.GridTestResult objDigitalGridResult,
+    CITester.TestResultJson.GridTestResult objAnalogGridResult)
         {
             bool bRoundSuccess = true;
             int nAnimationDelay = 100;
@@ -360,12 +396,37 @@ namespace TCMSTester.Services
             if (strUnitType == "TC" && context.ActiveDi3Count > 0 && RunChannelSequenceFunc != null)
                 await RunChannelSequenceFunc("DI3", context.ActiveDi3, context.ActiveDi3Count, nAnimationDelay, nLoop, listFailedPins, objDigitalGridResult.PinDetails, () => GetCurrentRawData("DI3"));
 
-            // DO 출력 검사 (VDI 폴링을 일시 정지하여 패킷 충돌 차단)
+            // DO 출력 검사 (VDI 폴링 일시 정지 후 VDO 드라이버 응답 대기)
             if (!checkIsTesting()) return false;
             if (context.ActiveDoCount > 0 && RunChannelSequenceFunc != null)
             {
-                PauseVdiPolling(); //  수동 시험처럼 DO 진행 중에는 VDI 폴링을 멈춰 버스를 비워줌
-                await Task.Delay(100);
+                PauseVdiPolling();
+                ResetVdoResponseState(); // 이전 잔여 응답 상태 초기화
+
+                OnLog?.Invoke("[시스템] DO 시험 준비 중: VDO 드라이버 응답 대기 (최대 40초)...", Color.DarkGray);
+
+                // VDO 보드가 실제로 깨어나서 0x0401 ACK를 돌려줄 때까지 동적 대기
+                bool bVdoReady = false;
+                DateTime dtVdoLimit = DateTime.Now.AddSeconds(40);
+                while (DateTime.Now < dtVdoLimit)
+                {
+                    if (!checkIsTesting()) return false;
+
+                    if (await CheckVdoReadyAsync(500))
+                    {
+                        bVdoReady = true;
+                        OnLog?.Invoke("[시스템] VDO 드라이버 응답 확인 완료! DO 시험을 시작합니다.", Color.DarkGreen);
+                        break;
+                    }
+                    await Task.Delay(500);
+                }
+
+                if (!bVdoReady)
+                {
+                    OnLog?.Invoke("[시스템] VDO 드라이버 응답 시간 초과 (40초 경과). 시퀀스를 진행합니다.", Color.Red);
+                }
+
+                await Task.Delay(300); // VME 버스 안정화
 
                 try
                 {
@@ -373,7 +434,7 @@ namespace TCMSTester.Services
                 }
                 finally
                 {
-                    ResumeVdiPolling(); //  DO 완료 후 VDI 폴링 재개
+                    ResumeVdiPolling();
                 }
             }
 
