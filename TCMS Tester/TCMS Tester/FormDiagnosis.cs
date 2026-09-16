@@ -7,12 +7,13 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using main;
 using TCMSTester;
+using CITester.Services; // 1. 방금 제작한 서비스 네임스페이스 추가
 using static CITester.FormLoad;
 using static CITester.FormMain;
-using System.Threading.Tasks;
 
 namespace CITester
 {
@@ -37,9 +38,7 @@ namespace CITester
 
         private void FormDiagnosis_Load(object sender, EventArgs e)
         {
-            // 진단 시작 전 포트 리셋이 필요하다면 유지, 
-            // 단 이미 연결된 포트를 불필요하게 끊지 않도록 주의합니다.
-            frmMain?.ResetPort();
+            //frmMain?.ResetPort();
         }
 
         public bool IsDiagnosisPassed
@@ -87,7 +86,7 @@ namespace CITester
 
                     bool bAllPassed = (m_lstFailItems.Count == 0);
 
-                    // 메인 폼에 자가진단 최종 결과 전달 (버튼 색상 변경 및 시험 버튼 활성화)
+                    // 메인 폼에 자가진단 최종 결과 전달
                     frmMain?.UpdateDiagnosisResultState(bAllPassed);
 
                     if (!bAllPassed)
@@ -110,7 +109,7 @@ namespace CITester
         }
 
         // =========================================================================
-        // 1. PLC 통신 진단 및 포트 상시 오픈 유지
+        // 1. PLC 통신 진단
         // =========================================================================
         private async void button_PLC_Click(object sender, EventArgs e)
         {
@@ -118,35 +117,16 @@ namespace CITester
             button_PLC.StartNewDiagnosis();
             button_PLC.Enabled = false;
 
-            // 재진단 시 메인 폼이 점유 중인 PLC 포트를 먼저 닫아 충돌 방지
             frmMain?.ClosePlc();
-            await Task.Delay(50); // OS 커널의 COM 포트 핸들 반환 대기
+            await Task.Delay(50);
 
-            // 재시험을 고려하여 이전 실패 목록에서 PLC 제거
             m_lstFailItems.Remove("PLC");
 
-            string strTargetPort = ConfigJson.CurrentConfig?.Device?.Plc_COM;
-            List<string> lstCandidatePorts = new List<string>();
-
-            if (!string.IsNullOrEmpty(strTargetPort))
-            {
-                lstCandidatePorts.Add(strTargetPort);
-            }
-
-            string[] arrSystemPorts = SerialPort.GetPortNames();
-            for (int nIdx = 0; nIdx < arrSystemPorts.Length; nIdx++)
-            {
-                string strPort = arrSystemPorts[nIdx];
-                if (!lstCandidatePorts.Contains(strPort, StringComparer.OrdinalIgnoreCase))
-                {
-                    lstCandidatePorts.Add(strPort);
-                }
-            }
+            List<string> lstCandidatePorts = GetCandidatePorts(ConfigJson.CurrentConfig?.Device?.Plc_COM);
 
             bool bPingSuccess = false;
             string strFoundPort = string.Empty;
 
-            // 1) 백그라운드에서 Cnet 핑(Ping)으로 진짜 PLC 포트 탐색
             await Task.Run(() =>
             {
                 for (int nPortIdx = 0; nPortIdx < lstCandidatePorts.Count; nPortIdx++)
@@ -165,7 +145,6 @@ namespace CITester
                             testPort.DiscardInBuffer();
                             testPort.DiscardOutBuffer();
 
-                            // PLC 읽기(%PW005) Cnet 프레임 송신
                             string reqBody = "00rSS0106%PW005";
                             byte[] txBuf = new byte[reqBody.Length + 4];
                             int txPos = 0;
@@ -221,7 +200,7 @@ namespace CITester
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[PLC 핑 테스트 예외 - {strCurrentPort}] {ex.Message}");
+                        Console.WriteLine($"[PLC 핑 예외 - {strCurrentPort}] {ex.Message}");
                     }
                 }
             });
@@ -237,14 +216,12 @@ namespace CITester
             }
             else
             {
-                // 2) 설정 저장
                 ConfigJson.CurrentConfig.Device.Plc_COM = strFoundPort;
                 SaveCurrentJsonConfig();
 
                 button_PLC.BackColor = Color.GreenYellow;
                 button_PLC.CurrentStatus = eDiagStatus.Normal;
 
-                // 3) 메인 폼의 PlcStart()를 직접 호출해 메인 폼에서 포트를 열어둠
                 if (frmMain != null)
                 {
                     bool bOpened = frmMain.PlcStart();
@@ -254,7 +231,7 @@ namespace CITester
         }
 
         // =========================================================================
-        // 2. DC 파워 진단 및 상시 오픈 (frmMain.OpenDCPower 호출)
+        // 2. DC 파워 진단
         // =========================================================================
         private void button_PowerSupply_Click(object sender, EventArgs e)
         {
@@ -274,7 +251,7 @@ namespace CITester
         }
 
         // =========================================================================
-        // 3. MVB 통신 진단 및 상시 오픈 (frmMain.OpenMvbBoard 호출)
+        // 3. MVB 통신 진단
         // =========================================================================
         private void button_MVB_Click(object sender, EventArgs e)
         {
@@ -293,31 +270,179 @@ namespace CITester
             }
         }
 
-        private void button_OutputBoard_Click(object sender, EventArgs e)
+        // =========================================================================
+        // 4. 전류 출력 보드 진단 (CurrentOutputService 활용)
+        // =========================================================================
+        private async void button_OutputBoard_Click(object sender, EventArgs e)
         {
-            // 비활성화 항목: 즉시 정상(성공) 처리
-            button_OutputBoard.BackColor = Color.GreenYellow;
-            button_OutputBoard.CurrentStatus = eDiagStatus.Normal;
-            Console.WriteLine("[진단] 출력 보드: 기본 정상 처리 완료");
+            button_OutputBoard.StartNewDiagnosis();
+            button_OutputBoard.Enabled = false;
+            m_lstFailItems.Remove("전류 출력 보드");
+
+            // 재진단 시 기존 점유 해제
+            frmMain?.CloseCurrentOutput();
+            await Task.Delay(50);
+
+            string preferredPort = ConfigJson.CurrentConfig?.Device?.CurrentOutput_COM ?? "COM1";
+            List<string> lstPorts = GetCandidatePorts(preferredPort);
+
+            bool bSuccess = false;
+            string strFoundPort = string.Empty;
+
+            await Task.Run(async () =>
+            {
+                using (var coService = new CurrentOutputService())
+                {
+                    foreach (string port in lstPorts)
+                    {
+                        try
+                        {
+                            if (coService.Open(port, 9600))
+                            {
+                                // "get.devicename.0" 송신 및 응답 장치명 확인
+                                string devName = await coService.GetDeviceNameAsync(boardIdx: 0, timeoutMs: 250);
+                                coService.Close();
+
+                                if (!string.IsNullOrEmpty(devName) &&
+                                    devName.IndexOf("voltage-to-current", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    bSuccess = true;
+                                    strFoundPort = port;
+                                    break;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // 포트 접근 불가 시 다음 포트 탐색
+                        }
+                    }
+                }
+            });
+
+            button_OutputBoard.Enabled = true;
+
+            if (bSuccess)
+            {
+                if (ConfigJson.CurrentConfig?.Device != null)
+                {
+                    ConfigJson.CurrentConfig.Device.CurrentOutput_COM = strFoundPort;
+                    SaveCurrentJsonConfig();
+                }
+
+                button_OutputBoard.BackColor = Color.GreenYellow;
+                button_OutputBoard.CurrentStatus = eDiagStatus.Normal;
+
+                // 메인 폼에 오픈 요청
+                frmMain?.OpenCurrentOutput(strFoundPort);
+                Console.WriteLine($"[진단] 전류 출력 보드(voltage-to-current) 연결 성공: {strFoundPort}");
+            }
+            else
+            {
+                button_OutputBoard.BackColor = Color.Red;
+                button_OutputBoard.CurrentStatus = eDiagStatus.Abnormal;
+                if (!m_lstFailItems.Contains("전류 출력 보드")) m_lstFailItems.Add("전류 출력 보드");
+                Console.WriteLine("[진단 결과] 전류 출력 보드 응답 없음");
+            }
         }
 
-        private void button_InputBoard_Click(object sender, EventArgs e)
+        // =========================================================================
+        // 5. 전류 입력 보드 진단 (CurrentInputService 활용)
+        // =========================================================================
+        private async void button_InputBoard_Click(object sender, EventArgs e)
         {
-            // 비활성화 항목: 즉시 정상(성공) 처리
-            button_InputBoard.BackColor = Color.GreenYellow;
-            button_InputBoard.CurrentStatus = eDiagStatus.Abnormal;
+            button_InputBoard.StartNewDiagnosis();
+            button_InputBoard.Enabled = false;
+            m_lstFailItems.Remove("전류 입력 보드");
 
-            if (!m_lstFailItems.Contains("입력 보드"))
+            frmMain?.CloseCurrentInput();
+            await Task.Delay(50);
+
+            string preferredPort = ConfigJson.CurrentConfig?.Device?.CurrentInput_COM ?? "COM5";
+            List<string> lstPorts = GetCandidatePorts(preferredPort);
+
+            bool bSuccess = false;
+            string strFoundPort = string.Empty;
+
+            await Task.Run(async () =>
             {
-                m_lstFailItems.Add("입력 보드");
+                using (var ciService = new CurrentInputService())
+                {
+                    foreach (string port in lstPorts)
+                    {
+                        try
+                        {
+                            if (ciService.Open(port, 9600))
+                            {
+                                // "get.devicename.0" 송신 및 응답 장치명 확인
+                                string devName = await ciService.GetDeviceNameAsync(boardIdx: 0, timeoutMs: 250);
+                                ciService.Close();
+
+                                if (!string.IsNullOrEmpty(devName) &&
+                                    devName.IndexOf("aiao-board", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    bSuccess = true;
+                                    strFoundPort = port;
+                                    break;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // 포트 접근 불가 시 다음 포트 탐색
+                        }
+                    }
+                }
+            });
+
+            button_InputBoard.Enabled = true;
+
+            if (bSuccess)
+            {
+                if (ConfigJson.CurrentConfig?.Device != null)
+                {
+                    ConfigJson.CurrentConfig.Device.CurrentInput_COM = strFoundPort;
+                    SaveCurrentJsonConfig();
+                }
+
+                button_InputBoard.BackColor = Color.GreenYellow;
+                button_InputBoard.CurrentStatus = eDiagStatus.Normal;
+
+                // 메인 폼에 오픈 요청
+                frmMain?.OpenCurrentInput(strFoundPort);
+                Console.WriteLine($"[진단] 전류 입력 보드(aiao-board) 연결 성공: {strFoundPort}");
+            }
+            else
+            {
+                button_InputBoard.BackColor = Color.Red;
+                button_InputBoard.CurrentStatus = eDiagStatus.Abnormal;
+                if (!m_lstFailItems.Contains("전류 입력 보드")) m_lstFailItems.Add("전류 입력 보드");
+                Console.WriteLine("[진단 결과] 전류 입력 보드 응답 없음");
+            }
+        }
+
+        // =========================================================================
+        // [공통 헬퍼] 우선순위 포트 포함 전체 COM 포트 목록 생성
+        // =========================================================================
+        private List<string> GetCandidatePorts(string preferredPort)
+        {
+            List<string> candidatePorts = new List<string>();
+            if (!string.IsNullOrEmpty(preferredPort))
+            {
+                candidatePorts.Add(preferredPort);
             }
 
-            Console.WriteLine("[진단] 입력 보드: 기본 실패 처리 완료");
+            foreach (string port in SerialPort.GetPortNames())
+            {
+                if (!candidatePorts.Contains(port, StringComparer.OrdinalIgnoreCase))
+                    candidatePorts.Add(port);
+            }
+
+            return candidatePorts;
         }
 
         private void FormDiagnosis_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // 창이 닫힐 때 포트를 닫지 않고, 변경된 설정값만 저장
             SaveCurrentJsonConfig();
         }
 
@@ -335,7 +460,5 @@ namespace CITester
                 return false;
             }
         }
-
-
     }
 }

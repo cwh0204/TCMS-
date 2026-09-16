@@ -187,8 +187,13 @@
     <Compile Include="Protocol\MvbReceiver.cs" />
     <Compile Include="Protocol\TcmsParser.cs" />
     <Compile Include="Protocol\TcmsValidator.cs" />
+    <Compile Include="Services\CurrentInputService.cs" />
+    <Compile Include="Services\CurrentOutputService.cs" />
+    <Compile Include="Services\MemEthTestService.cs" />
+    <Compile Include="Services\Rs485TestService.cs" />
     <Compile Include="Services\TcmsTestService.cs" />
     <Compile Include="Services\UdpService.cs" />
+    <Compile Include="Services\VaioTestService.cs" />
     <Compile Include="TestResultJson.cs" />
     <Compile Include="Tools\CustomComboBox.cs">
       <SubType>UserControl</SubType>
@@ -315,6 +320,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\CommTestUiManager.cs" />
+    <Compile Include="UI\MemEthTestUiManager.cs" />
     <Compile Include="UserClass.cs" />
     <Compile Include="Tools\UserControl1.cs">
       <SubType>Component</SubType>

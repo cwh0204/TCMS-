@@ -151,6 +151,9 @@ namespace CITester
 
             public string DPS1_ComPort { get; set; } = "COM100";
             public string DPS2_ComPort { get; set; } = "COM101";
+
+            public string CurrentInput_COM { get; set; } = "COM5";
+            public string CurrentOutput_COM { get; set; } = "COM1";
         }
 
         public OperationInfo Operation { get; set; } = new OperationInfo();
