@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using System.Drawing; // WinForms 표준 Color 네임스페이스
 using System.Threading;
 using System.Threading.Tasks;
 using TCMSTester.Protocol;
@@ -14,11 +14,12 @@ namespace TCMSTester.Services
         public ushort RawCh4 { get; set; } // 0~10V   (규격: 0~1000 count -> 0~10.00V)
         public ushort RawCh5 { get; set; } // Mascon FB (규격: 1500 count -> 15.00V)
 
-        public double Ch1_mA => RawCh1 / 100.0;
-        public double Ch2_mA => (RawCh2 / 1000.0) * 20.0;
-        public double Ch3_V => RawCh3 / 100.0;
-        public double Ch4_V => RawCh4 / 100.0;
-        public double Ch5_V => RawCh5 / 100.0;
+        // 단위 스케일링 변환 (1000 count 기준)
+        public double Ch1_mA => RawCh1 / 100.0;       // 1000 -> 10.00mA
+        public double Ch2_mA => RawCh2 / 50.0;        // 1000 -> 20.00mA (RawCh2 * 20.0 / 1000.0)
+        public double Ch3_V => RawCh3 / 100.0;        // 1000 -> 10.00V
+        public double Ch4_V => RawCh4 / 100.0;        // 1000 -> 10.00V
+        public double Ch5_V => RawCh5 / 100.0;        // 1500 -> 15.00V
 
         /// <summary>
         /// 규격 3.1: Ch5 Mascon Feedback 15V 정상 여부 (기본 오차 ±0.5V 허용)
@@ -30,20 +31,19 @@ namespace TCMSTester.Services
     {
         private readonly UdpService _udpService;
 
-        // 규격서 1장: LAN 1(10.0.1.11)과 LAN 2(10.0.2.11) 절체 지원
         public string TargetIp { get; set; }
         public int TargetPort { get; set; }
 
         private const ushort CMD_VAIO_AI_READ = 0x0201;
         private const ushort CMD_VAIO_AO_WRITE = 0x0202;
 
-        private TaskCompletionSource<ushort[]> _aiResponseTcs;
-        private TaskCompletionSource<ushort[]> _aoResponseTcs;
+        private TaskCompletionSource<ushort[]>? _aiResponseTcs;
+        private TaskCompletionSource<ushort[]>? _aoResponseTcs;
         private readonly object _lockObj = new object();
         private readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1, 1);
 
-        public Action<string, Color> OnLog { get; set; }
-        public Action<string, Color> OnFailLog { get; set; }
+        public Action<string, Color>? OnLog { get; set; }
+        public Action<string, Color>? OnFailLog { get; set; }
 
         public VaioTestService(UdpService udpService, string targetIp = "10.0.1.11", int targetPort = 5060)
         {
@@ -57,22 +57,25 @@ namespace TCMSTester.Services
             }
         }
 
-        private void OnPacketReceived(object sender, PacketReceivedEventArgs e)
+        private void OnPacketReceived(object? sender, PacketReceivedEventArgs e)
         {
             if (e == null) return;
 
-            if (e.Command == CMD_VAIO_AI_READ)
+            // VCPUT 응답 시 최상위 ACK 비트(0x8000)가 세팅되어 오는 경우(0x8201, 0x8202)도 수신 허용
+            ushort baseCmd = (ushort)(e.Command & 0x0FFF);
+
+            if (baseCmd == CMD_VAIO_AI_READ)
             {
                 lock (_lockObj)
                 {
-                    _aiResponseTcs?.TrySetResult(e.Payloads ?? new ushort[0]);
+                    _aiResponseTcs?.TrySetResult(e.Payloads ?? Array.Empty<ushort>());
                 }
             }
-            else if (e.Command == CMD_VAIO_AO_WRITE)
+            else if (baseCmd == CMD_VAIO_AO_WRITE)
             {
                 lock (_lockObj)
                 {
-                    _aoResponseTcs?.TrySetResult(e.Payloads ?? new ushort[0]);
+                    _aoResponseTcs?.TrySetResult(e.Payloads ?? Array.Empty<ushort>());
                 }
             }
         }
@@ -80,7 +83,7 @@ namespace TCMSTester.Services
         /// <summary>
         /// 아날로그 입력(AI) 5채널 읽기 (CMD: 0x0201)
         /// </summary>
-        public async Task<VaioAiResult> ReadAnalogInputsAsync(int timeoutMs = 2000)
+        public async Task<VaioAiResult?> ReadAnalogInputsAsync(int timeoutMs = 2000)
         {
             if (_udpService == null || !_udpService.IsRunning)
             {
@@ -89,8 +92,8 @@ namespace TCMSTester.Services
             }
 
             await _sendLock.WaitAsync();
-
             var tcs = new TaskCompletionSource<ushort[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+
             lock (_lockObj)
             {
                 _aiResponseTcs = tcs;
@@ -98,35 +101,44 @@ namespace TCMSTester.Services
 
             try
             {
-                bool sent = await _udpService.SendCommandAsync(TargetIp, TargetPort, CMD_VAIO_AI_READ);
+                // 송신 직전 로그 출력
+                OnLog?.Invoke($"[VAIO-TX] AI_READ(0x{CMD_VAIO_AI_READ:X4}) 요청 송신 -> {TargetIp}:{TargetPort}", Color.DarkBlue);
+
+                bool sent = await _udpService.SendCommandAsync(TargetIp, TargetPort, CMD_VAIO_AI_READ, Array.Empty<ushort>());
                 if (!sent)
                 {
                     OnFailLog?.Invoke("[VAIO] AI_READ 송신 실패", Color.Red);
                     return null;
                 }
 
-                using (var cts = new CancellationTokenSource(timeoutMs))
-                using (cts.Token.Register(() => tcs.TrySetResult(null)))
+                var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                if (completedTask != tcs.Task)
                 {
-                    ushort[] payloads = await tcs.Task;
-                    if (payloads == null || payloads.Length < 5)
-                    {
-                        OnFailLog?.Invoke("[VAIO] AI_READ 수신 타임아웃 또는 데이터 부족", Color.Red);
-                        return null;
-                    }
-
-                    var result = new VaioAiResult
-                    {
-                        RawCh1 = payloads[0],
-                        RawCh2 = payloads[1],
-                        RawCh3 = payloads[2],
-                        RawCh4 = payloads[3],
-                        RawCh5 = payloads[4]
-                    };
-
-                    OnLog?.Invoke($"[VAIO-AI] Ch1:{result.Ch1_mA:F2}mA | Ch2:{result.Ch2_mA:F2}mA | Ch3:{result.Ch3_V:F2}V | Ch4:{result.Ch4_V:F2}V | Ch5(Mascon):{result.Ch5_V:F2}V", Color.DarkBlue);
-                    return result;
+                    OnFailLog?.Invoke($"[VAIO] AI_READ 수신 타임아웃 ({timeoutMs}ms 초과) - 응답 없음", Color.OrangeRed);
+                    return null;
                 }
+
+                // VaioTestService.cs 내부
+
+                ushort[] payloads = await tcs.Task;
+                if (payloads == null || payloads.Length < 5)
+                {
+                    OnFailLog?.Invoke($"[VAIO] AI_READ 응답 데이터 부족 (수신: {payloads?.Length ?? 0} words)", Color.Red);
+                    return null;
+                }
+
+                // ★ 오프셋 없이 0번부터 순서대로 매핑
+                var result = new VaioAiResult
+                {
+                    RawCh1 = payloads[0], // Word 0: AIN1 (317 -> 3.17mA)
+                    RawCh2 = payloads[1], // Word 1: AIN2 (157 -> 3.14mA)
+                    RawCh3 = payloads[2], // Word 2: AIN3 (193 -> 1.93V)
+                    RawCh4 = payloads[3], // Word 3: AIN4 (298 -> 2.98V)
+                    RawCh5 = payloads[4]  // Word 4: PMASCON 15V (1499 -> 14.99V)
+                };
+
+                OnLog?.Invoke($"[VAIO-RX] Ch1(AIN1):{result.Ch1_mA:F2}mA | Ch2(AIN2):{result.Ch2_mA:F2}mA | Ch3(AIN3):{result.Ch3_V:F2}V | Ch4(AIN4):{result.Ch4_V:F2}V | Ch5(15V):{result.Ch5_V:F2}V", Color.DarkGreen);
+                return result;
             }
             catch (Exception ex)
             {
@@ -162,6 +174,7 @@ namespace TCMSTester.Services
             ushort r4 = (ushort)Math.Round(Math.Max(0.0, Math.Min(10.0, v4)) * 100.0);
 
             var tcs = new TaskCompletionSource<ushort[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+
             lock (_lockObj)
             {
                 _aoResponseTcs = tcs;
@@ -170,6 +183,8 @@ namespace TCMSTester.Services
             try
             {
                 ushort[] payloads = new ushort[] { r1, r2, r3, r4 };
+                OnLog?.Invoke($"[VAIO-TX] AO_WRITE(0x{CMD_VAIO_AO_WRITE:X4}) 송신 -> {v1:F1}V, {v2:F1}V, {v3:F1}V, {v4:F1}V", Color.DarkBlue);
+
                 bool sent = await _udpService.SendCommandAsync(TargetIp, TargetPort, CMD_VAIO_AO_WRITE, payloads);
                 if (!sent)
                 {
@@ -177,28 +192,24 @@ namespace TCMSTester.Services
                     return false;
                 }
 
-                using (var cts = new CancellationTokenSource(timeoutMs))
-                using (cts.Token.Register(() => tcs.TrySetResult(null)))
+                var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                if (completedTask != tcs.Task)
                 {
-                    ushort[] resp = await tcs.Task;
-                    if (resp == null)
-                    {
-                        OnFailLog?.Invoke("[VAIO] AO_WRITE 응답 타임아웃", Color.OrangeRed);
-                        return false;
-                    }
-
-                    // 페이로드가 없는 순수 ACK(Length == 0)이거나 결과 코드가 0 또는 1(성공)인 경우 정상 인정
-                    bool isSuccess = (resp.Length == 0) || (resp.Length >= 1 && (resp[0] == 0 || resp[0] == 1));
-
-                    if (isSuccess)
-                    {
-                        OnLog?.Invoke($"[VAIO-AO] 출력 설정 완료 -> Ch1~4: {v1:F2}V, {v2:F2}V, {v3:F2}V, {v4:F2}V", Color.DarkGreen);
-                        return true;
-                    }
-
-                    OnFailLog?.Invoke($"[VAIO-AO] 보드 오류 응답: 0x{(resp.Length > 0 ? resp[0] : 0):X4}", Color.Red);
+                    OnFailLog?.Invoke($"[VAIO] AO_WRITE 응답 타임아웃 ({timeoutMs}ms 초과)", Color.OrangeRed);
                     return false;
                 }
+
+                ushort[] resp = await tcs.Task;
+                bool isSuccess = (resp == null || resp.Length == 0) || (resp.Length >= 1 && (resp[0] == 0 || resp[0] == 1));
+
+                if (isSuccess)
+                {
+                    OnLog?.Invoke($"[VAIO-AO] 출력 설정 완료 -> Ch1~4: {v1:F2}V, {v2:F2}V, {v3:F2}V, {v4:F2}V", Color.DarkGreen);
+                    return true;
+                }
+
+                OnFailLog?.Invoke($"[VAIO-AO] 보드 오류 응답: 0x{(resp?.Length > 0 ? resp[0] : 0):X4}", Color.Red);
+                return false;
             }
             catch (Exception ex)
             {

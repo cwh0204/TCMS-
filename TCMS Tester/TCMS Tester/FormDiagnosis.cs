@@ -300,7 +300,7 @@ namespace CITester
                             if (coService.Open(port, 9600))
                             {
                                 // "get.devicename.0" 송신 및 응답 장치명 확인
-                                string devName = await coService.GetDeviceNameAsync(boardIdx: 0, timeoutMs: 250);
+                                string devName = await coService.GetDeviceNameAsync(boardIdx: 1, timeoutMs: 250);
                                 coService.Close();
 
                                 if (!string.IsNullOrEmpty(devName) &&
@@ -347,7 +347,7 @@ namespace CITester
         }
 
         // =========================================================================
-        // 5. 전류 입력 보드 진단 (CurrentInputService 활용)
+        // 5. 전류 입력 출력 보드 진단 (CurrentInputService 활용)
         // =========================================================================
         private async void button_InputBoard_Click(object sender, EventArgs e)
         {

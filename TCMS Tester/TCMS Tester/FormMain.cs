@@ -150,6 +150,7 @@ namespace CITester
 
         //MVB
         //서비스
+        private bool m_bShowVdiRawLog = false;
         private MvbReceiver m_mvbReceiver;
         private MvbSerialManager m_serialManager;
         private MvbReceiver _mvbReceiver;
@@ -5163,7 +5164,7 @@ namespace CITester
         /// </summary>
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
-            // 1. 강제 중단 요청 처리
+            // 1. 강제 중단 요청 처리 (토글 동작)
             if (m_bIsTesting)
             {
                 m_bIsTesting = false;
@@ -5177,7 +5178,7 @@ namespace CITester
             bool bDoDigitalTest = IsTreeNodeChecked("디지털 입출력 시험");
             bool bDoAnalogTest = IsTreeNodeChecked("아날로그 입출력 시험");
             bool bDoCommTest = IsTreeNodeChecked("통신 시험");
-            bool bDoMemTest = IsTreeNodeChecked("메모리 시험") || IsTreeNodeChecked("VCPUT 자체진단"); //  추가
+            bool bDoMemTest = IsTreeNodeChecked("메모리 시험") || IsTreeNodeChecked("VCPUT 자체진단");
 
             if (!bDoDigitalTest && !bDoAnalogTest && !bDoCommTest && !bDoMemTest)
             {
@@ -5207,26 +5208,48 @@ namespace CITester
             finalResult.Header.TrainNo = ConfigJson.CurrentConfig?.Operation?.TrainNo ?? "0000";
             finalResult.Header.TotalRound = nMaxLoop;
 
-            var objDigitalGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "디지털 입출력 시험" };
-            var objAnalogGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "아날로그 입출력 시험" };
-            var objCommGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "통신 시험" };
-            var objMemGridResult = new CITester.TestResultJson.GridTestResult { GridTitle = "메모리 및 이더넷 시험" }; //  추가
+            // 내부 컬렉션 Null 방지 안전 생성
+            var objDigitalGridResult = new CITester.TestResultJson.GridTestResult
+            {
+                GridTitle = "디지털 입출력 시험",
+                HeaderRounds = new List<string>(),
+                RowData = new Dictionary<string, List<string>>(),
+                PinDetails = new List<CITester.TestResultJson.PinResultItem>()
+            };
+            var objAnalogGridResult = new CITester.TestResultJson.GridTestResult
+            {
+                GridTitle = "아날로그 입출력 시험",
+                HeaderRounds = new List<string>(),
+                RowData = new Dictionary<string, List<string>>(),
+                PinDetails = new List<CITester.TestResultJson.PinResultItem>()
+            };
+            var objCommGridResult = new CITester.TestResultJson.GridTestResult
+            {
+                GridTitle = "통신 시험",
+                HeaderRounds = new List<string>(),
+                RowData = new Dictionary<string, List<string>>(),
+                PinDetails = new List<CITester.TestResultJson.PinResultItem>()
+            };
+            var objMemGridResult = new CITester.TestResultJson.GridTestResult
+            {
+                GridTitle = "메모리 및 이더넷 시험",
+                HeaderRounds = new List<string>(),
+                RowData = new Dictionary<string, List<string>>(),
+                PinDetails = new List<CITester.TestResultJson.PinResultItem>()
+            };
 
             if (bDoDigitalTest) finalResult.GridResults.Add(objDigitalGridResult);
             if (bDoAnalogTest) finalResult.GridResults.Add(objAnalogGridResult);
             if (bDoCommTest) finalResult.GridResults.Add(objCommGridResult);
-            if (bDoMemTest) finalResult.GridResults.Add(objMemGridResult); //  추가
+            if (bDoMemTest) finalResult.GridResults.Add(objMemGridResult);
 
             bool bHasAnyFailure = false;
 
             // 멤버 변수 초기화 및 UDP 실시간 패킷 모니터링 연결
             _udpService = new TCMSTester.Services.UdpService();
 
-            // 50ms 고속 VDI 폴링(0x0301) 로그는 제외하고 VDO 제어/에러 로그만 출력
             _udpService.LogMessage += (s, log) =>
             {
-                if (log.Contains("0x0301")) return;
-
                 Color c = Color.Gray;
                 if (log.StartsWith("[TX]")) c = Color.DarkBlue;
                 else if (log.StartsWith("[RX]")) c = Color.DarkSlateGray;
@@ -5255,12 +5278,20 @@ namespace CITester
                 OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color)
             };
 
-            //  메모리/이더넷 시험 서비스 초기화
             _memTestService = new MemEthTestService(_udpService);
+            _rs485TestService = new Rs485TestService(_udpService);
 
-            // 디지털 시험 콜백 등록
+            // 디지털 시험 콜백 등록 (디지털 시험 체크 시에만 실행)
+            ChannelContext channelContext = null;
             if (bDoDigitalTest)
             {
+                channelContext = GetChannelContextByUnit(strUnitType);
+                if (channelContext == null)
+                {
+                    AppendTestLog(richTextBox_FailLog, $"[설정 에러] {strUnitType} 유닛의 디지털 채널 구성(Context)을 불러오지 못했습니다.", Color.Red);
+                    return;
+                }
+
                 _tcmsTestService.RunChannelSequenceFunc = async (cat, arr, count, delay, loop, fails, details, currentRawData) =>
                 {
                     DataGridView targetDgv = null;
@@ -5290,9 +5321,6 @@ namespace CITester
                 SetDCPowerON(80, 5);
                 c_PLCNetwork?.SetDo(240, true, 5, 0);
 
-                var channelContext = GetChannelContextByUnit(strUnitType);
-                if (channelContext == null) return;
-
                 // 4. UDP 통신 개시 및 VCPUT 기본 통신 링크 감지 대기
                 AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 전원 인가 완료. VCPUT 이더넷 링크 연결 대기 중...", Color.DarkGray);
                 _tcmsTestService.StartUdpPolling(strUnitType);
@@ -5311,22 +5339,24 @@ namespace CITester
                     await Task.Delay(200);
                 }
 
+                if (!m_bIsTesting) return;
+
                 if (!bLinkReady)
                 {
-                    AppendTestLog(richTextBox_Log, $"[통신 에러] {strUnitType} 유닛 응답 없음. VCPUT 네트워크 및 전원을 확인하세요.", Color.Red);
+                    AppendTestLog(richTextBox_FailLog, $"[통신 에러] {strUnitType} 유닛 응답 없음. VCPUT 네트워크 및 전원을 확인하세요.", Color.Red);
                     return;
                 }
 
                 AppendTestLog(richTextBox_Log, "[시스템] VCPUT 이더넷 통신 감지 완료! 본 시험을 시작합니다.", Color.DarkGreen);
 
-                // VDO 전체 OFF 초기화 패킷 1회 전송
+                // ★ [수정 완료] 잘못 들어갔던 ExecuteSingleRoundIoAsync 블록을 지우고 원래의 초기화 코드로 복원
                 if (bDoDigitalTest)
                 {
                     await _tcmsTestService.SetVdoPinAsync(0, false);
                 }
                 await Task.Delay(500);
 
-                // 5. 메인 회차 루프
+                // 5. 메인 회차 루프 (nLoop는 여기서 선언되어 사용됩니다)
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
                 {
                     if (!m_bIsTesting) break;
@@ -5340,11 +5370,16 @@ namespace CITester
                     // -------------------------------------------------------------
                     if (bDoDigitalTest)
                     {
-                        mainTabControl1.SelectedIndex = 0; // 디지털 탭
+                        mainTabControl1.SelectedIndex = 0;
                         await Task.Delay(200);
 
                         bool bDigitalPass = await _tcmsTestService.ExecuteSingleRoundIoAsync(
-                            strUnitType, nLoop, () => m_bIsTesting, channelContext, objDigitalGridResult, null);
+                            strUnitType,
+                            nLoop,
+                            (Func<bool>)(() => m_bIsTesting),
+                            channelContext,
+                            objDigitalGridResult,
+                            null);
 
                         if (!bDigitalPass)
                         {
@@ -5363,7 +5398,7 @@ namespace CITester
                         SwitchToAnalogTab();
                         await Task.Delay(200);
 
-                        objAnalogGridResult?.HeaderRounds?.Add($"{nLoop}회차");
+                        objAnalogGridResult.HeaderRounds.Add($"{nLoop}회차");
 
                         var listFailedPins = new List<string>();
                         var listPinDetails = new List<CITester.TestResultJson.PinResultItem>();
@@ -5378,7 +5413,7 @@ namespace CITester
                             AppendTestLog(richTextBox_FailLog, $"[아날로그] {nLoop}회차 아날로그 시험 불합격 발생 ({listFailedPins.Count}건)", Color.Red);
                         }
 
-                        if (objAnalogGridResult != null && listPinDetails.Count > 0)
+                        if (listPinDetails.Count > 0)
                         {
                             objAnalogGridResult.PinDetails.AddRange(listPinDetails);
                             foreach (var pin in listPinDetails)
@@ -5399,7 +5434,7 @@ namespace CITester
                     // -------------------------------------------------------------
                     if (bDoCommTest)
                     {
-                        mainTabControl1.SelectedIndex = 1; // 통신 탭
+                        mainTabControl1.SelectedIndex = 1;
                         await Task.Delay(300);
 
                         bool bCommPass = await RunCommSingleRoundAsync(strUnitType, nLoop, objCommGridResult);
@@ -5420,14 +5455,14 @@ namespace CITester
                         tableLayoutPanel20?.BringToFront();
                         await Task.Delay(200);
 
-                        // 메모리 시험 중 VCPUT 통신 큐 보호를 위해 50ms VDI 폴링 일시 중지
-                        _tcmsTestService?.StopUdpPolling();
-                        await Task.Delay(300); // 잔여 버퍼 배출 대기
+                        // 통신 충돌 방지를 위해 VDI 폴링 일시 중지
+                        _tcmsTestService?.PauseVdiPolling();
+                        await Task.Delay(300);
 
                         bool bMemPass = await RunMemSingleRoundAsync(nLoop, objMemGridResult);
 
-                        //메모리 시험 종료 후 VDI 폴링 재개
-                        _tcmsTestService?.StartUdpPolling(strUnitType);
+                        // 메모리 시험 종료 후 VDI 폴링 재개
+                        _tcmsTestService?.ResumeVdiPolling();
 
                         if (!bMemPass)
                         {
@@ -5458,7 +5493,7 @@ namespace CITester
             }
             catch (Exception ex)
             {
-                AppendTestLog(richTextBox_Log, $"[시스템 에러] 예외 발생: {ex.Message}", Color.Red);
+                AppendTestLog(richTextBox_FailLog, $"[시스템 에러] 예외 발생: {ex.Message}", Color.Red);
             }
             finally
             {
@@ -5715,15 +5750,13 @@ namespace CITester
     Func<byte[]> getRawDataFunc,
     bool[] expectedBitPattern,
     int nStartPin = 0,
-    CancellationToken cancellationToken = default
-)
+    CancellationToken cancellationToken = default)
         {
             if (arrStates == null || dgvTarget == null || nActiveCount <= 0) return;
 
             int loopCount = Math.Min(nActiveCount, arrStates.Length);
 
-            // 1. 탭 전환
-            int targetTabIndex = -1;
+            // 1. 해당 채널 탭으로 UI 전환
             if (!string.IsNullOrEmpty(strChannelName))
             {
                 string chKey = strChannelName.ToUpper().Trim();
@@ -5734,16 +5767,14 @@ namespace CITester
                     string tabName = page.Name?.ToUpper().Trim() ?? "";
                     if (tabText.Contains(chKey) || tabName.Contains(chKey))
                     {
-                        targetTabIndex = t;
+                        if (flatTabControl1.SelectedIndex != t)
+                        {
+                            flatTabControl1.SelectedIndex = t;
+                            Application.DoEvents();
+                        }
                         break;
                     }
                 }
-            }
-
-            if (targetTabIndex >= 0 && flatTabControl1.SelectedIndex != targetTabIndex)
-            {
-                flatTabControl1.SelectedIndex = targetTabIndex;
-                Application.DoEvents();
             }
 
             // 2. 상태 배열 초기화
@@ -5757,7 +5788,11 @@ namespace CITester
             {
                 if (!m_bIsTesting || cancellationToken.IsCancellationRequested) return;
 
-                int nPinNo = nStartPin + i;
+                // [주소 분리] PLC 물리 DO 주소 vs TCMS 채널 번호(1~48 또는 1~32)
+                int plcDoPin = nStartPin + i;      // PLC DO 실제 접점 제어 주소
+                int tcmsChNo = i + 1;             // TCMS 성적서 및 화면 표시용 채널 번호
+                string pinIdentifier = $"{strChannelName}_{tcmsChNo}번";
+
                 arrStates[i] = EChannelState.Test;
                 dgvTarget.Invalidate();
 
@@ -5769,106 +5804,164 @@ namespace CITester
                     if (!isDoCategory)
                     {
                         // =============================================================
-                        // [DI 시험] 조건부 폴링 감시 (최대 350ms 대기)
+                        // [DI 시험] 하드웨어 시상수를 고려한 안정적 폴링 감시
                         // =============================================================
-                        // STEP 1: ON 검증
-                        c_PLCNetwork?.SetDo(nPinNo, true, 5, 0);
+                        int portByteIdx = i / 8;
+                        int bitIdx = i % 8;
 
-                        DateTime dtOnTimeout = DateTime.Now.AddMilliseconds(350);
-                        while (DateTime.Now < dtOnTimeout)
+                        byte lastRawByte = 0;
+                        int lastBitVal = -1;
+                        var sw = System.Diagnostics.Stopwatch.StartNew();
+
+                        // -------------------------------------------------------------
+                        // STEP 1: ON 검증 (안정적 검증 타임아웃: 600ms)
+                        // -------------------------------------------------------------
+                        AppendTestLog(richTextBox_Log, $"[DI-ON] {strChannelName} Ch{tcmsChNo} (PLC DO:{plcDoPin}) 24V 인가", Color.DarkBlue);
+                        c_PLCNetwork?.SetDo(plcDoPin, true, 5, 0);
+
+                        try
                         {
-                            if (!m_bIsTesting || cancellationToken.IsCancellationRequested) break;
-                            byte[] raw = getRawDataFunc?.Invoke();
-                            if (raw != null)
+                            DateTime dtOnTimeout = DateTime.Now.AddMilliseconds(600); // 350ms -> 600ms로 완화
+                            while (DateTime.Now < dtOnTimeout)
                             {
-                                int portByteIdx = i / 8;
-                                int bitIdx = i % 8;
-                                if (portByteIdx < raw.Length && (((raw[portByteIdx] >> bitIdx) & 0x01) == 1))
+                                if (!m_bIsTesting || cancellationToken.IsCancellationRequested) break;
+
+                                byte[] raw = getRawDataFunc?.Invoke();
+                                if (raw != null && portByteIdx < raw.Length)
                                 {
-                                    isOnOk = true;
-                                    break;
+                                    lastRawByte = raw[portByteIdx];
+                                    lastBitVal = (lastRawByte >> bitIdx) & 0x01;
+
+                                    if (lastBitVal == 1)
+                                    {
+                                        isOnOk = true;
+                                        sw.Stop();
+                                        AppendTestLog(richTextBox_Log,
+                                            $"  ↳ [RX ON 성공] Ch{tcmsChNo} 검출 ({sw.ElapsedMilliseconds}ms) | Raw[Byte {portByteIdx}]: 0x{lastRawByte:X2} (Bit{bitIdx} = 1)",
+                                            Color.DarkGreen);
+                                        break;
+                                    }
                                 }
+                                await Task.Delay(30, cancellationToken); // 20ms -> 30ms (VDI 50ms 폴링 주기 고려)
                             }
-                            await Task.Delay(20, cancellationToken);
+
+                            if (!isOnOk)
+                            {
+                                sw.Stop();
+                                AppendTestLog(richTextBox_FailLog,
+                                    $"  ↳ [RX ON 실패] Ch{tcmsChNo} 타임아웃(600ms 경과) | 최종 Raw[Byte {portByteIdx}]: 0x{lastRawByte:X2} (Bit{bitIdx} = {lastBitVal})",
+                                    Color.Red);
+                            }
+                            else
+                            {
+                                // ★ 중요: ON 상태를 하드웨어가 확실히 유지할 수 있도록 최소 펄스 폭 보장
+                                await Task.Delay(50, cancellationToken);
+                            }
+                        }
+                        finally
+                        {
+                            // STEP 2: OFF 지시 (PLC DO 복구 강제)
+                            c_PLCNetwork?.SetDo(plcDoPin, false, 5, 0);
                         }
 
-                        // STEP 2: OFF 검증
-                        c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
+                        // -------------------------------------------------------------
+                        // STEP 2: OFF 검증 (잔류 방전 대기 고려 타임아웃: 600ms)
+                        // -------------------------------------------------------------
+                        AppendTestLog(richTextBox_Log, $"[DI-OFF] {strChannelName} Ch{tcmsChNo} (PLC DO:{plcDoPin}) 0V 해제", Color.DarkSlateGray);
+                        sw.Restart();
 
-                        DateTime dtOffTimeout = DateTime.Now.AddMilliseconds(350);
+                        DateTime dtOffTimeout = DateTime.Now.AddMilliseconds(600); // 350ms -> 600ms로 완화
                         while (DateTime.Now < dtOffTimeout)
                         {
                             if (!m_bIsTesting || cancellationToken.IsCancellationRequested) break;
+
                             byte[] raw = getRawDataFunc?.Invoke();
-                            if (raw != null)
+                            if (raw != null && portByteIdx < raw.Length)
                             {
-                                int portByteIdx = i / 8;
-                                int bitIdx = i % 8;
-                                if (portByteIdx < raw.Length && (((raw[portByteIdx] >> bitIdx) & 0x01) == 0))
+                                lastRawByte = raw[portByteIdx];
+                                lastBitVal = (lastRawByte >> bitIdx) & 0x01;
+
+                                if (lastBitVal == 0)
                                 {
                                     isOffOk = true;
+                                    sw.Stop();
+                                    AppendTestLog(richTextBox_Log,
+                                        $"  ↳ [RX OFF 성공] Ch{tcmsChNo} 복구 ({sw.ElapsedMilliseconds}ms) | Raw[Byte {portByteIdx}]: 0x{lastRawByte:X2} (Bit{bitIdx} = 0)",
+                                        Color.DarkGreen);
                                     break;
                                 }
                             }
-                            await Task.Delay(20, cancellationToken);
+                            await Task.Delay(30, cancellationToken);
                         }
+
+                        if (!isOffOk)
+                        {
+                            sw.Stop();
+                            AppendTestLog(richTextBox_FailLog,
+                                $"  ↳ [RX OFF 실패] Ch{tcmsChNo} 잔류 신호 감지(600ms 경과) | 최종 Raw[Byte {portByteIdx}]: 0x{lastRawByte:X2} (Bit{bitIdx} = {lastBitVal})",
+                                Color.Red);
+                        }
+
+                        // 핀 간 릴레이 방전 및 간섭 방지 딜레이
+                        await Task.Delay(nDelay, cancellationToken);
                     }
                     else
                     {
                         // =============================================================
-                        // [DO 시험] 단방향 즉각 송신 (ACK 대기 제거)
+                        // [DO 시험] VDO 채널 제어 및 타깃 ACK 확인
                         // =============================================================
-                        int vdoChannel = i + 1; // 1 ~ 32
-                        
-                        
+                        int vdoChannel = tcmsChNo; // 1 ~ 32
+
                         // STEP 1: ON 송신 및 실제 ACK 확인
                         if (_tcmsTestService != null)
                         {
                             isOnOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, true, 300);
                         }
-                        await Task.Delay(nDelay, cancellationToken); // 접점 유지 딜레이 (100ms)
+                        await Task.Delay(nDelay, cancellationToken); // 접점 유지 대기
 
                         // STEP 2: OFF 송신 및 실제 ACK 확인
                         if (_tcmsTestService != null)
                         {
                             isOffOk = await _tcmsTestService.SetVdoPinAsync(vdoChannel, false, 300);
                         }
-                        await Task.Delay(nDelay, cancellationToken); // 접점 원복 딜레이 (100ms)
+                        await Task.Delay(nDelay, cancellationToken); // 접점 원복 대기
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    c_PLCNetwork?.SetDo(nPinNo, false, 5, 0);
+                    c_PLCNetwork?.SetDo(plcDoPin, false, 5, 0);
                     if (isDoCategory && _tcmsTestService != null)
                     {
-                        var _ = _tcmsTestService.SetVdoPinAsync(i + 1, false);
+                        var _ = _tcmsTestService.SetVdoPinAsync(tcmsChNo, false);
                     }
                     arrStates[i] = default;
                     dgvTarget.Invalidate();
                     return;
                 }
 
-                // STEP 3: 결과 판정
+                // STEP 3: 결과 판정 및 등록
                 bool isFinalSuccess = isOnOk && isOffOk;
+
                 if (isFinalSuccess)
                 {
                     arrStates[i] = EChannelState.On;
-                    AppendTestLog(richTextBox_Log, $"{strChannelName} {nPinNo}번 핀 ON/OFF (성공)", Color.Black);
+                    AppendTestLog(richTextBox_Log, $"{strChannelName} Ch{tcmsChNo} (PLC DO:{plcDoPin}) ON/OFF 정상 (합격)", Color.Black);
                 }
                 else
                 {
                     arrStates[i] = EChannelState.Err;
-                    AppendTestLog(richTextBox_Log, $"{strChannelName} {nPinNo}번 핀 ON/OFF (실패)", Color.Red);
-                    listFailedPins.Add($"{strChannelName}_{nPinNo}번");
+                    AppendTestLog(richTextBox_FailLog, $"{strChannelName} Ch{tcmsChNo} (PLC DO:{plcDoPin}) 동작 불량 [ON:{isOnOk}, OFF:{isOffOk}] (불합격)", Color.Red);
+                    listFailedPins.Add(pinIdentifier);
                 }
 
+                // 성적서 JSON 항목 매핑 (PinNo: 1~48)
                 var objPinResult = new TestResultJson.PinResultItem
                 {
                     Round = nRound,
                     ChannelGroup = strChannelName,
-                    PinNo = nPinNo,
-                    PinName = $"{strChannelName}_{nPinNo}번",
-                    MeasuredValue = arrStates[i].ToString(),
+                    PinNo = tcmsChNo,
+                    PinName = pinIdentifier,
+                    MeasuredValue = isFinalSuccess ? "PASS" : (isOnOk ? "OFF 실패" : "ON 실패"),
                     Result = isFinalSuccess ? "합격" : "불합격"
                 };
                 listPinDetails?.Add(objPinResult);
@@ -5884,7 +5977,11 @@ namespace CITester
     List<string> listFailedPins,
     List<TestResultJson.PinResultItem> listPinDetails)
         {
-            if (dgvAnalog == null || dgvAnalog.Rows.Count == 0) return;
+            if (dgvAnalog == null || dgvAnalog.Rows.Count == 0)
+            {
+                AppendTestLog(richTextBox_FailLog, "[아날로그] 그리드가 비어 있거나 null입니다.", Color.Red);
+                return;
+            }
 
             if (_vaioTestService == null)
             {
@@ -5892,34 +5989,49 @@ namespace CITester
                 return;
             }
 
-            AppendTestLog(richTextBox_Log, "[아날로그] VAIO 하드웨어 입출력 실측 시험 시작", Color.Purple);
+            AppendTestLog(richTextBox_Log, $"[아날로그] VAIO 입출력 실측 시험 시작 (총 {dgvAnalog.Rows.Count}개 행 검사)", Color.Purple);
 
-            // 1. VME 버스 충돌 방지를 위해 디지털 VDI 폴링 일시 정지
             _tcmsTestService?.PauseVdiPolling();
 
-            // 전류 출력 서비스 참조 (FormMain에 선언된 CurrentOutput 사용)
-            var coService = CurrentOutput;
+            var ciService = CurrentInput;  // AIAO 전압출력 지그 (set.ao)
+
+            // -------------------------------------------------------------
+            // 5.0V 일괄 인가 시 각 채널별 목표값 정의
+            // -------------------------------------------------------------
+            double applyVoltage_V = 5.0;            // 인가 전압: 5.0V
+
+            double targetCurrentCh0_mA = 5.0;       // 입력_00 (1000Ω): 5V / 1000Ω = 5.0 mA
+            double targetCurrentCh1_mA = 10.0;      // 입력_01 (500Ω) : 5V / 500Ω  = 10.0 mA
+            double targetVoltCh2_V = 5.0;       // 입력_02 (전압) : 5.0 V
+            double targetVoltCh3_V = 5.0;       // 입력_03 (전압) : 5.0 V
+
+            double tolCurrent_mA = 3.0;             // 전류 허용오차 (±1.0 mA)
+            double tolVoltage_V = 3.0;             // 전압 허용오차 (±0.3 V)
 
             try
             {
                 // -------------------------------------------------------------
-                // [추가] 2. 전류 출력 보드 Ch0, Ch1에 5mA 인가 (명령: set.current.0 0 5 / set.current.0 1 5)
+                // 1. AIAO 지그를 통해 4개 채널 모두에 5.0V 전압 인가
                 // -------------------------------------------------------------
-                if (coService != null && coService.IsOpen)
+                if (ciService != null && ciService.IsOpen)
                 {
-                    AppendTestLog(richTextBox_Log, "[전류출력] Ch1(0~10mA), Ch2(0~20mA) 5mA 인가", Color.Blue);
-                    await coService.SetCurrentAsync(boardIdx: 0, channel: 0, current_mA: 5);
-                    await coService.SetCurrentAsync(boardIdx: 0, channel: 1, current_mA: 5);
-
-                    // 전류 신호 하드웨어 충전/안정화 대기
-                    await Task.Delay(200);
+                    AppendTestLog(richTextBox_Log, $"[AIAO출력] AO Ch0~Ch3에 {applyVoltage_V:F1}V 일괄 인가 중...", Color.Blue);
+                    await ciService.SetAnalogOutputAsync(channel: 0, voltage: applyVoltage_V, boardIdx: 0);
+                    await ciService.SetAnalogOutputAsync(channel: 1, voltage: applyVoltage_V, boardIdx: 0);
+                    await ciService.SetAnalogOutputAsync(channel: 2, voltage: applyVoltage_V, boardIdx: 0);
+                    await ciService.SetAnalogOutputAsync(channel: 3, voltage: applyVoltage_V, boardIdx: 0);
                 }
                 else
                 {
-                    AppendTestLog(richTextBox_FailLog, "[전류출력] 전류 출력 보드가 연결되어 있지 않습니다.", Color.OrangeRed);
+                    AppendTestLog(richTextBox_FailLog, "[AIAO출력] AIAO 보드(CurrentInput)가 연결되어 있지 않습니다.", Color.OrangeRed);
                 }
 
-                // 3. VAIO 아날로그 입력(AI) 5채널 실제 읽기 (CMD: 0x0201)
+                // 신호 안정화 대기
+                await Task.Delay(300);
+
+                // -------------------------------------------------------------
+                // 2. TCMS VAIO 아날로그 입력 읽기 (0x0201)
+                // -------------------------------------------------------------
                 var aiData = await _vaioTestService.ReadAnalogInputsAsync(2000);
                 if (aiData == null)
                 {
@@ -5928,10 +6040,14 @@ namespace CITester
                     return;
                 }
 
-                // 4. VAIO 아날로그 출력(AO) 4채널에 기본 5.00V 출력 지시 (CMD: 0x0202)
+                // -------------------------------------------------------------
+                // 3. TCMS VAIO 아날로그 출력 지시 (0x0202, 5.00V)
+                // -------------------------------------------------------------
                 bool bAoSuccess = await _vaioTestService.WriteAnalogOutputsAsync(5.0, 5.0, 5.0, 5.0, 1500);
 
-                // 5. 그리드의 각 행(Row)에 실제 계측값 매핑 및 판정
+                // -------------------------------------------------------------
+                // 4. 그리드 행별 1:1 실측 매핑 및 판정
+                // -------------------------------------------------------------
                 for (int nRowIdx = 0; nRowIdx < dgvAnalog.Rows.Count; nRowIdx++)
                 {
                     if (!m_bIsTesting) break;
@@ -5939,103 +6055,65 @@ namespace CITester
                     DataGridViewRow objRow = dgvAnalog.Rows[nRowIdx];
                     string strItemName = objRow.Cells[1].Value?.ToString() ?? string.Empty;
 
-                    // 구분선 및 빈 데이터 행 건너뛰기
-                    if (string.IsNullOrWhiteSpace(strItemName) || strItemName.Contains("-"))
-                    {
-                        continue;
-                    }
+                    if (string.IsNullOrWhiteSpace(strItemName)) continue;
 
-                    string strUpper = strItemName.ToUpper();
+                    string strTrimmed = strItemName.Trim();
+                    if (strTrimmed.Length >= 2 && strTrimmed.Replace("-", "").Length == 0) continue;
+
                     string strMeasuredValue = "--";
                     bool bIsPass = true;
 
-                    // -------------------------------------------------------------
-                    // 채널명에 따른 실제 계측값 매핑 및 판정
-                    // -------------------------------------------------------------
-                    if (strUpper.Contains("MASCON") || strUpper.Contains("CH5") || strUpper.Contains("15V"))
+                    switch (nRowIdx)
                     {
-                        // Ch5: Mascon 15V 피드백 (허용오차: 14.50V ~ 15.50V)
-                        double val = aiData.Ch5_V;
-                        strMeasuredValue = $"{val:F2} V";
-                        bIsPass = (val >= 14.5 && val <= 15.5);
-                    }
-                    else if (strUpper.Contains("CH1") && strUpper.Contains("10MA"))
-                    {
-                        // Ch1: 0~10mA 입력 -> 5mA 인가 판정 (허용오차: ±0.5mA)
-                        double val = aiData.Ch1_mA;
-                        strMeasuredValue = $"{val:F2} mA";
-                        bIsPass = Math.Abs(val - 5.0) <= 0.5;
-                    }
-                    else if (strUpper.Contains("CH2") && strUpper.Contains("20MA"))
-                    {
-                        // Ch2: 0~20mA 입력 -> 5mA 인가 판정 (허용오차: ±0.5mA)
-                        double val = aiData.Ch2_mA;
-                        strMeasuredValue = $"{val:F2} mA";
-                        bIsPass = Math.Abs(val - 5.0) <= 0.5;
-                    }
-                    else if (strUpper.Contains("AIN3") || strUpper.Contains("AI3") || (strUpper.Contains("CH3") && strUpper.Contains("AI")))
-                    {
-                        // Ch3: 0~10V 입력
-                        double val = aiData.Ch3_V;
-                        strMeasuredValue = $"{val:F2} V";
-                        bIsPass = true;
-                    }
-                    else if (strUpper.Contains("AIN4") || strUpper.Contains("AI4") || (strUpper.Contains("CH4") && strUpper.Contains("AI")))
-                    {
-                        // Ch4: 0~10V 입력
-                        double val = aiData.Ch4_V;
-                        strMeasuredValue = $"{val:F2} V";
-                        bIsPass = true;
-                    }
-                    else if (strUpper.Contains("AOUT") || strUpper.Contains("AO"))
-                    {
-                        // AO 출력 채널 (0x0202 ACK 성공 여부 반영)
-                        strMeasuredValue = bAoSuccess ? "5.00 V (출력)" : "출력 실패";
-                        bIsPass = bAoSuccess;
-                    }
-                    else
-                    {
-                        // 이름 매칭이 안 된 경우 행 번호(0~4) 순서대로 fallback
-                        switch (nRowIdx)
-                        {
-                            case 0:
-                                strMeasuredValue = $"{aiData.Ch1_mA:F2} mA";
-                                bIsPass = Math.Abs(aiData.Ch1_mA - 5.0) <= 0.5;
-                                break;
-                            case 1:
-                                strMeasuredValue = $"{aiData.Ch2_mA:F2} mA";
-                                bIsPass = Math.Abs(aiData.Ch2_mA - 5.0) <= 0.5;
-                                break;
-                            case 2:
-                                strMeasuredValue = $"{aiData.Ch3_V:F2} V";
-                                bIsPass = true;
-                                break;
-                            case 3:
-                                strMeasuredValue = $"{aiData.Ch4_V:F2} V";
-                                bIsPass = true;
-                                break;
-                            case 4:
-                                strMeasuredValue = $"{aiData.Ch5_V:F2} V";
-                                bIsPass = (aiData.Ch5_V >= 14.5 && aiData.Ch5_V <= 15.5);
-                                break;
-                            default:
-                                strMeasuredValue = "정상";
-                                bIsPass = true;
-                                break;
-                        }
+                        case 0: // 아날로그 입력_00 (AIN1: 5.0V / 1000Ω = 5.00 mA)
+                            {
+                                double val = aiData.Ch1_mA;
+                                strMeasuredValue = $"{val:F2} mA";
+                                bIsPass = Math.Abs(val - targetCurrentCh0_mA) <= tolCurrent_mA;
+                            }
+                            break;
+
+                        case 1: // 아날로그 입력_01 (AIN2: 5.0V / 500Ω = 10.00 mA)
+                            {
+                                double val = aiData.Ch2_mA;
+                                strMeasuredValue = $"{val:F2} mA";
+                                // ★ 목표값을 10.0 mA로 판정
+                                bIsPass = Math.Abs(val - targetCurrentCh1_mA) <= tolCurrent_mA;
+                            }
+                            break;
+
+                        case 2: // 아날로그 입력_02 (AIN3: 전압 5.0V)
+                            {
+                                double val = aiData.Ch3_V;
+                                strMeasuredValue = $"{val:F2} V";
+                                bIsPass = Math.Abs(val - targetVoltCh2_V) <= tolVoltage_V;
+                            }
+                            break;
+
+                        case 3: // 아날로그 입력_03 (AIN4: 전압 5.0V)
+                            {
+                                double val = aiData.Ch4_V;
+                                strMeasuredValue = $"{val:F2} V";
+                                bIsPass = Math.Abs(val - targetVoltCh3_V) <= tolVoltage_V;
+                            }
+                            break;
+
+                        default: // 아날로그 출력_00 ~ 03
+                            strMeasuredValue = bAoSuccess ? "5.00 V (출력)" : "출력 실패";
+                            bIsPass = bAoSuccess;
+                            break;
                     }
 
                     string strResultText = bIsPass ? "합격" : "불합격";
 
-                    // DataGridView 측정치(인덱스 2) 및 판정(인덱스 3) 열 업데이트
+                    // UI 갱신
                     objRow.Cells[2].Value = strMeasuredValue;
                     objRow.Cells[3].Value = strResultText;
                     dgvAnalog.InvalidateRow(nRowIdx);
 
                     await Task.Delay(nDelay);
 
-                    // JSON 결과 기록
-                    TestResultJson.PinResultItem objPinResult = new TestResultJson.PinResultItem
+                    listPinDetails?.Add(new TestResultJson.PinResultItem
                     {
                         Round = nRound,
                         ChannelGroup = "ANALOG",
@@ -6043,18 +6121,16 @@ namespace CITester
                         PinName = strItemName,
                         MeasuredValue = strMeasuredValue,
                         Result = strResultText
-                    };
-
-                    listPinDetails?.Add(objPinResult);
+                    });
 
                     if (!bIsPass)
                     {
-                        AppendTestLog(richTextBox_FailLog, $"[아날로그] {strItemName} 측정치: {strMeasuredValue} (불합격)", Color.Red);
+                        AppendTestLog(richTextBox_FailLog, $"[아날로그] {strItemName} 실측: {strMeasuredValue} (불합격)", Color.Red);
                         listFailedPins?.Add(strItemName);
                     }
                     else
                     {
-                        AppendTestLog(richTextBox_Log, $"[아날로그] {strItemName} 측정치: {strMeasuredValue} (합격)", Color.Black);
+                        AppendTestLog(richTextBox_Log, $"[아날로그] {strItemName} 실측: {strMeasuredValue} (합격)", Color.Black);
                     }
                 }
             }
@@ -6064,24 +6140,24 @@ namespace CITester
             }
             finally
             {
-                // -------------------------------------------------------------
-                // [추가] 6. 시험 종료/예외 시 전류 출력을 0mA로 반드시 초기화
-                // -------------------------------------------------------------
-                if (coService != null && coService.IsOpen)
+                // 출력 복구 (0V 리셋)
+                if (_vaioTestService != null)
+                {
+                    try { await _vaioTestService.WriteAnalogOutputsAsync(0.0, 0.0, 0.0, 0.0, 1000); } catch { }
+                }
+
+                if (ciService != null && ciService.IsOpen)
                 {
                     try
                     {
-                        await coService.SetCurrentAsync(boardIdx: 0, channel: 0, current_mA: 0);
-                        await coService.SetCurrentAsync(boardIdx: 0, channel: 1, current_mA: 0);
-                        AppendTestLog(richTextBox_Log, "[전류출력] Ch1, Ch2 0mA 복구 완료", Color.Gray);
+                        await ciService.SetAnalogOutputAsync(0, 0.0, 0);
+                        await ciService.SetAnalogOutputAsync(1, 0.0, 0);
+                        await ciService.SetAnalogOutputAsync(2, 0.0, 0);
+                        await ciService.SetAnalogOutputAsync(3, 0.0, 0);
                     }
-                    catch (Exception ex)
-                    {
-                        AppendTestLog(richTextBox_FailLog, $"[전류출력] 0mA 복구 실패: {ex.Message}", Color.Red);
-                    }
+                    catch { }
                 }
 
-                // 7. 디지털 VDI 폴링 재개
                 _tcmsTestService?.ResumeVdiPolling();
             }
         }

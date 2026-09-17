@@ -464,7 +464,7 @@
             this.button_InputBoard.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_InputBoard.Size = new System.Drawing.Size(511, 66);
             this.button_InputBoard.TabIndex = 25;
-            this.button_InputBoard.Text = "전류입력보드 진단";
+            this.button_InputBoard.Text = "전압입출력보드 진단";
             this.button_InputBoard.TextLocation = new System.Drawing.Point(70, 16);
             this.button_InputBoard.UseAutoCenterLayout = false;
             this.button_InputBoard.UseVisualStyleBackColor = false;

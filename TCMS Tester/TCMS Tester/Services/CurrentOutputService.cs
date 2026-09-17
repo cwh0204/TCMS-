@@ -206,12 +206,18 @@ namespace CITester.Services
                         if (_serialPort.BytesToRead > 0)
                         {
                             sb.Append(_serialPort.ReadExisting());
-
-                            // 줄바꿈이 감지되면 패킷 수신 완료로 판단
                             string currentStr = sb.ToString();
+
+                            // 단순 \r\n이 아니라 실제 보드의 'reply.' 또는 에러 응답이 수신되었는지 확인
                             if (currentStr.Contains("\r") || currentStr.Contains("\n"))
                             {
-                                return currentStr.Trim();
+                                string trimmed = currentStr.Trim();
+                                // 명령어 에코 라인은 건너뛰고 응답 라인 대기
+                                if (trimmed.StartsWith("reply.", StringComparison.OrdinalIgnoreCase) ||
+                                    trimmed.IndexOf("error", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    return trimmed;
+                                }
                             }
                         }
                         Thread.Sleep(10);
