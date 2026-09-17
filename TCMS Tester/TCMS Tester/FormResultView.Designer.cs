@@ -210,7 +210,7 @@
             this.roundedPanel4.CornerRadius = 10;
             this.roundedPanel4.Location = new System.Drawing.Point(397, 616);
             this.roundedPanel4.Name = "roundedPanel4";
-            this.roundedPanel4.Size = new System.Drawing.Size(731, 226);
+            this.roundedPanel4.Size = new System.Drawing.Size(731, 317);
             this.roundedPanel4.TabIndex = 99;
             // 
             // TestResult_Memory
@@ -248,7 +248,7 @@
             this.dataGridViewMemory.Location = new System.Drawing.Point(15, 60);
             this.dataGridViewMemory.Name = "dataGridViewMemory";
             this.dataGridViewMemory.RowTemplate.Height = 23;
-            this.dataGridViewMemory.Size = new System.Drawing.Size(700, 147);
+            this.dataGridViewMemory.Size = new System.Drawing.Size(700, 243);
             this.dataGridViewMemory.TabIndex = 92;
             // 
             // label3
@@ -271,7 +271,7 @@
             this.roundedPanel5.CornerRadius = 10;
             this.roundedPanel5.Location = new System.Drawing.Point(29, 584);
             this.roundedPanel5.Name = "roundedPanel5";
-            this.roundedPanel5.Size = new System.Drawing.Size(348, 257);
+            this.roundedPanel5.Size = new System.Drawing.Size(348, 359);
             this.roundedPanel5.TabIndex = 97;
             // 
             // imagebtn2
@@ -325,7 +325,7 @@
             // 
             this.richTextBox_Err.Location = new System.Drawing.Point(21, 59);
             this.richTextBox_Err.Name = "richTextBox_Err";
-            this.richTextBox_Err.Size = new System.Drawing.Size(309, 184);
+            this.richTextBox_Err.Size = new System.Drawing.Size(309, 276);
             this.richTextBox_Err.TabIndex = 87;
             this.richTextBox_Err.Text = "";
             // 
@@ -707,7 +707,7 @@
             // FormResultView
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1144, 849);
+            this.ClientSize = new System.Drawing.Size(1140, 961);
             this.ControlBox = false;
             this.Controls.Add(this.BtnClose);
             this.Controls.Add(this.BtnConfig);

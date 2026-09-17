@@ -27,17 +27,36 @@ namespace TCMSTester.UI
 
         private readonly TableLayoutPanel _parentTable;
         private readonly Dictionary<string, CommCardUI> _commCards = new Dictionary<string, CommCardUI>();
+        private string _currentUnitType = "TC";
 
         // 단독 시험 버튼 클릭 시 FormMain으로 전달할 콜백 이벤트
         public event Action<string> OnSingleTestRequested;
 
-        public CommTestUiManager(TableLayoutPanel parentTable)
+        public CommTestUiManager(TableLayoutPanel parentTable, string unitType = "TC")
         {
             _parentTable = parentTable ?? throw new ArgumentNullException(nameof(parentTable));
-            BuildLayout();
+            _currentUnitType = unitType ?? "TC";
+            BuildLayout(_currentUnitType);
         }
 
-        private void BuildLayout()
+        /// <summary>
+        /// 유닛 변경(TC, CC, DU) 시 화면 레이아웃을 다시 빌드합니다.
+        /// </summary>
+        public void RebuildLayout(string unitType)
+        {
+            _currentUnitType = unitType ?? "TC";
+
+            if (_parentTable.InvokeRequired)
+            {
+                _parentTable.BeginInvoke(new Action(() => BuildLayout(_currentUnitType)));
+            }
+            else
+            {
+                BuildLayout(_currentUnitType);
+            }
+        }
+
+        private void BuildLayout(string unitType)
         {
             _parentTable.SuspendLayout();
             _parentTable.Controls.Clear();
@@ -46,51 +65,80 @@ namespace TCMSTester.UI
             _commCards.Clear();
 
             _parentTable.Dock = DockStyle.Fill;
-            _parentTable.RowCount = 2;
-            _parentTable.ColumnCount = 1;
             _parentTable.BackColor = Color.FromArgb(240, 244, 253);
             _parentTable.Padding = new Padding(10);
 
-            _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-            _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-
-            // 상단 2분할 (WTB, MVB)
-            TableLayoutPanel topTable = new TableLayoutPanel
+            // =========================================================================
+            // [1] DU 유닛 레이아웃: MVB + RS485 (1개 채널) -> 1행 2열 가로 50:50 배치
+            // =========================================================================
+            if (unitType.Equals("DU", StringComparison.OrdinalIgnoreCase))
             {
-                Dock = DockStyle.Fill,
-                RowCount = 1,
-                ColumnCount = 2,
-                Margin = new Padding(0, 0, 0, 6),
-                BackColor = Color.Transparent
-            };
-            topTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-            topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                _parentTable.RowCount = 1;
+                _parentTable.ColumnCount = 2;
 
-            topTable.Controls.Add(CreateCommCard("WTB", "WTB 통신", "노드 주소: 0x01 | 텔레그램 검증").CardPanel, 0, 0);
-            topTable.Controls.Add(CreateCommCard("MVB", "MVB 통신", "포트 주소: 41A0 | 주기 데이터 수신").CardPanel, 1, 0);
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
 
-            // 하단 3분할 (RS485 #1, #2, #3)
-            TableLayoutPanel bottomTable = new TableLayoutPanel
+                // 1. MVB 통신 카드
+                _parentTable.Controls.Add(
+                    CreateCommCard("MVB", "MVB 통신", "포트 주소: 0xD4 / 0xD0 | 화면 전환 검증").CardPanel,
+                    0, 0);
+
+                // 2. RS485 통신 카드 (기존 키 호환성을 위해 "RS485_1" 유지)
+                _parentTable.Controls.Add(
+                    CreateCommCard("RS485_1", "RS-485 통신", "115200 bps | 에코백 검증").CardPanel,
+                    1, 0);
+            }
+            // =========================================================================
+            // [2] TC / CC / 기본 레이아웃: 상단 2분할(WTB, MVB) + 하단 3분할(RS485 #1~#3)
+            // =========================================================================
+            else
             {
-                Dock = DockStyle.Fill,
-                RowCount = 1,
-                ColumnCount = 3,
-                Margin = new Padding(0, 6, 0, 0),
-                BackColor = Color.Transparent
-            };
-            bottomTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+                _parentTable.RowCount = 2;
+                _parentTable.ColumnCount = 1;
 
-            bottomTable.Controls.Add(CreateCommCard("RS485_1", "RS485 - #1", "115200 bps | 에코백 검증").CardPanel, 0, 0);
-            bottomTable.Controls.Add(CreateCommCard("RS485_2", "RS485 - #2", "115200 bps | 에코백 검증").CardPanel, 1, 0);
-            bottomTable.Controls.Add(CreateCommCard("RS485_3", "RS485 - #3", "9600 bps | 에코백 검증").CardPanel, 2, 0);
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
 
-            _parentTable.Controls.Add(topTable, 0, 0);
-            _parentTable.Controls.Add(bottomTable, 0, 1);
+                // 상단 2분할 (WTB, MVB)
+                TableLayoutPanel topTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 2,
+                    Margin = new Padding(0, 0, 0, 6),
+                    BackColor = Color.Transparent
+                };
+                topTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+
+                topTable.Controls.Add(CreateCommCard("WTB", "WTB 통신", "노드 주소: 0x01 | 텔레그램 검증").CardPanel, 0, 0);
+                topTable.Controls.Add(CreateCommCard("MVB", "MVB 통신", "포트 주소: 41A0 | 주기 데이터 수신").CardPanel, 1, 0);
+
+                // 하단 3분할 (RS485 #1, #2, #3)
+                TableLayoutPanel bottomTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 3,
+                    Margin = new Padding(0, 6, 0, 0),
+                    BackColor = Color.Transparent
+                };
+                bottomTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+
+                bottomTable.Controls.Add(CreateCommCard("RS485_1", "RS485 - #1", "115200 bps | 에코백 검증").CardPanel, 0, 0);
+                bottomTable.Controls.Add(CreateCommCard("RS485_2", "RS485 - #2", "115200 bps | 에코백 검증").CardPanel, 1, 0);
+                bottomTable.Controls.Add(CreateCommCard("RS485_3", "RS485 - #3", "9600 bps | 에코백 검증").CardPanel, 2, 0);
+
+                _parentTable.Controls.Add(topTable, 0, 0);
+                _parentTable.Controls.Add(bottomTable, 0, 1);
+            }
 
             _parentTable.ResumeLayout(true);
         }
@@ -123,8 +171,7 @@ namespace TCMSTester.UI
                 FlatStyle = FlatStyle.Flat,
                 Size = new Size(95, 30),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Cursor = Cursors.Hand
-                ,
+                Cursor = Cursors.Hand,
                 Visible = false
             };
             btnSingle.FlatAppearance.BorderColor = Color.FromArgb(191, 219, 254);
@@ -181,6 +228,7 @@ namespace TCMSTester.UI
 
         public void SetCardState(string key, ECommTestState state, string statusMsg = null, string detailMsg = null)
         {
+            // DU 모드에서 WTB나 RS485_2 등이 호출되더라도 안전하게 무시
             if (!_commCards.ContainsKey(key)) return;
             var ui = _commCards[key];
 
@@ -230,7 +278,7 @@ namespace TCMSTester.UI
         }
 
         /// <summary>
-        /// 전체 카드를 READY(대기) 상태로 초기화합니다.
+        /// 현재 표시된 카드들을 모두 READY(대기) 상태로 초기화합니다.
         /// </summary>
         public void ResetAll()
         {

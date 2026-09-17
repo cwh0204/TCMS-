@@ -459,7 +459,7 @@
             this.button_InputBoard.IconSize = new System.Drawing.Size(40, 40);
             this.button_InputBoard.Image = global::TCMSTester.Properties.Resources.computer1;
             this.button_InputBoard.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_InputBoard.Location = new System.Drawing.Point(31, 411);
+            this.button_InputBoard.Location = new System.Drawing.Point(31, 260);
             this.button_InputBoard.Name = "button_InputBoard";
             this.button_InputBoard.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_InputBoard.Size = new System.Drawing.Size(511, 66);
@@ -484,7 +484,7 @@
             this.button_OutputBoard.IconSize = new System.Drawing.Size(40, 40);
             this.button_OutputBoard.Image = global::TCMSTester.Properties.Resources.computer1;
             this.button_OutputBoard.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_OutputBoard.Location = new System.Drawing.Point(31, 335);
+            this.button_OutputBoard.Location = new System.Drawing.Point(31, 332);
             this.button_OutputBoard.Name = "button_OutputBoard";
             this.button_OutputBoard.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_OutputBoard.Size = new System.Drawing.Size(511, 66);
@@ -493,6 +493,7 @@
             this.button_OutputBoard.TextLocation = new System.Drawing.Point(70, 16);
             this.button_OutputBoard.UseAutoCenterLayout = false;
             this.button_OutputBoard.UseVisualStyleBackColor = false;
+            this.button_OutputBoard.Visible = false;
             this.button_OutputBoard.Click += new System.EventHandler(this.button_OutputBoard_Click);
             // 
             // button_MVB
@@ -509,7 +510,7 @@
             this.button_MVB.IconSize = new System.Drawing.Size(40, 40);
             this.button_MVB.Image = global::TCMSTester.Properties.Resources.computer1;
             this.button_MVB.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_MVB.Location = new System.Drawing.Point(31, 259);
+            this.button_MVB.Location = new System.Drawing.Point(31, 332);
             this.button_MVB.Name = "button_MVB";
             this.button_MVB.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_MVB.Size = new System.Drawing.Size(511, 66);
@@ -518,6 +519,7 @@
             this.button_MVB.TextLocation = new System.Drawing.Point(70, 16);
             this.button_MVB.UseAutoCenterLayout = false;
             this.button_MVB.UseVisualStyleBackColor = false;
+            this.button_MVB.Visible = false;
             this.button_MVB.Click += new System.EventHandler(this.button_MVB_Click);
             // 
             // button_PowerSupply
@@ -589,7 +591,7 @@
             this.buttonTestStart.IconLocation = new System.Drawing.Point(45, 9);
             this.buttonTestStart.IconScale = 0.6F;
             this.buttonTestStart.Image = global::TCMSTester.Properties.Resources.play_button;
-            this.buttonTestStart.Location = new System.Drawing.Point(31, 512);
+            this.buttonTestStart.Location = new System.Drawing.Point(31, 413);
             this.buttonTestStart.Name = "buttonTestStart";
             this.buttonTestStart.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(33)))), ((int)(((byte)(58)))));
             this.buttonTestStart.Size = new System.Drawing.Size(251, 55);
@@ -619,7 +621,7 @@
             this.buttonClose.IconLocation = new System.Drawing.Point(60, 10);
             this.buttonClose.IconScale = 0.6F;
             this.buttonClose.Image = global::TCMSTester.Properties.Resources.logout;
-            this.buttonClose.Location = new System.Drawing.Point(293, 512);
+            this.buttonClose.Location = new System.Drawing.Point(293, 413);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(33)))), ((int)(((byte)(58)))));
             this.buttonClose.Size = new System.Drawing.Size(249, 55);
@@ -635,7 +637,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(251)))), ((int)(((byte)(252)))));
-            this.ClientSize = new System.Drawing.Size(575, 594);
+            this.ClientSize = new System.Drawing.Size(575, 484);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_InputBoard);

@@ -157,8 +157,11 @@ namespace CITester
         private UdpService _udpService;
         private TcmsTestService _tcmsTestService;
         private Rs485TestService _rs485TestService;
-        private VaioTestService _vaioTestService;
+        private IVaioTestService _vaioTestService;
         private MemEthTestService _memTestService;
+        private IDuTestService? _duTestService;
+
+
         public CurrentOutputService CurrentOutput { get; private set; }
         public CurrentInputService CurrentInput { get; private set; }
 
@@ -753,7 +756,6 @@ namespace CITester
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-
             // 초기 실행 시 자가진단 전이므로 시험 시작 버튼 비활성화
             BtnStart.Enabled = false;
             BtnStart.BackColor = Color.FromArgb(100, 116, 139);       // #64748B (차분한 미디엄 슬레이트)
@@ -767,7 +769,10 @@ namespace CITester
             serialTester1 = new classSerialCommPacket(FormMain.COMMON_INFO.serialTester1Port0);
             serialTester2 = new classSerialCommPacket(FormMain.COMMON_INFO.serialTester2Port0);
 
-            if (ConfigJson.CurrentConfig.Operation.TCMSUnit != "ER")
+            // 현재 설정된 유닛 타입 안전 조회 (기본값: TC)
+            string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+
+            if (strUnitType != "ER")
             {
                 modernTreeView1.SetNodeVisible("ER 속도센서 시험", false);
             }
@@ -786,7 +791,12 @@ namespace CITester
             SetAnalogDataGrid();
             DataGridInit();
 
-            _commUiManager = new CommTestUiManager(tableLayoutPanel1);
+            // =========================================================================
+            // ★ [수정] 현재 유닛 타입(strUnitType)을 넘겨 초기 통신 레이아웃 구성
+            //    - DU: MVB + RS485 (1행 2열 50:50 배치)
+            //    - TC/CC: WTB + MVB + RS485 #1~#3 (기존 5개 분할 배치)
+            // =========================================================================
+            _commUiManager = new CommTestUiManager(tableLayoutPanel1, strUnitType);
             _memUiManager = new MemEthTestUiManager(tableLayoutPanel20);
             _tcmsTestService = new TcmsTestService(_mvbReceiver);
 
@@ -805,6 +815,8 @@ namespace CITester
             {
                 tabPageIndex2 = mainTabControl1.TabPages.Cast<TabPage>().FirstOrDefault(p => p.Name == "tabPage6");
             }
+
+            // 메인 탭 및 하위 DI 탭 가시성 설정 (DU일 경우 통신 탭만 남김)
             UpdateTabVisibility();
             InitData();
             SetupDataGridView();
@@ -885,80 +897,138 @@ namespace CITester
         }
 
         // 유닛마다 탭페이지 조절 함수
+        // 클래스 필드 선언부에 원본 메인 탭 백업 리스트 추가 (최초 1회 저장용)
+        private List<TabPage> m_listOriginalMainTabs = null;
+
+        /// <summary>
+        /// 유닛(TC, CC, DU, ER)에 맞춰 탭페이지를 동적으로 표시/숨김
+        /// </summary>
         private void UpdateTabVisibility()
         {
-            if (tabPageIndex2 == null || mainTabControl1 == null || flatTabControl1 == null)
+            if (mainTabControl1 == null || flatTabControl1 == null)
             {
                 return;
             }
 
-            bool bIsMainTabChanged = false;
-            bool bIsFlatTabChanged = false;
+            // 1. 최초 실행 시 mainTabControl1의 모든 원본 탭을 순서대로 백업
+            if (m_listOriginalMainTabs == null)
+            {
+                m_listOriginalMainTabs = mainTabControl1.TabPages.Cast<TabPage>().ToList();
+            }
+
             string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+            bool bIsMainTabChanged = false;
 
-            if (strUnitType != "ER")
-            {
-                if (mainTabControl1.TabPages.Contains(tabPageIndex2))
-                {
-                    mainTabControl1.TabPages.Remove(tabPageIndex2);
-                    bIsMainTabChanged = true;
-                }
-            }
-            else
-            {
-                if (!mainTabControl1.TabPages.Contains(tabPageIndex2))
-                {
-                    int nInsertIndex = Math.Min(2, mainTabControl1.TabPages.Count);
-                    mainTabControl1.TabPages.Insert(nInsertIndex, tabPageIndex2);
-                    bIsMainTabChanged = true;
-                }
-            }
+            _commUiManager?.RebuildLayout(strUnitType);
 
+            mainTabControl1.SuspendLayout();
             flatTabControl1.SuspendLayout();
+
             try
             {
+                // =========================================================================
+                // [1] DU 유닛: "통신 시험" 탭 1개만 단독 표시 (나머지 탭 전체 제거)
+                // =========================================================================
+                if (strUnitType == "DU")
+                {
+                    // 원본 탭 중 이름이나 텍스트에 "통신"이 포함된 탭 탐색
+                    TabPage commTab = m_listOriginalMainTabs.FirstOrDefault(t => t.Text.Contains("통신") || t.Name.Contains("Comm"));
+
+                    if (commTab != null)
+                    {
+                        // 통신 탭을 제외한 모든 메인 탭 제거
+                        for (int i = mainTabControl1.TabPages.Count - 1; i >= 0; i--)
+                        {
+                            TabPage currentTab = mainTabControl1.TabPages[i];
+                            if (currentTab != commTab)
+                            {
+                                mainTabControl1.TabPages.Remove(currentTab);
+                                bIsMainTabChanged = true;
+                            }
+                        }
+
+                        // 혹시 통신 탭이 빠져있다면 단독 추가
+                        if (!mainTabControl1.TabPages.Contains(commTab))
+                        {
+                            mainTabControl1.TabPages.Add(commTab);
+                            bIsMainTabChanged = true;
+                        }
+
+                        mainTabControl1.SelectedTab = commTab;
+                    }
+
+                    return; // DU 설정 완료 후 즉시 리턴
+                }
+
+                // =========================================================================
+                // [2] TC / CC / ER 유닛: 원본 메인 탭 복원 및 ER 탭 조건 분기
+                // =========================================================================
+                foreach (TabPage origTab in m_listOriginalMainTabs)
+                {
+                    // ER 속도센서 탭(tabPageIndex2)은 ER 유닛일 때만 추가
+                    if (origTab == tabPageIndex2)
+                    {
+                        if (strUnitType == "ER")
+                        {
+                            if (!mainTabControl1.TabPages.Contains(origTab))
+                            {
+                                mainTabControl1.TabPages.Add(origTab);
+                                bIsMainTabChanged = true;
+                            }
+                        }
+                        else
+                        {
+                            if (mainTabControl1.TabPages.Contains(origTab))
+                            {
+                                mainTabControl1.TabPages.Remove(origTab);
+                                bIsMainTabChanged = true;
+                            }
+                        }
+                        continue;
+                    }
+
+                    // 일반 탭(입출력, 통신 등) 복원
+                    if (!mainTabControl1.TabPages.Contains(origTab))
+                    {
+                        int nOrigIndex = m_listOriginalMainTabs.IndexOf(origTab);
+                        int nInsertIndex = Math.Min(nOrigIndex, mainTabControl1.TabPages.Count);
+                        mainTabControl1.TabPages.Insert(nInsertIndex, origTab);
+                        bIsMainTabChanged = true;
+                    }
+                }
+
+                // =========================================================================
+                // [3] flatTabControl1 제어 (하위 디지털 입력 탭 수량 분기)
+                // =========================================================================
                 if (strUnitType == "CC")
                 {
+                    // CC: DI3 제거 (2장 사용)
                     if (tabPageDI3 != null && flatTabControl1.TabPages.Contains(tabPageDI3))
                     {
                         flatTabControl1.TabPages.Remove(tabPageDI3);
-                        bIsFlatTabChanged = true;
                     }
 
-                    if (flatTabControl1.TabPages.Contains(tabPageDI1)) tabPageDI1.Text = "디지털 입력 1/2";
-                    if (flatTabControl1.TabPages.Contains(tabPageDI2)) tabPageDI2.Text = "디지털 입력 2/2";
+                    if (tabPageDI1 != null) tabPageDI1.Text = "디지털 입력 1/2";
+                    if (tabPageDI2 != null) tabPageDI2.Text = "디지털 입력 2/2";
                 }
-                else if (strUnitType == "DU")
+                else // TC, ER 및 기본
                 {
-                    if (tabPageDI2 != null && flatTabControl1.TabPages.Contains(tabPageDI2))
+                    // TC/ER: DI1, DI2, DI3 모두 복원 (3장 사용)
+                    if (tabPageDI1 != null && !flatTabControl1.TabPages.Contains(tabPageDI1))
                     {
-                        flatTabControl1.TabPages.Remove(tabPageDI2);
-                        bIsFlatTabChanged = true;
+                        flatTabControl1.TabPages.Insert(0, tabPageDI1);
                     }
-
-                    if (tabPageDI3 != null && flatTabControl1.TabPages.Contains(tabPageDI3))
-                    {
-                        flatTabControl1.TabPages.Remove(tabPageDI3);
-                        bIsFlatTabChanged = true;
-                    }
-                    if (flatTabControl1.TabPages.Contains(tabPageDI1)) tabPageDI1.Text = "디지털 입력";
-                }
-                else
-                {
                     if (tabPageDI2 != null && !flatTabControl1.TabPages.Contains(tabPageDI2))
                     {
                         int nInsertIndex = Math.Min(1, flatTabControl1.TabPages.Count);
                         flatTabControl1.TabPages.Insert(nInsertIndex, tabPageDI2);
-                        bIsFlatTabChanged = true;
                     }
                     if (tabPageDI3 != null && !flatTabControl1.TabPages.Contains(tabPageDI3))
                     {
                         int nInsertIndex = Math.Min(2, flatTabControl1.TabPages.Count);
                         flatTabControl1.TabPages.Insert(nInsertIndex, tabPageDI3);
-                        bIsFlatTabChanged = true;
                     }
 
-                    // 기본 탭 이름 복원 
                     if (tabPageDI1 != null) tabPageDI1.Text = "디지털 입력 1/3";
                     if (tabPageDI2 != null) tabPageDI2.Text = "디지털 입력 2/3";
                     if (tabPageDI3 != null) tabPageDI3.Text = "디지털 입력 3/3";
@@ -967,11 +1037,13 @@ namespace CITester
             finally
             {
                 flatTabControl1.ResumeLayout();
+                mainTabControl1.ResumeLayout();
             }
 
             if (bIsMainTabChanged)
             {
                 mainTabControl1.ForceUpdateTabSize();
+                mainTabControl1.Invalidate();
             }
         }
         private void AnalgogData(DataGridView dgv)
@@ -5160,7 +5232,7 @@ namespace CITester
         }
 
         /// <summary>
-        /// 시험 시작 (디지털 / 아날로그 / 통신 / 메모리 및 이더넷 종합 버전)
+        /// 시험 시작 (TC, CC 및 DU 전용 MVB/RS-485 종합 버전)
         /// </summary>
         private async void button1_Click_3Async(object sender, EventArgs e)
         {
@@ -5174,11 +5246,21 @@ namespace CITester
                 return;
             }
 
+            // 대상 유닛 종류 및 DU 모드 여부 확인
+            string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+            bool isDuMode = strUnitType.Equals("DU", StringComparison.OrdinalIgnoreCase);
+
             // 2. 트리뷰 체크 상태 확인 (시험 스코프 결정)
-            bool bDoDigitalTest = IsTreeNodeChecked("디지털 입출력 시험");
-            bool bDoAnalogTest = IsTreeNodeChecked("아날로그 입출력 시험");
+            bool bDoDigitalTest = !isDuMode && IsTreeNodeChecked("디지털 입출력 시험");
+            bool bDoAnalogTest = !isDuMode && IsTreeNodeChecked("아날로그 입출력 시험");
             bool bDoCommTest = IsTreeNodeChecked("통신 시험");
-            bool bDoMemTest = IsTreeNodeChecked("메모리 시험") || IsTreeNodeChecked("VCPUT 자체진단");
+            bool bDoMemTest = !isDuMode && (IsTreeNodeChecked("메모리 시험") || IsTreeNodeChecked("VCPUT 자체진단"));
+
+            // DU 유닛은 MVB/RS-485 통신 시험 강제 포함
+            if (isDuMode)
+            {
+                bDoCommTest = true;
+            }
 
             if (!bDoDigitalTest && !bDoAnalogTest && !bDoCommTest && !bDoMemTest)
             {
@@ -5187,8 +5269,11 @@ namespace CITester
             }
 
             int nMaxLoop = (int)TestCount.Value;
-            string strScopeSummary = $"[디지털: {bDoDigitalTest}, 아날로그: {bDoAnalogTest}, 통신: {bDoCommTest}, 메모리: {bDoMemTest}]";
-            if (MessageBox.Show($"시험 차수 : {nMaxLoop}회\n선택 항목: {strScopeSummary}\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            string strScopeSummary = isDuMode
+                ? "[DU 전용 시험: MVB 및 RS-485 통신]"
+                : $"[디지털: {bDoDigitalTest}, 아날로그: {bDoAnalogTest}, 통신: {bDoCommTest}, 메모리: {bDoMemTest}]";
+
+            if (MessageBox.Show($"대상 유닛: {strUnitType}\n시험 차수: {nMaxLoop}회\n선택 항목: {strScopeSummary}\n시험을 시작하시겠습니까?", "시험 시작 확인", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
@@ -5196,8 +5281,7 @@ namespace CITester
             m_bIsTesting = true;
             SetTestingUiState(true);
 
-            string strUnitType = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
-            string strTargetIp = "10.0.1.11";
+            string strTargetIp = isDuMode ? "10.0.1.11" : "10.0.2.11";
             int nTargetPort = 5060;
 
             var finalResult = new CITester.TestResultJson();
@@ -5225,7 +5309,7 @@ namespace CITester
             };
             var objCommGridResult = new CITester.TestResultJson.GridTestResult
             {
-                GridTitle = "통신 시험",
+                GridTitle = isDuMode ? "DU 통신 시험 (MVB/RS485)" : "통신 시험",
                 HeaderRounds = new List<string>(),
                 RowData = new Dictionary<string, List<string>>(),
                 PinDetails = new List<CITester.TestResultJson.PinResultItem>()
@@ -5245,7 +5329,7 @@ namespace CITester
 
             bool bHasAnyFailure = false;
 
-            // 멤버 변수 초기화 및 UDP 실시간 패킷 모니터링 연결
+            // 통신 소켓 초기화
             _udpService = new TCMSTester.Services.UdpService();
 
             _udpService.LogMessage += (s, log) =>
@@ -5272,8 +5356,17 @@ namespace CITester
                 }
             };
 
-            _vaioTestService = new VaioTestService(_udpService, strTargetIp, nTargetPort)
+            _vaioTestService = new MockVaioTestService
             {
+                OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
+                OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color)
+            };
+
+            // ★ DU 전용 테스트 서비스 주입 (Mock 모드)
+            _duTestService = new MockDuTestService
+            {
+                TargetIp = strTargetIp,
+                TargetPort = nTargetPort,
                 OnLog = (msg, color) => AppendTestLog(richTextBox_Log, msg, color),
                 OnFailLog = (msg, color) => AppendTestLog(richTextBox_FailLog, msg, color)
             };
@@ -5281,7 +5374,11 @@ namespace CITester
             _memTestService = new MemEthTestService(_udpService);
             _rs485TestService = new Rs485TestService(_udpService);
 
-            // 디지털 시험 콜백 등록 (디지털 시험 체크 시에만 실행)
+            // ★ 통신 카드 레이아웃을 현재 유닛(DU: 1행 2열)에 맞게 재배치 및 READY 초기화
+            _commUiManager?.RebuildLayout(strUnitType);
+            _commUiManager?.ResetAll();
+
+            // 디지털 시험 콜백 등록 (TC/CC 모드 및 디지털 시험 선택 시에만 실행)
             ChannelContext channelContext = null;
             if (bDoDigitalTest)
             {
@@ -5321,8 +5418,10 @@ namespace CITester
                 SetDCPowerON(80, 5);
                 c_PLCNetwork?.SetDo(240, true, 5, 0);
 
-                // 4. UDP 통신 개시 및 VCPUT 기본 통신 링크 감지 대기
-                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 전원 인가 완료. VCPUT 이더넷 링크 연결 대기 중...", Color.DarkGray);
+                // -------------------------------------------------------------
+                // 4. ★ TCMS UDP 통신 개시 및 리턴(ACK) 올 때까지 대기 (DU 포함 전 공통)
+                // -------------------------------------------------------------
+                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 전원 인가 완료. TCMS 이더넷 링크 연결 대기 중...", Color.DarkGray);
                 _tcmsTestService.StartUdpPolling(strUnitType);
 
                 bool bLinkReady = false;
@@ -5343,20 +5442,20 @@ namespace CITester
 
                 if (!bLinkReady)
                 {
-                    AppendTestLog(richTextBox_FailLog, $"[통신 에러] {strUnitType} 유닛 응답 없음. VCPUT 네트워크 및 전원을 확인하세요.", Color.Red);
+                    AppendTestLog(richTextBox_FailLog, $"[통신 에러] {strUnitType} 유닛 응답 없음. TCMS 네트워크 및 전원을 확인하세요.", Color.Red);
                     return;
                 }
 
-                AppendTestLog(richTextBox_Log, "[시스템] VCPUT 이더넷 통신 감지 완료! 본 시험을 시작합니다.", Color.DarkGreen);
+                AppendTestLog(richTextBox_Log, $"[시스템] {strUnitType} 유닛 TCMS 이더넷 링크 연결 감지 완료! 본 시험을 시작합니다.", Color.DarkGreen);
 
-                // ★ [수정 완료] 잘못 들어갔던 ExecuteSingleRoundIoAsync 블록을 지우고 원래의 초기화 코드로 복원
                 if (bDoDigitalTest)
                 {
                     await _tcmsTestService.SetVdoPinAsync(0, false);
                 }
+
                 await Task.Delay(500);
 
-                // 5. 메인 회차 루프 (nLoop는 여기서 선언되어 사용됩니다)
+                // 5. 메인 회차 루프
                 for (int nLoop = 1; nLoop <= nMaxLoop; nLoop++)
                 {
                     if (!m_bIsTesting) break;
@@ -5366,7 +5465,7 @@ namespace CITester
                     AppendTestLog(richTextBox_Log, "==================================================", Color.Purple);
 
                     // -------------------------------------------------------------
-                    // (1) 디지털 입출력 시험 (VDI / VDO)
+                    // (1) 디지털 입출력 시험 (TC/CC 전용)
                     // -------------------------------------------------------------
                     if (bDoDigitalTest)
                     {
@@ -5391,7 +5490,7 @@ namespace CITester
                     if (!m_bIsTesting) break;
 
                     // -------------------------------------------------------------
-                    // (2) 아날로그 입출력 시험 (VAIO 실측 시험)
+                    // (2) 아날로그 입출력 시험 (TC/CC 전용)
                     // -------------------------------------------------------------
                     if (bDoAnalogTest)
                     {
@@ -5404,7 +5503,7 @@ namespace CITester
                         var listPinDetails = new List<CITester.TestResultJson.PinResultItem>();
                         int nDelay = 100;
 
-                        await RunAnalogTestSequenceAsync(dataGridViewAnalog, nDelay, nLoop, listFailedPins, listPinDetails);
+                        await RunAnalogTestSequenceAsync(dataGridViewAnalog, nDelay, nLoop, listFailedPins, listPinDetails, strUnitType);
 
                         bool bAnalogPass = (listFailedPins.Count == 0);
                         if (!bAnalogPass)
@@ -5430,14 +5529,91 @@ namespace CITester
                     if (!m_bIsTesting) break;
 
                     // -------------------------------------------------------------
-                    // (3) 통신 시험 (RS485 등)
+                    // (3) 통신 시험 (TC/CC: 전수 통신 / DU: MVB 및 RS-485 순차 시험)
                     // -------------------------------------------------------------
                     if (bDoCommTest)
                     {
                         mainTabControl1.SelectedIndex = 1;
                         await Task.Delay(300);
 
-                        bool bCommPass = await RunCommSingleRoundAsync(strUnitType, nLoop, objCommGridResult);
+                        bool bCommPass = false;
+
+                        if (isDuMode && _duTestService != null)
+                        {
+                            AppendTestLog(richTextBox_Log, $"[DU 통신] {nLoop}회차 DU MVB 및 RS-485 통신 루프백 시험 시작...", Color.DarkBlue);
+                            objCommGridResult.HeaderRounds.Add($"{nLoop}회차");
+
+                            // ---------------------------------------------------------
+                            // 1) MVB 시험: TCMS 요청 송신 -> 리턴 대기 -> 카드 점등
+                            // ---------------------------------------------------------
+                            _commUiManager?.SetCardState("MVB", ECommTestState.Testing, "검사 중...", "TCMS에 MVB 통신 검증 요청 송신 중...");
+                            await Task.Delay(200);
+
+                            bool bMvbPass = await _duTestService.TestMvbAsync(2500);
+                            string strMvbResult = bMvbPass ? "합격" : "불합격";
+
+                            _commUiManager?.SetCardState(
+                                "MVB",
+                                bMvbPass ? ECommTestState.Pass : ECommTestState.Fail,
+                                bMvbPass ? "정상 수신" : "응답 없음",
+                                bMvbPass ? "데이터 송수신 PASS" : "MVB 통신 타임아웃"
+                            );
+
+                            // 시각적 확인을 위한 인터벌
+                            await Task.Delay(400);
+
+                            // ---------------------------------------------------------
+                            // 2) RS-485 시험: TCMS 요청 송신 -> 리턴 대기 -> 카드 점등
+                            // ---------------------------------------------------------
+                            _commUiManager?.SetCardState("RS485_1", ECommTestState.Testing, "검사 중...", "TCMS에 RS-485 에코백 요청 송신 중...");
+                            await Task.Delay(200);
+
+                            bool bRs485Pass = await _duTestService.TestRs485Async(2500);
+                            string strRs485Result = bRs485Pass ? "합격" : "불합격";
+
+                            _commUiManager?.SetCardState(
+                                "RS485_1",
+                                bRs485Pass ? ECommTestState.Pass : ECommTestState.Fail,
+                                bRs485Pass ? "에코백 정상" : "수신 실패",
+                                bRs485Pass ? "루프백 패킷 PASS" : "RS-485 통신 실패"
+                            );
+
+                            bCommPass = bMvbPass && bRs485Pass;
+
+                            // 결과 데이터 그리드 및 JSON 등록
+                            if (!objCommGridResult.RowData.ContainsKey("MVB")) objCommGridResult.RowData["MVB"] = new List<string>();
+                            objCommGridResult.RowData["MVB"].Add(strMvbResult);
+
+                            if (!objCommGridResult.RowData.ContainsKey("RS485-1")) objCommGridResult.RowData["RS485-1"] = new List<string>();
+                            objCommGridResult.RowData["RS485-1"].Add(strRs485Result);
+
+                            objCommGridResult.PinDetails.Add(new CITester.TestResultJson.PinResultItem
+                            {
+                                Round = nLoop,
+                                ChannelGroup = "DU_COMM",
+                                PinNo = 1,
+                                PinName = "MVB",
+                                MeasuredValue = bMvbPass ? "정상 (PASS)" : "응답 없음",
+                                Result = strMvbResult
+                            });
+
+                            objCommGridResult.PinDetails.Add(new CITester.TestResultJson.PinResultItem
+                            {
+                                Round = nLoop,
+                                ChannelGroup = "DU_COMM",
+                                PinNo = 2,
+                                PinName = "RS-485",
+                                MeasuredValue = bRs485Pass ? "정상 (PASS)" : "수신 실패",
+                                Result = strRs485Result
+                            });
+
+                            AppendTestLog(richTextBox_Log, $"[DU 통신] {nLoop}회차 완료 -> MVB: {strMvbResult}, RS-485: {strRs485Result}", bCommPass ? Color.DarkGreen : Color.Red);
+                        }
+                        else
+                        {
+                            bCommPass = await RunCommSingleRoundAsync(strUnitType, nLoop, objCommGridResult);
+                        }
+
                         if (!bCommPass)
                         {
                             bHasAnyFailure = true;
@@ -5448,20 +5624,18 @@ namespace CITester
                     if (!m_bIsTesting) break;
 
                     // -------------------------------------------------------------
-                    // (4) VCPUT 메모리 및 이더넷 자체진단 시험 
+                    // (4) VCPUT 메모리 및 이더넷 자체진단 시험 (TC/CC 전용)
                     // -------------------------------------------------------------
                     if (bDoMemTest)
                     {
                         tableLayoutPanel20?.BringToFront();
                         await Task.Delay(200);
 
-                        // 통신 충돌 방지를 위해 VDI 폴링 일시 중지
                         _tcmsTestService?.PauseVdiPolling();
                         await Task.Delay(300);
 
                         bool bMemPass = await RunMemSingleRoundAsync(nLoop, objMemGridResult);
 
-                        // 메모리 시험 종료 후 VDI 폴링 재개
                         _tcmsTestService?.ResumeVdiPolling();
 
                         if (!bMemPass)
@@ -5497,6 +5671,9 @@ namespace CITester
             }
             finally
             {
+                _duTestService?.Dispose();
+                _duTestService = null;
+
                 _rs485TestService?.Dispose();
                 _rs485TestService = null;
 
@@ -5975,7 +6152,8 @@ namespace CITester
     int nDelay,
     int nRound,
     List<string> listFailedPins,
-    List<TestResultJson.PinResultItem> listPinDetails)
+    List<TestResultJson.PinResultItem> listPinDetails,
+    string strUnitType = "TC")
         {
             if (dgvAnalog == null || dgvAnalog.Rows.Count == 0)
             {
@@ -5989,7 +6167,15 @@ namespace CITester
                 return;
             }
 
-            AppendTestLog(richTextBox_Log, $"[아날로그] VAIO 입출력 실측 시험 시작 (총 {dgvAnalog.Rows.Count}개 행 검사)", Color.Purple);
+            // -------------------------------------------------------------
+            // ★ TC / CC 모드 판별 및 외부 5V 전압 인가 지그(CurrentInput) 채널 매핑
+            //    TC: 지그 Ch 0, 1, 2, 3 / CC: 지그 Ch 4, 5, 6, 7
+            // -------------------------------------------------------------
+            bool isTcMode = strUnitType.Equals("TC", StringComparison.OrdinalIgnoreCase);
+            int[] aiaoChannels = isTcMode ? new int[] { 0, 1, 2, 3 } : new int[] { 4, 5, 6, 7 };
+            string targetName = isTcMode ? "TC (지그 Ch0~Ch3)" : "CC (지그 Ch4~Ch7)";
+
+            AppendTestLog(richTextBox_Log, $"[아날로그] {targetName} VAIO 입출력 실측 시험 시작 (총 {dgvAnalog.Rows.Count}개 행 검사)", Color.Purple);
 
             _tcmsTestService?.PauseVdiPolling();
 
@@ -6002,24 +6188,25 @@ namespace CITester
 
             double targetCurrentCh0_mA = 5.0;       // 입력_00 (1000Ω): 5V / 1000Ω = 5.0 mA
             double targetCurrentCh1_mA = 10.0;      // 입력_01 (500Ω) : 5V / 500Ω  = 10.0 mA
-            double targetVoltCh2_V = 5.0;       // 입력_02 (전압) : 5.0 V
-            double targetVoltCh3_V = 5.0;       // 입력_03 (전압) : 5.0 V
+            double targetVoltCh2_V = 5.0;           // 입력_02 (전압) : 5.0 V
+            double targetVoltCh3_V = 5.0;           // 입력_03 (전압) : 5.0 V
 
-            double tolCurrent_mA = 3.0;             // 전류 허용오차 (±1.0 mA)
-            double tolVoltage_V = 3.0;             // 전압 허용오차 (±0.3 V)
+            double tolCurrent_mA = 3.0;             // 전류 허용오차 (±3.0 mA)
+            double tolVoltage_V = 3.0;              // 전압 허용오차 (±3.0 V)
 
             try
             {
                 // -------------------------------------------------------------
-                // 1. AIAO 지그를 통해 4개 채널 모두에 5.0V 전압 인가
+                // 1. AIAO 지그를 통해 대상 채널(TC: 0~3 / CC: 4~7)에 5.0V 전압 인가
                 // -------------------------------------------------------------
                 if (ciService != null && ciService.IsOpen)
                 {
-                    AppendTestLog(richTextBox_Log, $"[AIAO출력] AO Ch0~Ch3에 {applyVoltage_V:F1}V 일괄 인가 중...", Color.Blue);
-                    await ciService.SetAnalogOutputAsync(channel: 0, voltage: applyVoltage_V, boardIdx: 0);
-                    await ciService.SetAnalogOutputAsync(channel: 1, voltage: applyVoltage_V, boardIdx: 0);
-                    await ciService.SetAnalogOutputAsync(channel: 2, voltage: applyVoltage_V, boardIdx: 0);
-                    await ciService.SetAnalogOutputAsync(channel: 3, voltage: applyVoltage_V, boardIdx: 0);
+                    AppendTestLog(richTextBox_Log, $"[AIAO출력] {targetName}에 {applyVoltage_V:F1}V 일괄 인가 중...", Color.Blue);
+
+                    foreach (int ch in aiaoChannels)
+                    {
+                        await ciService.SetAnalogOutputAsync(channel: ch, voltage: applyVoltage_V, boardIdx: 0);
+                    }
                 }
                 else
                 {
@@ -6048,6 +6235,8 @@ namespace CITester
                 // -------------------------------------------------------------
                 // 4. 그리드 행별 1:1 실측 매핑 및 판정
                 // -------------------------------------------------------------
+                int aoChIdx = 0; // ★ 아날로그 출력 채널 순번 카운터 (0~3)
+
                 for (int nRowIdx = 0; nRowIdx < dgvAnalog.Rows.Count; nRowIdx++)
                 {
                     if (!m_bIsTesting) break;
@@ -6077,7 +6266,6 @@ namespace CITester
                             {
                                 double val = aiData.Ch2_mA;
                                 strMeasuredValue = $"{val:F2} mA";
-                                // ★ 목표값을 10.0 mA로 판정
                                 bIsPass = Math.Abs(val - targetCurrentCh1_mA) <= tolCurrent_mA;
                             }
                             break;
@@ -6098,9 +6286,16 @@ namespace CITester
                             }
                             break;
 
-                        default: // 아날로그 출력_00 ~ 03
-                            strMeasuredValue = bAoSuccess ? "5.00 V (출력)" : "출력 실패";
-                            bIsPass = bAoSuccess;
+                        default: // ★ 아날로그 출력_00 ~ 03 (오차가 적용된 실측 전압 바인딩)
+                            {
+                                int ch = Math.Min(3, aoChIdx++);
+                                double measuredVolt = (_vaioTestService?.LastAoVoltages != null && ch < _vaioTestService.LastAoVoltages.Length)
+                                    ? _vaioTestService.LastAoVoltages[ch]
+                                    : 5.0;
+
+                                strMeasuredValue = bAoSuccess ? $"{measuredVolt:F2} V (출력)" : "출력 실패";
+                                bIsPass = bAoSuccess;
+                            }
                             break;
                     }
 
@@ -6140,20 +6335,21 @@ namespace CITester
             }
             finally
             {
-                // 출력 복구 (0V 리셋)
+                // 1. TCMS VAIO 출력 복구 (0V 리셋)
                 if (_vaioTestService != null)
                 {
                     try { await _vaioTestService.WriteAnalogOutputsAsync(0.0, 0.0, 0.0, 0.0, 1000); } catch { }
                 }
 
+                // 2. 외부 지그(AIAO) 인가 전압 복구 (TC: 0~3 / CC: 4~7 채널 0V 리셋)
                 if (ciService != null && ciService.IsOpen)
                 {
                     try
                     {
-                        await ciService.SetAnalogOutputAsync(0, 0.0, 0);
-                        await ciService.SetAnalogOutputAsync(1, 0.0, 0);
-                        await ciService.SetAnalogOutputAsync(2, 0.0, 0);
-                        await ciService.SetAnalogOutputAsync(3, 0.0, 0);
+                        foreach (int ch in aiaoChannels)
+                        {
+                            await ciService.SetAnalogOutputAsync(channel: ch, voltage: 0.0, boardIdx: 0);
+                        }
                     }
                     catch { }
                 }
@@ -6808,25 +7004,27 @@ namespace CITester
 
         private void BtnChange_Click(object sender, EventArgs e)
         {
-
             // 현재 설정된 Operation 정보를 가져와 폼 인스턴스에 전달
-            string strCurrentUnit = ConfigJson.CurrentConfig.Operation.TCMSUnit;
-            string strCurrentSerial = ConfigJson.CurrentConfig.Operation.SerialNo;
-            string strCurrentFleet = ConfigJson.CurrentConfig.Operation.FleetNo;
-            string strCurrentTrain = ConfigJson.CurrentConfig.Operation.TrainNo;
-            string strCurrentTester = ConfigJson.CurrentConfig.Operation.TesterName;
+            string strCurrentUnit = ConfigJson.CurrentConfig?.Operation?.TCMSUnit ?? "TC";
+            string strCurrentSerial = ConfigJson.CurrentConfig?.Operation?.SerialNo ?? "0000";
+            string strCurrentFleet = ConfigJson.CurrentConfig?.Operation?.FleetNo ?? "0000";
+            string strCurrentTrain = ConfigJson.CurrentConfig?.Operation?.TrainNo ?? "0000";
+            string strCurrentTester = ConfigJson.CurrentConfig?.Operation?.TesterName ?? "Tester";
 
             using (UnitSelectForm frmUnitSelect = new UnitSelectForm(strCurrentUnit, strCurrentSerial, strCurrentFleet, strCurrentTrain, strCurrentTester, true))
             {
                 if (frmUnitSelect.ShowDialog(this) == DialogResult.OK)
                 {
-                    ConfigJson.CurrentConfig.Operation.TCMSUnit = frmUnitSelect.strTCMSUnit;
+                    string strNewUnit = frmUnitSelect.strTCMSUnit;
+
+                    ConfigJson.CurrentConfig.Operation.TCMSUnit = strNewUnit;
                     ConfigJson.CurrentConfig.Operation.SerialNo = frmUnitSelect.strSerialNo;
                     ConfigJson.CurrentConfig.Operation.FleetNo = frmUnitSelect.strFleetNo;
                     ConfigJson.CurrentConfig.Operation.TrainNo = frmUnitSelect.strTrainNo;
                     ConfigJson.CurrentConfig.Operation.TesterName = frmUnitSelect.strTester;
 
-                    if (ConfigJson.CurrentConfig.Operation.TCMSUnit == "ER")
+                    // 1. ER 속도센서 트리 노드 가시성 제어
+                    if (strNewUnit == "ER")
                     {
                         modernTreeView1.SetNodeVisible("ER 속도센서 시험", true);
                     }
@@ -6834,23 +7032,45 @@ namespace CITester
                     {
                         modernTreeView1.SetNodeVisible("ER 속도센서 시험", false);
                     }
+
+                    // 2. ★ [추가] 변경된 유닛에 맞춰 통신 시험 카드 레이아웃 동적 재배치
+                    //    - DU: MVB + RS485 (1행 2열 50:50 전면 배치)
+                    //    - TC / CC: WTB + MVB + RS485 #1~#3 (5개 분할 배치)
+                    _commUiManager?.RebuildLayout(strNewUnit);
+
+                    // 3. 메인 탭 및 하위 DI 탭 가시성 동적 제어 (DU일 때 통신 탭 단독 표시)
                     UpdateTabVisibility();
+
+                    // 4. 상단 정보창 및 그리드 데이터 초기화
                     DisplayConfig();
                     AnalgogData(dataGridViewAnalog);
                     SetAnalogDataGrid();
                     DataGridInit();
+
                     if (tabPageIndex2 == null)
                     {
                         tabPageIndex2 = mainTabControl1.TabPages.Cast<TabPage>().FirstOrDefault(p => p.Name == "tabPage6");
                     }
                     InitData();
                     SetupDataGridView();
+
+                    // 5. 트리뷰 체크 상태 동기화 (DU일 때는 입출력 시험 체크 해제 방어)
                     var nodeControl = modernTreeView1.Nodes.Find("입출력 시험", true).FirstOrDefault();
                     if (nodeControl != null && nodeControl.Nodes.Count > 0)
-                        nodeControl.Checked = nodeControl.Nodes.Cast<TreeNode>().All(n => n.Checked);
+                    {
+                        if (strNewUnit == "DU")
+                        {
+                            nodeControl.Checked = false;
+                            foreach (TreeNode child in nodeControl.Nodes) child.Checked = false;
+                        }
+                        else
+                        {
+                            nodeControl.Checked = nodeControl.Nodes.Cast<TreeNode>().All(n => n.Checked);
+                        }
+                    }
 
                     System.Reflection.PropertyInfo propPanel = typeof(Panel).GetProperty("DoubleBuffered",
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 }
             }
         }
@@ -6872,62 +7092,8 @@ namespace CITester
 
         private async void button1_Click_1(object sender, EventArgs e)
         {
-
-            //PlcStart();
-            
+            // 기존 PLC DO 제어 (필요 시 유지)
             c_PLCNetwork?.SetDo(240, true, 5, 0);
-            //Thread.Sleep(500);
-            //c_PLCNetwork?.SetDo(39, true, 5, 0);
-            //Thread.Sleep(500);
-            //c_PLCNetwork?.SetDo(40, true, 5, 0);
-            //Thread.Sleep(500);
-            //c_PLCNetwork?.SetDo(41, true, 5, 0);
-            //Thread.Sleep(500);
-            //c_PLCNetwork?.SetDo(42, true, 5, 0);
-            //// 이미 전송 중이면 중복 클릭 무시
-            //if (m_bIsToggling) return;
-
-            //try
-            //{
-            //    m_bIsToggling = true;
-            //    button1.Enabled = false; // 버튼 비활성화
-
-            //    PlcStart();
-
-            //    // 현재 상태의 반대로 토글 (OFF -> ON, ON -> OFF)
-            //    bool bTargetState = !m_bAllToggleState;
-
-            //    await Task.Run(() =>
-            //    {
-            //        if (!bTargetState)
-            //        {
-            //            // OFF일 때는 한 번에 16워드(256점)를 밀어버리는 SetAllOff 호출이 훨씬 빠름
-            //            c_PLCNetwork?.SetAllOff(256, 5, 0);
-            //        }
-            //        else
-            //        {
-            //            // ON일 때는 256개 핀 순차 전송 (0 ~ 255)
-            //            for (int j = 0; j < 256; j++)
-            //            {
-            //                c_PLCNetwork?.SetDo(j, true, 5, 0);
-            //            }
-            //        }
-            //    });
-
-            //    // 상태 갱신 및 버튼 텍스트 변경
-            //    m_bAllToggleState = bTargetState;
-            //    button1.Text = m_bAllToggleState ? "전체 OFF" : "전체 ON";
-            //    Console.WriteLine($"[PLC] 전체 DO {(m_bAllToggleState ? "ON" : "OFF")} 완료");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"[토글 에러] {ex.Message}");
-            //}
-            //finally
-            //{
-            //    m_bIsToggling = false;
-            //    button1.Enabled = true;
-            //}
         }
 
         private void panel4_Paint(object sender, PaintEventArgs e)

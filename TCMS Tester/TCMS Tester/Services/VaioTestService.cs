@@ -1,33 +1,12 @@
 ﻿using System;
-using System.Drawing; // WinForms 표준 Color 네임스페이스
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using TCMSTester.Protocol;
 
 namespace TCMSTester.Services
 {
-    public class VaioAiResult
-    {
-        public ushort RawCh1 { get; set; } // 0~10mA  (규격: 0~1000 count -> 0~10.00mA)
-        public ushort RawCh2 { get; set; } // 0~20mA  (규격: 0~1000 count -> 0~20.00mA)
-        public ushort RawCh3 { get; set; } // 0~10V   (규격: 0~1000 count -> 0~10.00V)
-        public ushort RawCh4 { get; set; } // 0~10V   (규격: 0~1000 count -> 0~10.00V)
-        public ushort RawCh5 { get; set; } // Mascon FB (규격: 1500 count -> 15.00V)
-
-        // 단위 스케일링 변환 (1000 count 기준)
-        public double Ch1_mA => RawCh1 / 100.0;       // 1000 -> 10.00mA
-        public double Ch2_mA => RawCh2 / 50.0;        // 1000 -> 20.00mA (RawCh2 * 20.0 / 1000.0)
-        public double Ch3_V => RawCh3 / 100.0;        // 1000 -> 10.00V
-        public double Ch4_V => RawCh4 / 100.0;        // 1000 -> 10.00V
-        public double Ch5_V => RawCh5 / 100.0;        // 1500 -> 15.00V
-
-        /// <summary>
-        /// 규격 3.1: Ch5 Mascon Feedback 15V 정상 여부 (기본 오차 ±0.5V 허용)
-        /// </summary>
-        public bool IsMasconValid(double tolerance = 0.5) => Math.Abs(Ch5_V - 15.0) <= tolerance;
-    }
-
-    public class VaioTestService : IDisposable
+    public class VaioTestService : IVaioTestService
     {
         private readonly UdpService _udpService;
 
@@ -45,6 +24,9 @@ namespace TCMSTester.Services
         public Action<string, Color>? OnLog { get; set; }
         public Action<string, Color>? OnFailLog { get; set; }
 
+        // ★ IVaioTestService 인터페이스 구현: AO 4채널 인가 전압 보관
+        public double[] LastAoVoltages { get; private set; } = new double[] { 0.0, 0.0, 0.0, 0.0 };
+
         public VaioTestService(UdpService udpService, string targetIp = "10.0.1.11", int targetPort = 5060)
         {
             _udpService = udpService;
@@ -61,7 +43,6 @@ namespace TCMSTester.Services
         {
             if (e == null) return;
 
-            // VCPUT 응답 시 최상위 ACK 비트(0x8000)가 세팅되어 오는 경우(0x8201, 0x8202)도 수신 허용
             ushort baseCmd = (ushort)(e.Command & 0x0FFF);
 
             if (baseCmd == CMD_VAIO_AI_READ)
@@ -80,9 +61,6 @@ namespace TCMSTester.Services
             }
         }
 
-        /// <summary>
-        /// 아날로그 입력(AI) 5채널 읽기 (CMD: 0x0201)
-        /// </summary>
         public async Task<VaioAiResult?> ReadAnalogInputsAsync(int timeoutMs = 2000)
         {
             if (_udpService == null || !_udpService.IsRunning)
@@ -101,7 +79,6 @@ namespace TCMSTester.Services
 
             try
             {
-                // 송신 직전 로그 출력
                 OnLog?.Invoke($"[VAIO-TX] AI_READ(0x{CMD_VAIO_AI_READ:X4}) 요청 송신 -> {TargetIp}:{TargetPort}", Color.DarkBlue);
 
                 bool sent = await _udpService.SendCommandAsync(TargetIp, TargetPort, CMD_VAIO_AI_READ, Array.Empty<ushort>());
@@ -118,8 +95,6 @@ namespace TCMSTester.Services
                     return null;
                 }
 
-                // VaioTestService.cs 내부
-
                 ushort[] payloads = await tcs.Task;
                 if (payloads == null || payloads.Length < 5)
                 {
@@ -127,14 +102,13 @@ namespace TCMSTester.Services
                     return null;
                 }
 
-                // ★ 오프셋 없이 0번부터 순서대로 매핑
                 var result = new VaioAiResult
                 {
-                    RawCh1 = payloads[0], // Word 0: AIN1 (317 -> 3.17mA)
-                    RawCh2 = payloads[1], // Word 1: AIN2 (157 -> 3.14mA)
-                    RawCh3 = payloads[2], // Word 2: AIN3 (193 -> 1.93V)
-                    RawCh4 = payloads[3], // Word 3: AIN4 (298 -> 2.98V)
-                    RawCh5 = payloads[4]  // Word 4: PMASCON 15V (1499 -> 14.99V)
+                    RawCh1 = payloads[0],
+                    RawCh2 = payloads[1],
+                    RawCh3 = payloads[2],
+                    RawCh4 = payloads[3],
+                    RawCh5 = payloads[4]
                 };
 
                 OnLog?.Invoke($"[VAIO-RX] Ch1(AIN1):{result.Ch1_mA:F2}mA | Ch2(AIN2):{result.Ch2_mA:F2}mA | Ch3(AIN3):{result.Ch3_V:F2}V | Ch4(AIN4):{result.Ch4_V:F2}V | Ch5(15V):{result.Ch5_V:F2}V", Color.DarkGreen);
@@ -155,9 +129,6 @@ namespace TCMSTester.Services
             }
         }
 
-        /// <summary>
-        /// 아날로그 출력(AO) 4채널 전압 인가 (CMD: 0x0202 / 0.00 ~ 10.00V)
-        /// </summary>
         public async Task<bool> WriteAnalogOutputsAsync(double v1, double v2, double v3, double v4, int timeoutMs = 1500)
         {
             if (_udpService == null || !_udpService.IsRunning)
@@ -204,6 +175,9 @@ namespace TCMSTester.Services
 
                 if (isSuccess)
                 {
+                    // ★ 보드가 정상 ACK를 반환하면 설정 전압을 실측 배열에 반영
+                    LastAoVoltages = new double[] { v1, v2, v3, v4 };
+
                     OnLog?.Invoke($"[VAIO-AO] 출력 설정 완료 -> Ch1~4: {v1:F2}V, {v2:F2}V, {v3:F2}V, {v4:F2}V", Color.DarkGreen);
                     return true;
                 }

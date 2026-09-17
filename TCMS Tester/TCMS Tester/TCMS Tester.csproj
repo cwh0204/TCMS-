@@ -190,10 +190,17 @@
     <Compile Include="Protocol\TcmsValidator.cs" />
     <Compile Include="Services\CurrentInputService.cs" />
     <Compile Include="Services\CurrentOutputService.cs" />
+    <Compile Include="Services\DuTestResult.cs" />
+    <Compile Include="Services\DuTestService.cs" />
+    <Compile Include="Services\IDuTestService.cs" />
+    <Compile Include="Services\IVaioTestService.cs" />
     <Compile Include="Services\MemEthTestService.cs" />
+    <Compile Include="Services\MockDuTestService.cs" />
+    <Compile Include="Services\MockVaioTestService.cs" />
     <Compile Include="Services\Rs485TestService.cs" />
     <Compile Include="Services\TcmsTestService.cs" />
     <Compile Include="Services\UdpService.cs" />
+    <Compile Include="Services\VaioAiResult.cs" />
     <Compile Include="Services\VaioTestService.cs" />
     <Compile Include="TestResultJson.cs" />
     <Compile Include="Tools\CustomComboBox.cs">
