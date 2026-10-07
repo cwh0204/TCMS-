@@ -28,16 +28,35 @@ namespace TCMSTester.UI
 
         private readonly TableLayoutPanel _parentTable;
         private readonly Dictionary<string, MemCardUI> _cards = new Dictionary<string, MemCardUI>();
+        private string _currentUnitType = "TC";
 
         public event Action<string> OnSingleTestRequested;
 
-        public MemEthTestUiManager(TableLayoutPanel parentTable)
+        public MemEthTestUiManager(TableLayoutPanel parentTable, string unitType = "TC")
         {
             _parentTable = parentTable ?? throw new ArgumentNullException(nameof(parentTable));
-            BuildLayout();
+            _currentUnitType = unitType ?? "TC";
+            BuildLayout(_currentUnitType);
         }
 
-        private void BuildLayout()
+        /// <summary>
+        /// 유닛 변경(TC, CC, DU, ER) 시 메모리 시험 카드 레이아웃을 동적으로 다시 빌드합니다.
+        /// </summary>
+        public void RebuildLayout(string unitType)
+        {
+            _currentUnitType = unitType ?? "TC";
+
+            if (_parentTable.InvokeRequired)
+            {
+                _parentTable.BeginInvoke(new Action(() => BuildLayout(_currentUnitType)));
+            }
+            else
+            {
+                BuildLayout(_currentUnitType);
+            }
+        }
+
+        private void BuildLayout(string unitType)
         {
             _parentTable.SuspendLayout();
             _parentTable.Controls.Clear();
@@ -46,51 +65,116 @@ namespace TCMSTester.UI
             _cards.Clear();
 
             _parentTable.Dock = DockStyle.Fill;
-            _parentTable.RowCount = 2;
-            _parentTable.ColumnCount = 1;
             _parentTable.BackColor = Color.FromArgb(240, 244, 253);
             _parentTable.Padding = new Padding(8);
 
-            _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-            _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
-
-            // 상단 4분할: VCPUT/860 메모리 4종
-            TableLayoutPanel topTable = new TableLayoutPanel
+            // =========================================================================
+            // [1] DU 유닛: 메모리 시험 항목 없음 (빈 화면 유지)
+            // =========================================================================
+            if (unitType.Equals("DU", StringComparison.OrdinalIgnoreCase))
             {
-                Dock = DockStyle.Fill,
-                RowCount = 1,
-                ColumnCount = 4,
-                Margin = new Padding(0, 0, 0, 4),
-                BackColor = Color.Transparent
-            };
-            topTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            for (int i = 0; i < 4; i++) topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+                _parentTable.ResumeLayout(true);
+                return;
+            }
 
-            topTable.Controls.Add(CreateCard("DPRAM", "DPRAM", "860 ↔ iMX6SX 통신", "CMD: 0x0107 | 듀얼포트 RAM").CardPanel, 0, 0);
-            topTable.Controls.Add(CreateCard("SDRAM", "SDRAM", "860 시스템 메모리", "CMD: 0x010A | 메인 RAM").CardPanel, 1, 0);
-            topTable.Controls.Add(CreateCard("MRAM", "MRAM", "860 비휘발성 저장", "CMD: 0x010B | MRAM 검증").CardPanel, 2, 0);
-            topTable.Controls.Add(CreateCard("FLASH", "FLASH", "860 펌웨어 ROM", "CMD: 0x010C | 플래시 메모리").CardPanel, 3, 0);
-
-            // 하단 4분할: iMX6SX 저장소 & 이더넷 2포트
-            TableLayoutPanel bottomTable = new TableLayoutPanel
+            // =========================================================================
+            // [2]  ER 유닛: 상단 3개(Flash, SDRAM, FRAM) + 하단 2개(RTC, HRS)
+            // =========================================================================
+            if (unitType.Equals("ER", StringComparison.OrdinalIgnoreCase))
             {
-                Dock = DockStyle.Fill,
-                RowCount = 1,
-                ColumnCount = 4,
-                Margin = new Padding(0, 4, 0, 0),
-                BackColor = Color.Transparent
-            };
-            bottomTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            for (int i = 0; i < 4; i++) bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+                _parentTable.RowCount = 2;
+                _parentTable.ColumnCount = 1;
 
-            bottomTable.Controls.Add(CreateCard("EMMC", "eMMC", "iMX6SX 내장 플래시", "CMD: 0x0002 | 내장 저장소").CardPanel, 0, 0);
-            bottomTable.Controls.Add(CreateCard("USB", "USB", "iMX6SX 외장 포트", "CMD: 0x0001 | 사전 삽입 확인").CardPanel, 1, 0);
-            bottomTable.Controls.Add(CreateCard("ENET_1", "이더넷 #1", "10.0.1.11 : 5060", "CMD: 0x0003 | Echo-back").CardPanel, 2, 0);
-            bottomTable.Controls.Add(CreateCard("ENET_2", "이더넷 #2", "10.0.2.11 : 5060", "CMD: 0x0003 | Echo-back").CardPanel, 3, 0);
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
 
-            _parentTable.Controls.Add(topTable, 0, 0);
-            _parentTable.Controls.Add(bottomTable, 0, 1);
+                // 상단 3분할: Flash Memory, SDRAM, FRAM
+                TableLayoutPanel topTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 3,
+                    Margin = new Padding(0, 0, 0, 4),
+                    BackColor = Color.Transparent
+                };
+                topTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+
+                topTable.Controls.Add(CreateCard("FLASH", "Flash Memory", "부트/어플리케이션 ROM", "CMD: 0x2A44 | 플래시 영역 점검").CardPanel, 0, 0);
+                topTable.Controls.Add(CreateCard("SDRAM", "SDRAM", "고속 주기억장치", "CMD: 0x2A3C | Read/Write 무결성").CardPanel, 1, 0);
+                topTable.Controls.Add(CreateCard("FRAM", "FRAM", "비휘발성 메모리", "CMD: 0x2A4C | 데이터 보존 시험").CardPanel, 2, 0);
+
+                // 하단 2분할: RTC, HRS
+                TableLayoutPanel bottomTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 2,
+                    Margin = new Padding(0, 4, 0, 0),
+                    BackColor = Color.Transparent
+                };
+                bottomTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+
+                bottomTable.Controls.Add(CreateCard("RTC", "RTC", "실시간 클록 IC", "CMD: 0x2A38 / 0x2A34 | 시각 레지스터").CardPanel, 0, 0);
+                bottomTable.Controls.Add(CreateCard("HRS", "HRS", "로터리 스위치", "CMD: 0x2A58 | 설정 레지스터 검증").CardPanel, 1, 0);
+
+                _parentTable.Controls.Add(topTable, 0, 0);
+                _parentTable.Controls.Add(bottomTable, 0, 1);
+            }
+            // =========================================================================
+            // [3] TC / CC 유닛: 기존 8종 VCPUT 메모리 및 이더넷 포트 (4열 2행)
+            // =========================================================================
+            else
+            {
+                _parentTable.RowCount = 2;
+                _parentTable.ColumnCount = 1;
+
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+
+                // 상단 4분할: VCPUT/860 메모리 4종
+                TableLayoutPanel topTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 4,
+                    Margin = new Padding(0, 0, 0, 4),
+                    BackColor = Color.Transparent
+                };
+                topTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                for (int i = 0; i < 4; i++) topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+
+                topTable.Controls.Add(CreateCard("DPRAM", "DPRAM", "860 ↔ iMX6SX 통신", "CMD: 0x0107 | 듀얼포트 RAM").CardPanel, 0, 0);
+                topTable.Controls.Add(CreateCard("SDRAM", "SDRAM", "860 시스템 메모리", "CMD: 0x010A | 메인 RAM").CardPanel, 1, 0);
+                topTable.Controls.Add(CreateCard("MRAM", "MRAM", "860 비휘발성 저장", "CMD: 0x010B | MRAM 검증").CardPanel, 2, 0);
+                topTable.Controls.Add(CreateCard("FLASH", "FLASH", "860 펌웨어 ROM", "CMD: 0x010C | 플래시 메모리").CardPanel, 3, 0);
+
+                // 하단 4분할: iMX6SX 저장소 & 이더넷 2포트
+                TableLayoutPanel bottomTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 4,
+                    Margin = new Padding(0, 4, 0, 0),
+                    BackColor = Color.Transparent
+                };
+                bottomTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                for (int i = 0; i < 4; i++) bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+
+                bottomTable.Controls.Add(CreateCard("EMMC", "eMMC", "iMX6SX 내장 플래시", "CMD: 0x0002 | 내장 저장소").CardPanel, 0, 0);
+                bottomTable.Controls.Add(CreateCard("USB", "USB", "iMX6SX 외장 포트", "CMD: 0x0001 | 사전 삽입 확인").CardPanel, 1, 0);
+                bottomTable.Controls.Add(CreateCard("ENET_1", "이더넷 #1", "10.0.1.11 : 5060", "CMD: 0x0003 | Echo-back").CardPanel, 2, 0);
+                bottomTable.Controls.Add(CreateCard("ENET_2", "이더넷 #2", "10.0.2.11 : 5060", "CMD: 0x0003 | Echo-back").CardPanel, 3, 0);
+
+                _parentTable.Controls.Add(topTable, 0, 0);
+                _parentTable.Controls.Add(bottomTable, 0, 1);
+            }
 
             _parentTable.ResumeLayout(true);
         }
@@ -105,7 +189,6 @@ namespace TCMSTester.UI
                 Padding = new Padding(10)
             };
 
-            // 1. 상단 정보 영역 컨테이너 (고정 높이로 안정적 배치)
             Panel pnlTopInfo = new Panel
             {
                 Dock = DockStyle.Top,
@@ -113,7 +196,6 @@ namespace TCMSTester.UI
                 BackColor = Color.Transparent
             };
 
-            // 1-1. 최상단 헤더 (타이틀 + 단독 버튼)
             Panel pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
@@ -148,7 +230,6 @@ namespace TCMSTester.UI
             pnlHeader.Controls.Add(lblTitle);
             pnlHeader.Controls.Add(btnSingle);
 
-            // 1-2. 보조 설명 라벨 (하위 스택)
             Label lblSub = new Label
             {
                 Text = subTitle,
@@ -185,7 +266,6 @@ namespace TCMSTester.UI
             pnlTopInfo.Controls.Add(lblStatus);
             pnlTopInfo.Controls.Add(lblDetail);
 
-            // 2. 결과 표시 영역 (하단 중앙에 큼직하게 배치)
             Label lblResult = new Label
             {
                 Text = "READY",

@@ -97,9 +97,14 @@ namespace CITester
         // 하드웨어 설정
         public class DeviceConfig
         {
+            // PLC 1차 하드웨어 통신 설정
             public string Plc_IPAddress { get; set; } = "192.168.1.20";
+            public string Plc_COM { get; set; } = "COM7";
 
-            public string Plc_COM { get; set; } = "COM1";
+            // PLC 2차 하드웨어 통신 설정
+            public string Plc2_IPAddress { get; set; } = "192.168.1.21";
+            public string Plc2_COM { get; set; } = "COM54";
+
             public string Oscilloscope_IPAddress { get; set; } = "TCPIP0::192.168.1.10::5025::SOCKET";
             public string Oscilloscope_IDN { get; set; } = "DSOX1204A";
 
@@ -145,9 +150,13 @@ namespace CITester
             public int LineVoltageBoard0_BaudRate { get; set; } = 9600;
             public string LineVoltageBoard0_IDN { get; set; } = "3sin.phase";
 
-            public string MVBBoard_ComPort { get; set; } = "COM1";
-            public int MVBBoard_BaudRate { get; set; } = 19200;
+            public string MVBBoard_ComPort { get; set; } = "COM3";
+            public int MVBBoard_BaudRate { get; set; } = 9600;
             public string MVBBoard_IDN { get; set; } = "MVB";
+
+            public string WTBBoard_ComPort { get; set; } = "COM2";
+            public int WTBBoard_BaudRate { get; set; } = 9600;
+            public string WTBBoard_IDN { get; set; } = "WTB";
 
             public string DPS1_ComPort { get; set; } = "COM100";
             public string DPS2_ComPort { get; set; } = "COM101";

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using TCMSTester.Models;
 
 namespace TCMSTester.Protocol
@@ -25,6 +27,13 @@ namespace TCMSTester.Protocol
     /// </summary>
     public class MvbReceiver : IDisposable
     {
+        // [외부 참조 가능하도록 public const로 정의]
+        public const ushort CMD_MVB_TEST = 0x0501;
+        public const ushort CHANNEL_LEFT = 0x0001;   // Direction: Left
+        public const ushort CHANNEL_RIGHT = 0x0002;  // Direction: Right
+        public const ushort CHANNEL_LINE_A = 0x000A; // Line: Line A
+        public const ushort CHANNEL_LINE_B = 0x000B; // Line: Line B
+
         public const int PACKET_SIZE_TC = 40;
         public const int PACKET_SIZE_DEFAULT = 34; // CC 유닛 기본 크기 34바이트
 
@@ -38,6 +47,7 @@ namespace TCMSTester.Protocol
         private readonly StringBuilder _textBuffer = new StringBuilder();
         private readonly object _lockObj = new object();
         private byte[] _latestRawData;
+        private string _latestPortAddress = string.Empty;
 
         public int FrameSize { get; set; } = PACKET_SIZE_DEFAULT;
 
@@ -45,6 +55,20 @@ namespace TCMSTester.Protocol
         public event EventHandler<string> ErrorOccurred;
 
         public bool IsRunning { get; private set; }
+
+        /// <summary>
+        /// 가장 최근에 수신 성공한 MVB 포트 주소 (예: "41A0", "42A0")
+        /// </summary>
+        public string LatestPortAddress
+        {
+            get
+            {
+                lock (_lockObj)
+                {
+                    return _latestPortAddress;
+                }
+            }
+        }
 
         /// <summary>
         /// 가장 최근에 파싱 성공한 실시간 Raw 바이트 배열을 스레드 안전하게 반환합니다.
@@ -66,12 +90,52 @@ namespace TCMSTester.Protocol
             {
                 _textBuffer.Clear();
                 _latestRawData = null;
+                _latestPortAddress = string.Empty;
             }
         }
 
         public void Stop()
         {
             IsRunning = false;
+        }
+
+        /// <summary>
+        /// 특정 포트(예: "42A0", "41A0") 패킷이 수신될 때까지 비동기로 대기합니다. (기존 이벤트 기반 안전 대기)
+        /// </summary>
+        /// <param name="targetPort">수신 확인할 4자리 포트 번호</param>
+        /// <param name="timeoutMs">최대 대기 시간(ms)</param>
+        /// <returns>시간 내 수신 시 true, 타임아웃 시 false</returns>
+        public async Task<bool> WaitForPortAsync(string targetPort, int timeoutMs = 3000)
+        {
+            if (string.IsNullOrEmpty(targetPort)) return false;
+
+            if (!IsRunning) Start();
+
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            EventHandler<MvbPacketEventArgs> handler = null;
+
+            handler = (sender, e) =>
+            {
+                if (e != null && string.Equals(e.PortAddress, targetPort, StringComparison.OrdinalIgnoreCase))
+                {
+                    tcs.TrySetResult(true);
+                }
+            };
+
+            PacketReceived += handler;
+
+            try
+            {
+                using (var cts = new CancellationTokenSource(timeoutMs))
+                using (cts.Token.Register(() => tcs.TrySetResult(false)))
+                {
+                    return await tcs.Task;
+                }
+            }
+            finally
+            {
+                PacketReceived -= handler;
+            }
         }
 
         public void PushRawData(byte[] data, int length)
@@ -131,6 +195,7 @@ namespace TCMSTester.Protocol
                     lock (_lockObj)
                     {
                         _latestRawData = (byte[])frameBytes.Clone();
+                        _latestPortAddress = port;
                     }
 
                     // 추출된 port 주소를 이벤트 인자로 전달

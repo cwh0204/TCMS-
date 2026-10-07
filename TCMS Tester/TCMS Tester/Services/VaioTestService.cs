@@ -24,7 +24,7 @@ namespace TCMSTester.Services
         public Action<string, Color>? OnLog { get; set; }
         public Action<string, Color>? OnFailLog { get; set; }
 
-        // ★ IVaioTestService 인터페이스 구현: AO 4채널 인가 전압 보관
+        //  IVaioTestService 인터페이스 구현: AO 4채널 인가 전압 보관
         public double[] LastAoVoltages { get; private set; } = new double[] { 0.0, 0.0, 0.0, 0.0 };
 
         public VaioTestService(UdpService udpService, string targetIp = "10.0.1.11", int targetPort = 5060)
@@ -175,7 +175,7 @@ namespace TCMSTester.Services
 
                 if (isSuccess)
                 {
-                    // ★ 보드가 정상 ACK를 반환하면 설정 전압을 실측 배열에 반영
+                    //  보드가 정상 ACK를 반환하면 설정 전압을 실측 배열에 반영
                     LastAoVoltages = new double[] { v1, v2, v3, v4 };
 
                     OnLog?.Invoke($"[VAIO-AO] 출력 설정 완료 -> Ch1~4: {v1:F2}V, {v2:F2}V, {v3:F2}V, {v4:F2}V", Color.DarkGreen);

@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.BtnClose = new CustomIconButton();
-            this.BtnConfig = new CustomIconButton();
             this.roundedPanel3 = new CITester.RoundedPanel();
             this.TestResult_Comn = new CustomIconButton();
             this.dataGridViewComm = new System.Windows.Forms.DataGridView();
@@ -39,8 +37,6 @@
             this.dataGridViewMemory = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.roundedPanel5 = new CITester.RoundedPanel();
-            this.imagebtn2 = new CustomIconButton();
-            this.roundedLabel11 = new CITester.RoundedLabel();
             this.richTextBox_Err = new System.Windows.Forms.RichTextBox();
             this.roundedPanel2 = new CITester.RoundedPanel();
             this.TestResult_IO = new CustomIconButton();
@@ -51,9 +47,7 @@
             this.Label_FinalResult = new CITester.CITesterLabel();
             this.Label_Round = new CITester.CITesterLabel();
             this.roundedLabel14 = new CITester.RoundedLabel();
-            this.roundedLabel8 = new CITester.RoundedLabel();
             this.roundedPanel6 = new CITester.RoundedPanel();
-            this.roundedLabel1 = new CITester.RoundedLabel();
             this.Label_Tester = new CITester.CITesterLabel();
             this.Label_Train = new CITester.CITesterLabel();
             this.Label_Fleet = new CITester.CITesterLabel();
@@ -66,6 +60,13 @@
             this.Label_Unit = new CITester.CITesterLabel();
             this.Label_Date = new CITester.CITesterLabel();
             this.roundedLabel2 = new CITester.RoundedLabel();
+            this.BtnCsv = new CustomIconButton();
+            this.BtnClose = new CustomIconButton();
+            this.BtnConfig = new CustomIconButton();
+            this.imagebtn2 = new CustomIconButton();
+            this.roundedLabel11 = new CITester.RoundedLabel();
+            this.roundedLabel8 = new CITester.RoundedLabel();
+            this.roundedLabel1 = new CITester.RoundedLabel();
             this.roundedPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewComm)).BeginInit();
             this.roundedPanel4.SuspendLayout();
@@ -76,68 +77,6 @@
             this.roundedPanel1.SuspendLayout();
             this.roundedPanel6.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // BtnClose
-            // 
-            this.BtnClose.AutoCenterIcon = false;
-            this.BtnClose.AutoCenterText = false;
-            this.BtnClose.BackColor = System.Drawing.Color.White;
-            this.BtnClose.BaseBorderColor = System.Drawing.Color.Brown;
-            this.BtnClose.BaseBorderThickness = 1;
-            this.BtnClose.CornerRadius = 10;
-            this.BtnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.BtnClose.FlatAppearance.BorderSize = 0;
-            this.BtnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnClose.Font = new System.Drawing.Font("맑은 고딕", 13F, System.Drawing.FontStyle.Bold);
-            this.BtnClose.ForeColor = System.Drawing.Color.Brown;
-            this.BtnClose.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
-            this.BtnClose.HoverBorderColor = System.Drawing.Color.Brown;
-            this.BtnClose.HoverBorderThickness = 3;
-            this.BtnClose.IconLocation = new System.Drawing.Point(15, 8);
-            this.BtnClose.IconScale = 0.6F;
-            this.BtnClose.Image = global::TCMSTester.Properties.Resources.cross;
-            this.BtnClose.Location = new System.Drawing.Point(994, 8);
-            this.BtnClose.Name = "BtnClose";
-            this.BtnClose.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
-            this.BtnClose.Size = new System.Drawing.Size(134, 42);
-            this.BtnClose.TabIndex = 102;
-            this.BtnClose.Text = "종 료";
-            this.BtnClose.TextBottomMargin = 7;
-            this.BtnClose.TextLocation = new System.Drawing.Point(47, 7);
-            this.BtnClose.UseHoverBackColor = false;
-            this.BtnClose.UseVisualStyleBackColor = false;
-            this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click_2);
-            // 
-            // BtnConfig
-            // 
-            this.BtnConfig.AutoCenterIcon = false;
-            this.BtnConfig.AutoCenterText = false;
-            this.BtnConfig.BackColor = System.Drawing.Color.White;
-            this.BtnConfig.BaseBorderColor = System.Drawing.Color.SteelBlue;
-            this.BtnConfig.BaseBorderThickness = 1;
-            this.BtnConfig.CornerRadius = 10;
-            this.BtnConfig.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.BtnConfig.FlatAppearance.BorderSize = 0;
-            this.BtnConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnConfig.Font = new System.Drawing.Font("맑은 고딕", 13F, System.Drawing.FontStyle.Bold);
-            this.BtnConfig.ForeColor = System.Drawing.Color.SteelBlue;
-            this.BtnConfig.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
-            this.BtnConfig.HoverBorderColor = System.Drawing.Color.SteelBlue;
-            this.BtnConfig.HoverBorderThickness = 3;
-            this.BtnConfig.IconLocation = new System.Drawing.Point(15, 7);
-            this.BtnConfig.IconScale = 0.6F;
-            this.BtnConfig.Image = global::TCMSTester.Properties.Resources.printer;
-            this.BtnConfig.Location = new System.Drawing.Point(846, 8);
-            this.BtnConfig.Name = "BtnConfig";
-            this.BtnConfig.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
-            this.BtnConfig.Size = new System.Drawing.Size(134, 42);
-            this.BtnConfig.TabIndex = 101;
-            this.BtnConfig.Text = "인 쇄";
-            this.BtnConfig.TextBottomMargin = 7;
-            this.BtnConfig.TextLocation = new System.Drawing.Point(47, 7);
-            this.BtnConfig.UseHoverBackColor = false;
-            this.BtnConfig.UseVisualStyleBackColor = false;
-            this.BtnConfig.Click += new System.EventHandler(this.BtnPrint_Click);
             // 
             // roundedPanel3
             // 
@@ -273,53 +212,6 @@
             this.roundedPanel5.Name = "roundedPanel5";
             this.roundedPanel5.Size = new System.Drawing.Size(348, 359);
             this.roundedPanel5.TabIndex = 97;
-            // 
-            // imagebtn2
-            // 
-            this.imagebtn2.AutoCenterIcon = true;
-            this.imagebtn2.AutoCenterText = true;
-            this.imagebtn2.BackColor = System.Drawing.Color.White;
-            this.imagebtn2.BaseBorderColor = System.Drawing.Color.Gray;
-            this.imagebtn2.BaseBorderThickness = 0;
-            this.imagebtn2.CornerRadius = 1;
-            this.imagebtn2.Enabled = false;
-            this.imagebtn2.FlatAppearance.BorderSize = 0;
-            this.imagebtn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.imagebtn2.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.imagebtn2.ForeColor = System.Drawing.Color.DarkGray;
-            this.imagebtn2.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
-            this.imagebtn2.HoverBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(204)))), ((int)(((byte)(255)))));
-            this.imagebtn2.HoverBorderThickness = 0;
-            this.imagebtn2.IconLocation = new System.Drawing.Point(0, 0);
-            this.imagebtn2.IconScale = 0.4F;
-            this.imagebtn2.Image = global::TCMSTester.Properties.Resources.note;
-            this.imagebtn2.Location = new System.Drawing.Point(56, 89);
-            this.imagebtn2.Name = "imagebtn2";
-            this.imagebtn2.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
-            this.imagebtn2.Size = new System.Drawing.Size(237, 120);
-            this.imagebtn2.TabIndex = 88;
-            this.imagebtn2.Text = "오류가 없습니다.";
-            this.imagebtn2.TextBottomMargin = 15;
-            this.imagebtn2.TextLocation = new System.Drawing.Point(0, 0);
-            this.imagebtn2.UseHoverBackColor = true;
-            this.imagebtn2.UseVisualStyleBackColor = false;
-            // 
-            // roundedLabel11
-            // 
-            this.roundedLabel11.AutoCenterImage = false;
-            this.roundedLabel11.AutoCenterText = false;
-            this.roundedLabel11.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel11.CustomImage = global::TCMSTester.Properties.Resources.report__12_;
-            this.roundedLabel11.FillColor = System.Drawing.Color.White;
-            this.roundedLabel11.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel11.ImageLocation = new System.Drawing.Point(5, 3);
-            this.roundedLabel11.Location = new System.Drawing.Point(13, 12);
-            this.roundedLabel11.Name = "roundedLabel11";
-            this.roundedLabel11.Size = new System.Drawing.Size(176, 40);
-            this.roundedLabel11.TabIndex = 69;
-            this.roundedLabel11.Text = "오류 목록";
-            this.roundedLabel11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.roundedLabel11.TextLocation = new System.Drawing.Point(43, 8);
             // 
             // richTextBox_Err
             // 
@@ -467,23 +359,6 @@
             this.roundedLabel14.Text = "시험 차수";
             this.roundedLabel14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // roundedLabel8
-            // 
-            this.roundedLabel8.AutoCenterImage = false;
-            this.roundedLabel8.AutoCenterText = false;
-            this.roundedLabel8.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel8.CustomImage = global::TCMSTester.Properties.Resources.clipboard;
-            this.roundedLabel8.FillColor = System.Drawing.Color.White;
-            this.roundedLabel8.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel8.ImageLocation = new System.Drawing.Point(5, 3);
-            this.roundedLabel8.Location = new System.Drawing.Point(13, 12);
-            this.roundedLabel8.Name = "roundedLabel8";
-            this.roundedLabel8.Size = new System.Drawing.Size(176, 40);
-            this.roundedLabel8.TabIndex = 69;
-            this.roundedLabel8.Text = "결과 판정";
-            this.roundedLabel8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.roundedLabel8.TextLocation = new System.Drawing.Point(43, 8);
-            // 
             // roundedPanel6
             // 
             this.roundedPanel6.BackColor = System.Drawing.Color.Transparent;
@@ -506,23 +381,6 @@
             this.roundedPanel6.Name = "roundedPanel6";
             this.roundedPanel6.Size = new System.Drawing.Size(348, 342);
             this.roundedPanel6.TabIndex = 91;
-            // 
-            // roundedLabel1
-            // 
-            this.roundedLabel1.AutoCenterImage = false;
-            this.roundedLabel1.AutoCenterText = false;
-            this.roundedLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel1.CustomImage = global::TCMSTester.Properties.Resources.train1;
-            this.roundedLabel1.FillColor = System.Drawing.Color.White;
-            this.roundedLabel1.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel1.ImageLocation = new System.Drawing.Point(5, 3);
-            this.roundedLabel1.Location = new System.Drawing.Point(13, 12);
-            this.roundedLabel1.Name = "roundedLabel1";
-            this.roundedLabel1.Size = new System.Drawing.Size(176, 40);
-            this.roundedLabel1.TabIndex = 69;
-            this.roundedLabel1.Text = "시험 정보";
-            this.roundedLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.roundedLabel1.TextLocation = new System.Drawing.Point(43, 8);
             // 
             // Label_Tester
             // 
@@ -704,11 +562,186 @@
             this.roundedLabel2.Text = "시험 일자";
             this.roundedLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // BtnCsv
+            // 
+            this.BtnCsv.AutoCenterIcon = false;
+            this.BtnCsv.AutoCenterText = false;
+            this.BtnCsv.BackColor = System.Drawing.Color.White;
+            this.BtnCsv.BaseBorderColor = System.Drawing.Color.ForestGreen;
+            this.BtnCsv.BaseBorderThickness = 1;
+            this.BtnCsv.CornerRadius = 10;
+            this.BtnCsv.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BtnCsv.FlatAppearance.BorderSize = 0;
+            this.BtnCsv.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnCsv.Font = new System.Drawing.Font("맑은 고딕", 13F, System.Drawing.FontStyle.Bold);
+            this.BtnCsv.ForeColor = System.Drawing.Color.ForestGreen;
+            this.BtnCsv.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
+            this.BtnCsv.HoverBorderColor = System.Drawing.Color.ForestGreen;
+            this.BtnCsv.HoverBorderThickness = 3;
+            this.BtnCsv.IconLocation = new System.Drawing.Point(15, 7);
+            this.BtnCsv.IconScale = 0.6F;
+            this.BtnCsv.Image = global::TCMSTester.Properties.Resources.csv_icon;
+            this.BtnCsv.Location = new System.Drawing.Point(684, 8);
+            this.BtnCsv.Name = "BtnCsv";
+            this.BtnCsv.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
+            this.BtnCsv.Size = new System.Drawing.Size(146, 42);
+            this.BtnCsv.TabIndex = 103;
+            this.BtnCsv.Text = "엑셀 저장";
+            this.BtnCsv.TextBottomMargin = 7;
+            this.BtnCsv.TextLocation = new System.Drawing.Point(47, 7);
+            this.BtnCsv.UseHoverBackColor = false;
+            this.BtnCsv.UseVisualStyleBackColor = false;
+            this.BtnCsv.Click += new System.EventHandler(this.BtnExcel_Click);
+            // 
+            // BtnClose
+            // 
+            this.BtnClose.AutoCenterIcon = false;
+            this.BtnClose.AutoCenterText = false;
+            this.BtnClose.BackColor = System.Drawing.Color.White;
+            this.BtnClose.BaseBorderColor = System.Drawing.Color.Brown;
+            this.BtnClose.BaseBorderThickness = 1;
+            this.BtnClose.CornerRadius = 10;
+            this.BtnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BtnClose.FlatAppearance.BorderSize = 0;
+            this.BtnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnClose.Font = new System.Drawing.Font("맑은 고딕", 13F, System.Drawing.FontStyle.Bold);
+            this.BtnClose.ForeColor = System.Drawing.Color.Brown;
+            this.BtnClose.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
+            this.BtnClose.HoverBorderColor = System.Drawing.Color.Brown;
+            this.BtnClose.HoverBorderThickness = 3;
+            this.BtnClose.IconLocation = new System.Drawing.Point(15, 8);
+            this.BtnClose.IconScale = 0.6F;
+            this.BtnClose.Image = global::TCMSTester.Properties.Resources.cross;
+            this.BtnClose.Location = new System.Drawing.Point(994, 8);
+            this.BtnClose.Name = "BtnClose";
+            this.BtnClose.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
+            this.BtnClose.Size = new System.Drawing.Size(134, 42);
+            this.BtnClose.TabIndex = 102;
+            this.BtnClose.Text = "종 료";
+            this.BtnClose.TextBottomMargin = 7;
+            this.BtnClose.TextLocation = new System.Drawing.Point(47, 7);
+            this.BtnClose.UseHoverBackColor = false;
+            this.BtnClose.UseVisualStyleBackColor = false;
+            this.BtnClose.Click += new System.EventHandler(this.BtnClose_Click_2);
+            // 
+            // BtnConfig
+            // 
+            this.BtnConfig.AutoCenterIcon = false;
+            this.BtnConfig.AutoCenterText = false;
+            this.BtnConfig.BackColor = System.Drawing.Color.White;
+            this.BtnConfig.BaseBorderColor = System.Drawing.Color.SteelBlue;
+            this.BtnConfig.BaseBorderThickness = 1;
+            this.BtnConfig.CornerRadius = 10;
+            this.BtnConfig.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BtnConfig.FlatAppearance.BorderSize = 0;
+            this.BtnConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnConfig.Font = new System.Drawing.Font("맑은 고딕", 13F, System.Drawing.FontStyle.Bold);
+            this.BtnConfig.ForeColor = System.Drawing.Color.SteelBlue;
+            this.BtnConfig.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
+            this.BtnConfig.HoverBorderColor = System.Drawing.Color.SteelBlue;
+            this.BtnConfig.HoverBorderThickness = 3;
+            this.BtnConfig.IconLocation = new System.Drawing.Point(15, 7);
+            this.BtnConfig.IconScale = 0.6F;
+            this.BtnConfig.Image = global::TCMSTester.Properties.Resources.printer;
+            this.BtnConfig.Location = new System.Drawing.Point(846, 8);
+            this.BtnConfig.Name = "BtnConfig";
+            this.BtnConfig.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
+            this.BtnConfig.Size = new System.Drawing.Size(134, 42);
+            this.BtnConfig.TabIndex = 101;
+            this.BtnConfig.Text = "인 쇄";
+            this.BtnConfig.TextBottomMargin = 7;
+            this.BtnConfig.TextLocation = new System.Drawing.Point(47, 7);
+            this.BtnConfig.UseHoverBackColor = false;
+            this.BtnConfig.UseVisualStyleBackColor = false;
+            this.BtnConfig.Click += new System.EventHandler(this.BtnPrint_Click);
+            // 
+            // imagebtn2
+            // 
+            this.imagebtn2.AutoCenterIcon = true;
+            this.imagebtn2.AutoCenterText = true;
+            this.imagebtn2.BackColor = System.Drawing.Color.White;
+            this.imagebtn2.BaseBorderColor = System.Drawing.Color.Gray;
+            this.imagebtn2.BaseBorderThickness = 0;
+            this.imagebtn2.CornerRadius = 1;
+            this.imagebtn2.Enabled = false;
+            this.imagebtn2.FlatAppearance.BorderSize = 0;
+            this.imagebtn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.imagebtn2.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.imagebtn2.ForeColor = System.Drawing.Color.DarkGray;
+            this.imagebtn2.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(65)))));
+            this.imagebtn2.HoverBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(204)))), ((int)(((byte)(255)))));
+            this.imagebtn2.HoverBorderThickness = 0;
+            this.imagebtn2.IconLocation = new System.Drawing.Point(0, 0);
+            this.imagebtn2.IconScale = 0.4F;
+            this.imagebtn2.Image = global::TCMSTester.Properties.Resources.note;
+            this.imagebtn2.Location = new System.Drawing.Point(56, 89);
+            this.imagebtn2.Name = "imagebtn2";
+            this.imagebtn2.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(38)))));
+            this.imagebtn2.Size = new System.Drawing.Size(237, 120);
+            this.imagebtn2.TabIndex = 88;
+            this.imagebtn2.Text = "오류가 없습니다.";
+            this.imagebtn2.TextBottomMargin = 15;
+            this.imagebtn2.TextLocation = new System.Drawing.Point(0, 0);
+            this.imagebtn2.UseHoverBackColor = true;
+            this.imagebtn2.UseVisualStyleBackColor = false;
+            // 
+            // roundedLabel11
+            // 
+            this.roundedLabel11.AutoCenterImage = false;
+            this.roundedLabel11.AutoCenterText = false;
+            this.roundedLabel11.BackColor = System.Drawing.Color.Transparent;
+            this.roundedLabel11.CustomImage = global::TCMSTester.Properties.Resources.report__12_;
+            this.roundedLabel11.FillColor = System.Drawing.Color.White;
+            this.roundedLabel11.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.roundedLabel11.ImageLocation = new System.Drawing.Point(5, 3);
+            this.roundedLabel11.Location = new System.Drawing.Point(13, 12);
+            this.roundedLabel11.Name = "roundedLabel11";
+            this.roundedLabel11.Size = new System.Drawing.Size(176, 40);
+            this.roundedLabel11.TabIndex = 69;
+            this.roundedLabel11.Text = "오류 목록";
+            this.roundedLabel11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.roundedLabel11.TextLocation = new System.Drawing.Point(43, 8);
+            // 
+            // roundedLabel8
+            // 
+            this.roundedLabel8.AutoCenterImage = false;
+            this.roundedLabel8.AutoCenterText = false;
+            this.roundedLabel8.BackColor = System.Drawing.Color.Transparent;
+            this.roundedLabel8.CustomImage = global::TCMSTester.Properties.Resources.clipboard;
+            this.roundedLabel8.FillColor = System.Drawing.Color.White;
+            this.roundedLabel8.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.roundedLabel8.ImageLocation = new System.Drawing.Point(5, 3);
+            this.roundedLabel8.Location = new System.Drawing.Point(13, 12);
+            this.roundedLabel8.Name = "roundedLabel8";
+            this.roundedLabel8.Size = new System.Drawing.Size(176, 40);
+            this.roundedLabel8.TabIndex = 69;
+            this.roundedLabel8.Text = "결과 판정";
+            this.roundedLabel8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.roundedLabel8.TextLocation = new System.Drawing.Point(43, 8);
+            // 
+            // roundedLabel1
+            // 
+            this.roundedLabel1.AutoCenterImage = false;
+            this.roundedLabel1.AutoCenterText = false;
+            this.roundedLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.roundedLabel1.CustomImage = global::TCMSTester.Properties.Resources.train1;
+            this.roundedLabel1.FillColor = System.Drawing.Color.White;
+            this.roundedLabel1.Font = new System.Drawing.Font("맑은 고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.roundedLabel1.ImageLocation = new System.Drawing.Point(5, 3);
+            this.roundedLabel1.Location = new System.Drawing.Point(13, 12);
+            this.roundedLabel1.Name = "roundedLabel1";
+            this.roundedLabel1.Size = new System.Drawing.Size(176, 40);
+            this.roundedLabel1.TabIndex = 69;
+            this.roundedLabel1.Text = "시험 정보";
+            this.roundedLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.roundedLabel1.TextLocation = new System.Drawing.Point(43, 8);
+            // 
             // FormResultView
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1140, 961);
+            this.ClientSize = new System.Drawing.Size(1136, 957);
             this.ControlBox = false;
+            this.Controls.Add(this.BtnCsv);
             this.Controls.Add(this.BtnClose);
             this.Controls.Add(this.BtnConfig);
             this.Controls.Add(this.roundedPanel3);
@@ -782,6 +815,7 @@
         private CustomIconButton BtnClose;
         private CustomIconButton imagebtn2;
         private System.Windows.Forms.RichTextBox richTextBox_Err;
+        private CustomIconButton BtnCsv;
     }
 }
 

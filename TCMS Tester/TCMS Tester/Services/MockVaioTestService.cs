@@ -12,7 +12,7 @@ namespace TCMSTester.Services
         public Action<string, Color>? OnLog { get; set; }
         public Action<string, Color>? OnFailLog { get; set; }
 
-        // ★ AO 4개 채널 실측 전압 보관
+        //  AO 4개 채널 실측 전압 보관
         public double[] LastAoVoltages { get; private set; } = new double[] { 5.0, 5.0, 5.0, 5.0 };
 
         private readonly Random _rand = new Random();
@@ -57,7 +57,7 @@ namespace TCMSTester.Services
         {
             await Task.Delay(30);
 
-            // ★ AO 출력 피드백에도 각각 ±0.01 ~ ±0.05V 오차 부여
+            //  AO 출력 피드백에도 각각 ±0.01 ~ ±0.05V 오차 부여
             double v1_fb = Math.Round(v1 + (GetRandomJitterCount(1, 5) * 0.01), 2);
             double v2_fb = Math.Round(v2 + (GetRandomJitterCount(1, 5) * 0.01), 2);
             double v3_fb = Math.Round(v3 + (GetRandomJitterCount(1, 5) * 0.01), 2);

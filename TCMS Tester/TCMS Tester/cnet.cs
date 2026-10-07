@@ -111,6 +111,8 @@ namespace CITester
             string strBitVal = wordVal.ToString("X4");
             string strDevice = string.Format("%PW{0:D3}", wordIndex);
 
+            Console.WriteLine($"[PLC DO 제어] Pin: {pinNo} ({ (bOn ? "ON" : "OFF") }) -> Device: {strDevice}, HexValue: 0x{strBitVal}");
+
             // 4. 개별 쓰기(wSS) 패킷 생성 (기존 정상 패킷 규격 유지)
             string strReqPacket = string.Format("{0:X2}{1}{2}{3}{4:D2}{5}{6}",
                 stationNo,          // 국번 (00)

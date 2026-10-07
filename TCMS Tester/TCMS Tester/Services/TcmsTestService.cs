@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
 using CITester;
@@ -21,6 +22,9 @@ namespace TCMSTester.Services
         private TcmsPacket _latestPacket = new TcmsPacket();
         private readonly object _lockObj = new object();
 
+        // ★ [핵심] VDI 패킷 도착 시점 판별을 위한 수신 시퀀스 카운터
+        private long _vdiUpdateCount = 0;
+
         // 링크 상태 및 VDI 주기적 폴링 제어
         private volatile bool _isFirstPacketReceived = false;
         private volatile bool _isPollingPaused = false; // DO 시험 중 폴링 일시정지 플래그
@@ -32,6 +36,14 @@ namespace TCMSTester.Services
         /// </summary>
         public bool IsLinkReady => _isFirstPacketReceived;
 
+        /// <summary>
+        /// VDI 패킷 갱신 번호 (PLC 조작 후 신규 패킷 여부 검증용)
+        /// </summary>
+        public long VdiUpdateCount
+        {
+            get { lock (_lockObj) return _vdiUpdateCount; }
+        }
+
         // VDO 비동기 응답 대기 및 동기화 락
         private TaskCompletionSource<bool> _vdoResponseTcs;
         private readonly object _vdoLock = new object();
@@ -42,6 +54,18 @@ namespace TCMSTester.Services
         private const ushort CMD_VDI_READ = 0x0301;
         private const ushort CMD_VDO_WRITE = 0x0401;
 
+        // MVB 직결 시험용 커맨드 및 매크로 상수
+        private const ushort CMD_MVB_TEST = 0x0501;
+        private const ushort CHANNEL_LEFT = 0x0001;   // Direction: Left
+        private const ushort CHANNEL_RIGHT = 0x0002;  // Direction: Right
+        private const ushort CHANNEL_LINE_A = 0x000A; // Line: Line A
+        private const ushort CHANNEL_LINE_B = 0x000B; // Line: Line B
+
+        private const ushort CMD_WTB_TEST = 0x0502;
+
+        private TaskCompletionSource<bool> _busTestCompleteTcs;
+        private readonly object _busLock = new object();
+
         public Action<string, Color> OnLog { get; set; }
         public Action<string, Color> OnFailLog { get; set; }
         public Action OnGridInvalidate { get; set; }
@@ -49,7 +73,7 @@ namespace TCMSTester.Services
         public Func<string, EChannelState[], int, int, int, List<string>, List<CITester.TestResultJson.PinResultItem>, Func<byte[]>, Task> RunChannelSequenceFunc { get; set; }
         public Func<int, int, List<string>, List<CITester.TestResultJson.PinResultItem>, Task> RunAnalogSequenceFunc { get; set; }
 
-        // 1. 기존 MVB 수신기 사용 코드 호환용 생성자
+        // 1. 기존 MVB 수신기 단독 사용 코드 호환용 생성자
         public TcmsTestService(MvbReceiver mvbReceiver)
         {
             _mvbReceiver = mvbReceiver;
@@ -57,12 +81,13 @@ namespace TCMSTester.Services
             _targetPort = 5060;
         }
 
-        // 2. 신규 이더넷 UDP 서비스용 생성자
-        public TcmsTestService(UdpService udpService, string targetIp = "10.0.1.11", int targetPort = 5060)
+        // 2. 신규 이더넷 UDP + MVB 수신기 통합 생성자
+        public TcmsTestService(UdpService udpService, string targetIp = "10.0.1.11", int targetPort = 5060, MvbReceiver mvbReceiver = null)
         {
             _udpService = udpService;
             _targetIp = targetIp;
             _targetPort = targetPort;
+            _mvbReceiver = mvbReceiver;
         }
 
         #region 이더넷 통신 수명주기 및 VDI 주기적 폴링 제어
@@ -76,6 +101,7 @@ namespace TCMSTester.Services
             lock (_lockObj)
             {
                 _latestPacket = new TcmsPacket();
+                _vdiUpdateCount = 0;
             }
 
             if (_udpService != null && !_udpService.IsRunning)
@@ -89,6 +115,8 @@ namespace TCMSTester.Services
                 _udpService.PacketReceived += OnUdpPacketReceived;
             }
 
+            // 기존 폴링 루프 정리 후 새로 시작
+            _pollingCts?.Cancel();
             _pollingCts = new CancellationTokenSource();
             _pollingTask = Task.Run(() => PollingVdiLoopAsync(_pollingCts.Token));
 
@@ -105,7 +133,9 @@ namespace TCMSTester.Services
                     {
                         await _udpService.SendCommandAsync(_targetIp, _targetPort, CMD_VDI_READ);
                     }
-                    await Task.Delay(50, token);
+
+                    // 배터리 절전 모드의 타이머 늘어짐을 감안하여 35ms로 폴링 주기 단축
+                    await Task.Delay(35, token);
                 }
                 catch (OperationCanceledException)
                 {
@@ -132,19 +162,106 @@ namespace TCMSTester.Services
                     break;
 
                 case CMD_VDO_WRITE:
-                    // 타깃 응답 규격: [A1 53] [01 04] [01 00] (Result: 0x0001 성공)
                     bool isSuccess = (e.Payloads != null && e.Payloads.Length >= 1 && e.Payloads[0] == 0x0001);
                     lock (_vdoLock)
                     {
                         _vdoResponseTcs?.TrySetResult(isSuccess);
                     }
                     break;
+
+                case CMD_MVB_TEST:
+                case CMD_WTB_TEST:
+                    lock (_busLock)
+                    {
+                        OnLog?.Invoke($"[UDP RX] 보드 시험 완료 패킷 수신 (CMD: 0x{e.Command:X4})", Color.DarkGreen);
+                        _busTestCompleteTcs?.TrySetResult(true);
+                    }
+                    break;
             }
         }
 
-        /// <summary>
-        /// DO 시험 진입 전 대기 중인 잔여 VDO 응답 상태 초기화
-        /// </summary>
+        public async Task<bool> RunBusTestSequenceAsync(string busName, string comPort, ushort cmd, int baudRate = 9600, int waitTimeoutMs = 15000)
+        {
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            lock (_busLock)
+            {
+                _busTestCompleteTcs?.TrySetResult(false);
+                _busTestCompleteTcs = tcs;
+            }
+
+            SerialPort serial = null;
+            bool isSerialDataReceived = false;
+
+            try
+            {
+                serial = new SerialPort(comPort, baudRate, Parity.None, 8, StopBits.One);
+                serial.Open();
+                serial.DiscardInBuffer();
+
+                OnLog?.Invoke($"[{busName}] {comPort} 시리얼 포트 오픈 완료. 버스 데이터 대기 중...", Color.DarkBlue);
+
+                bool sent = await _udpService.SendCommandAsync(_targetIp, _targetPort, cmd, CHANNEL_LEFT, CHANNEL_LINE_A);
+                if (!sent)
+                {
+                    OnFailLog?.Invoke($"[{busName}] UDP 트리거 송신 실패 -> {_targetIp}:{_targetPort}", Color.Red);
+                    return false;
+                }
+
+                OnLog?.Invoke($"[{busName}] UDP 트리거 송신 완료 (0x{cmd:X4}). 보드 완료 응답 대기...", Color.DarkBlue);
+
+                DateTime limit = DateTime.Now.AddMilliseconds(waitTimeoutMs);
+                while (DateTime.Now < limit)
+                {
+                    if (serial.IsOpen && serial.BytesToRead > 0)
+                    {
+                        int len = serial.BytesToRead;
+                        byte[] buf = new byte[len];
+                        serial.Read(buf, 0, len);
+                        isSerialDataReceived = true;
+                    }
+
+                    if (tcs.Task.IsCompleted)
+                    {
+                        break;
+                    }
+
+                    await Task.Delay(50);
+                }
+
+                bool isUdpComplete = tcs.Task.IsCompleted && await tcs.Task;
+
+                if (isSerialDataReceived && isUdpComplete)
+                {
+                    OnLog?.Invoke($"[{busName}] 시험 성공! (시리얼 데이터 확인 및 보드 완료 신호 수신)", Color.DarkGreen);
+                    return true;
+                }
+                else
+                {
+                    string failReason = !isSerialDataReceived ? "시리얼 데이터 미유입" : "보드 완료 응답 타임아웃";
+                    OnFailLog?.Invoke($"[{busName}] 시험 실패: {failReason}", Color.Red);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnFailLog?.Invoke($"[{busName} 예외] {ex.Message}", Color.Red);
+                return false;
+            }
+            finally
+            {
+                if (serial != null && serial.IsOpen)
+                {
+                    serial.Close();
+                    serial.Dispose();
+                }
+
+                lock (_busLock)
+                {
+                    if (_busTestCompleteTcs == tcs) _busTestCompleteTcs = null;
+                }
+            }
+        }
+
         public void ResetVdoResponseState()
         {
             lock (_vdoLock)
@@ -153,8 +270,6 @@ namespace TCMSTester.Services
                 _vdoResponseTcs = null;
             }
         }
-
-        private volatile bool _vdiLogPrintedOnce = false; // 최초 1회 정상 수신 포맷 확인용
 
         private void ParseVdiResponse(ushort[] payloads)
         {
@@ -166,7 +281,6 @@ namespace TCMSTester.Services
 
             if (_strUnitType == "CC")
             {
-                // CC 유닛은 12 words 중 6~8번 워드가 DI1, 9~11번 워드가 DI2
                 if (payloads.Length >= 12)
                 {
                     Buffer.BlockCopy(BitConverter.GetBytes(payloads[6]), 0, di1, 0, 2);
@@ -180,7 +294,6 @@ namespace TCMSTester.Services
             }
             else // TC 유닛
             {
-                // TC 유닛은 0~2번 DI1, 3~5번 DI2, 6~8번 DI3
                 if (payloads.Length >= 6)
                 {
                     Buffer.BlockCopy(BitConverter.GetBytes(payloads[0]), 0, di1, 0, 2);
@@ -205,12 +318,13 @@ namespace TCMSTester.Services
                 _latestPacket.Di1Raw = di1;
                 _latestPacket.Di2Raw = di2;
                 _latestPacket.Di3Raw = di3;
+                _vdiUpdateCount++; // ★ 신규 패킷 카운트 증가
             }
         }
 
         #endregion
 
-        #region MVB 하위 호환 메서드 (기존 탭 빌드 보장)
+        #region MVB 송수신 검증 및 하위 호환 메서드
 
         public void StartMvbReceiver(string strUnitType)
         {
@@ -232,7 +346,6 @@ namespace TCMSTester.Services
 
         public async Task<bool> CheckMvbPortsAsync(int timeoutMs, params string[] targetPorts)
         {
-            await Task.Delay(100);
             return true;
         }
 
@@ -272,17 +385,37 @@ namespace TCMSTester.Services
         }
 
         /// <summary>
+        /// 특정 카운트 이후 새로 들어온 최신 VDI 패킷을 대기하여 반환합니다. (과거 패킷 읽기 방지)
+        /// </summary>
+        public async Task<byte[]> WaitForFreshRawDataAsync(string category, long previousUpdateCount, int maxWaitMs = 600)
+        {
+            DateTime limit = DateTime.Now.AddMilliseconds(maxWaitMs);
+            while (DateTime.Now < limit)
+            {
+                lock (_lockObj)
+                {
+                    if (_vdiUpdateCount > previousUpdateCount)
+                    {
+                        return GetCurrentRawData(category);
+                    }
+                }
+                await Task.Delay(10);
+            }
+            return GetCurrentRawData(category);
+        }
+
+        /// <summary>
         /// VDO 출력 보드의 드라이버 및 릴레이 제어 준비 완료 여부를 핑(전체 OFF 0x0401)으로 확인합니다.
         /// </summary>
-        public async Task<bool> CheckVdoReadyAsync(int timeoutMs = 500)
+        public async Task<bool> CheckVdoReadyAsync(int timeoutMs = 800)
         {
             return await SetVdoPinAsync(0, false, timeoutMs);
         }
 
         /// <summary>
-        /// VDO 32ch 제어 명령 전송 후 타깃 보드의 실제 ACK([RX] 0x0401)를 대기합니다. (응답 없거나 불일치 시 false)
+        /// VDO 32ch 제어 명령 전송 후 타깃 보드의 실제 ACK([RX] 0x0401)를 대기합니다.
         /// </summary>
-        public async Task<bool> SetVdoPinAsync(int pinNo, bool isOn, int timeoutMs = 300)
+        public async Task<bool> SetVdoPinAsync(int pinNo, bool isOn, int timeoutMs = 800)
         {
             if (_udpService == null || pinNo < 0 || pinNo > 32) return false;
 
@@ -307,15 +440,20 @@ namespace TCMSTester.Services
 
             try
             {
-                // 패킷 송신 실패 시 즉시 false
                 bool sent = await _udpService.SendCommandAsync(_targetIp, _targetPort, CMD_VDO_WRITE, ch1To16, ch17To32);
                 if (!sent) return false;
 
-                // 타깃 보드로부터 [RX] ACK 응답이 올 때까지 timeoutMs 대기
-                using (var cts = new CancellationTokenSource(timeoutMs))
-                using (cts.Token.Register(() => tcs.TrySetResult(false)))
+                // CancellationToken registration 대신 Task.WhenAny로 깔끔하고 확실한 타임아웃 제어
+                var delayTask = Task.Delay(timeoutMs);
+                var completedTask = await Task.WhenAny(tcs.Task, delayTask);
+
+                if (completedTask == tcs.Task)
                 {
                     return await tcs.Task;
+                }
+                else
+                {
+                    return false; // 타임아웃
                 }
             }
             catch
@@ -342,32 +480,27 @@ namespace TCMSTester.Services
                 _udpService.PacketReceived -= OnUdpPacketReceived;
             }
             _isFirstPacketReceived = false;
+            _isPollingPaused = false;
             OnLog?.Invoke("[통신] VDI 폴링 루프가 정지되었습니다.", Color.DarkGray);
         }
 
-        /// <summary>
-        /// DO 시험 시 타깃 보드 버스 병목을 막기 위해 VDI 폴링을 일시 정지합니다.
-        /// </summary>
         public void PauseVdiPolling()
         {
             _isPollingPaused = true;
         }
 
-        /// <summary>
-        /// DO 시험 완료 후 VDI 폴링을 다시 재개합니다.
-        /// </summary>
         public void ResumeVdiPolling()
         {
             _isPollingPaused = false;
         }
 
         public async Task<bool> ExecuteSingleRoundIoAsync(
-    string strUnitType,
-    int nLoop,
-    Func<bool> checkIsTesting,
-    ChannelContext context,
-    CITester.TestResultJson.GridTestResult objDigitalGridResult,
-    CITester.TestResultJson.GridTestResult objAnalogGridResult)
+            string strUnitType,
+            int nLoop,
+            Func<bool> checkIsTesting,
+            ChannelContext context,
+            CITester.TestResultJson.GridTestResult objDigitalGridResult,
+            CITester.TestResultJson.GridTestResult objAnalogGridResult)
         {
             bool bRoundSuccess = true;
             int nAnimationDelay = 100;
@@ -401,18 +534,21 @@ namespace TCMSTester.Services
             if (context.ActiveDoCount > 0 && RunChannelSequenceFunc != null)
             {
                 PauseVdiPolling();
-                ResetVdoResponseState(); // 이전 잔여 응답 상태 초기화
+
+                // ★ [핵심] 일시 정지 직전까지 네트워크 선로에 흐르던 잔여 VDI 패킷들이 완전히 수신/소진될 시간 확보
+                await Task.Delay(200);
+                ResetVdoResponseState();
 
                 OnLog?.Invoke("[시스템] DO 시험 준비 중: VDO 드라이버 응답 대기 (최대 40초)...", Color.DarkGray);
 
-                // VDO 보드가 실제로 깨어나서 0x0401 ACK를 돌려줄 때까지 동적 대기
                 bool bVdoReady = false;
                 DateTime dtVdoLimit = DateTime.Now.AddSeconds(40);
                 while (DateTime.Now < dtVdoLimit)
                 {
                     if (!checkIsTesting()) return false;
 
-                    if (await CheckVdoReadyAsync(500))
+                    // 기본 타임아웃 800ms 적용
+                    if (await CheckVdoReadyAsync(800))
                     {
                         bVdoReady = true;
                         OnLog?.Invoke("[시스템] VDO 드라이버 응답 확인 완료! DO 시험을 시작합니다.", Color.DarkGreen);
@@ -434,6 +570,8 @@ namespace TCMSTester.Services
                 }
                 finally
                 {
+                    ResetVdoResponseState();
+                    await Task.Delay(100);
                     ResumeVdiPolling();
                 }
             }

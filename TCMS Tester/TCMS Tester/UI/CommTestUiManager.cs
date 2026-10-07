@@ -40,7 +40,7 @@ namespace TCMSTester.UI
         }
 
         /// <summary>
-        /// 유닛 변경(TC, CC, DU) 시 화면 레이아웃을 다시 빌드합니다.
+        /// 유닛 변경(TC, CC, DU, ER) 시 화면 레이아웃을 다시 빌드합니다.
         /// </summary>
         public void RebuildLayout(string unitType)
         {
@@ -69,29 +69,72 @@ namespace TCMSTester.UI
             _parentTable.Padding = new Padding(10);
 
             // =========================================================================
-            // [1] DU 유닛 레이아웃: MVB + RS485 (1개 채널) -> 1행 2열 가로 50:50 배치
+            // [1] DU 유닛 레이아웃: MVB 단독 시험 (1행 1열 전체 100% 배치)
             // =========================================================================
             if (unitType.Equals("DU", StringComparison.OrdinalIgnoreCase))
             {
                 _parentTable.RowCount = 1;
-                _parentTable.ColumnCount = 2;
+                _parentTable.ColumnCount = 1;
 
                 _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
-                // 1. MVB 통신 카드
+                // MVB 카드 단독 생성 및 화면 전체 채우기
                 _parentTable.Controls.Add(
                     CreateCommCard("MVB", "MVB 통신", "포트 주소: 0xD4 / 0xD0 | 화면 전환 검증").CardPanel,
                     0, 0);
-
-                // 2. RS485 통신 카드 (기존 키 호환성을 위해 "RS485_1" 유지)
-                _parentTable.Controls.Add(
-                    CreateCommCard("RS485_1", "RS-485 통신", "115200 bps | 에코백 검증").CardPanel,
-                    1, 0);
             }
             // =========================================================================
-            // [2] TC / CC / 기본 레이아웃: 상단 2분할(WTB, MVB) + 하단 3분할(RS485 #1~#3)
+            // [2]  ER 유닛 레이아웃: 상단 3개(LAN, Probe, MVB) + 하단 2개(CPM, USB)
+            // =========================================================================
+            else if (unitType.Equals("ER", StringComparison.OrdinalIgnoreCase))
+            {
+                _parentTable.RowCount = 2;
+                _parentTable.ColumnCount = 1;
+
+                _parentTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+                _parentTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+
+                // 상단 3분할 (LAN, Target Probe, MVB)
+                TableLayoutPanel topTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 3,
+                    Margin = new Padding(0, 0, 0, 6),
+                    BackColor = Color.Transparent
+                };
+                topTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+                topTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+
+                topTable.Controls.Add(CreateCommCard("LAN", "Ethernet LAN", "ICMP Ping | PC ↔ ECPU 링크").CardPanel, 0, 0);
+                topTable.Controls.Add(CreateCommCard("PROBE", "Target Probe", "CMD: 0x2A7D | 내부 CAN (SCM/EDI)").CardPanel, 1, 0);
+                topTable.Controls.Add(CreateCommCard("MVB", "MVB 통신", "포트 주소: 43A0 | 버스 송수신 검증").CardPanel, 2, 0);
+
+                // 하단 2분할 (CPM, USB)
+                TableLayoutPanel bottomTable = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    RowCount = 1,
+                    ColumnCount = 2,
+                    Margin = new Padding(0, 6, 0, 0),
+                    BackColor = Color.Transparent
+                };
+                bottomTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                bottomTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+
+                bottomTable.Controls.Add(CreateCommCard("CPM", "CPM 통신", "CMD: 0x2B7D | 충돌보호모듈 (0x0001: OK)").CardPanel, 0, 0);
+                bottomTable.Controls.Add(CreateCommCard("USB", "USB 인터페이스", "CMD: 0x2A54 | 포트 R/W 인식 검증").CardPanel, 1, 0);
+
+                _parentTable.Controls.Add(topTable, 0, 0);
+                _parentTable.Controls.Add(bottomTable, 0, 1);
+            }
+            // =========================================================================
+            // [3] TC / CC / 기본 레이아웃: 상단 2분할(WTB, MVB) + 하단 3분할(RS485 #1~#3)
             // =========================================================================
             else
             {
@@ -228,7 +271,6 @@ namespace TCMSTester.UI
 
         public void SetCardState(string key, ECommTestState state, string statusMsg = null, string detailMsg = null)
         {
-            // DU 모드에서 WTB나 RS485_2 등이 호출되더라도 안전하게 무시
             if (!_commCards.ContainsKey(key)) return;
             var ui = _commCards[key];
 
@@ -277,9 +319,6 @@ namespace TCMSTester.UI
             }
         }
 
-        /// <summary>
-        /// 현재 표시된 카드들을 모두 READY(대기) 상태로 초기화합니다.
-        /// </summary>
         public void ResetAll()
         {
             foreach (var key in _commCards.Keys)

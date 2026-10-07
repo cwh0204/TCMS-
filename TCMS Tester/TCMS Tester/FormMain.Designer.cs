@@ -42,7 +42,6 @@
             treeNode2});
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("통신 시험");
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("메모리 시험");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("ER 속도센서 시험");
             this.ProgressBar_Run = new System.Windows.Forms.ProgressBar();
             this.Btn_EmergencyStop = new System.Windows.Forms.Button();
             this.Timer_Measure = new System.Windows.Forms.Timer(this.components);
@@ -96,16 +95,11 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.roundedPanel5 = new CITester.RoundedPanel();
-            this.customNumeric1 = new CustomNumeric();
-            this.roundedLabel9 = new CITester.RoundedLabel();
             this.BtnStart = new CustomIconButton();
-            this.roundedLabel10 = new CITester.RoundedLabel();
             this.customProgressBar2 = new YourNamespace.CustomProgressBar();
             this.roundedLabel11 = new CITester.RoundedLabel();
             this.Label_Desc = new System.Windows.Forms.Label();
-            this.roundedLabel12 = new CITester.RoundedLabel();
             this.roundedLabel13 = new CITester.RoundedLabel();
-            this.roundedLabel14 = new CITester.RoundedLabel();
             this.roundedPanel4 = new CITester.RoundedPanel();
             this.imagebtn2 = new CustomIconButton();
             this.imagebtn1 = new CustomIconButton();
@@ -297,6 +291,7 @@
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(1528, 125);
             this.tableLayoutPanel11.TabIndex = 36;
+            this.tableLayoutPanel11.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel11_Paint);
             // 
             // BtnExit
             // 
@@ -495,7 +490,7 @@
             // 
             this.button2.Location = new System.Drawing.Point(1047, 3);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(141, 119);
+            this.button2.Size = new System.Drawing.Size(61, 119);
             this.button2.TabIndex = 84;
             this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
@@ -1069,47 +1064,17 @@
             // 
             this.roundedPanel5.BackColor = System.Drawing.Color.Transparent;
             this.roundedPanel5.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(238)))));
-            this.roundedPanel5.Controls.Add(this.customNumeric1);
-            this.roundedPanel5.Controls.Add(this.roundedLabel9);
             this.roundedPanel5.Controls.Add(this.BtnStart);
-            this.roundedPanel5.Controls.Add(this.roundedLabel10);
             this.roundedPanel5.Controls.Add(this.customProgressBar2);
             this.roundedPanel5.Controls.Add(this.roundedLabel11);
             this.roundedPanel5.Controls.Add(this.Label_Desc);
-            this.roundedPanel5.Controls.Add(this.roundedLabel12);
             this.roundedPanel5.Controls.Add(this.roundedLabel13);
-            this.roundedPanel5.Controls.Add(this.roundedLabel14);
             this.roundedPanel5.CornerRadius = 10;
             this.roundedPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.roundedPanel5.Location = new System.Drawing.Point(3, 599);
             this.roundedPanel5.Name = "roundedPanel5";
             this.roundedPanel5.Size = new System.Drawing.Size(646, 234);
             this.roundedPanel5.TabIndex = 82;
-            // 
-            // customNumeric1
-            // 
-            this.customNumeric1.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.customNumeric1.BackColor = System.Drawing.Color.White;
-            this.customNumeric1.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(100)))), ((int)(((byte)(200)))));
-            this.customNumeric1.Location = new System.Drawing.Point(487, 90);
-            this.customNumeric1.Minimum = 0D;
-            this.customNumeric1.Name = "customNumeric1";
-            this.customNumeric1.Padding = new System.Windows.Forms.Padding(1);
-            this.customNumeric1.Size = new System.Drawing.Size(96, 30);
-            this.customNumeric1.Step = 1D;
-            this.customNumeric1.TabIndex = 50;
-            // 
-            // roundedLabel9
-            // 
-            this.roundedLabel9.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel9.FillColor = System.Drawing.Color.White;
-            this.roundedLabel9.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel9.Location = new System.Drawing.Point(133, 148);
-            this.roundedLabel9.Name = "roundedLabel9";
-            this.roundedLabel9.Size = new System.Drawing.Size(120, 40);
-            this.roundedLabel9.TabIndex = 49;
-            this.roundedLabel9.Text = "00 : 00 : 00";
-            this.roundedLabel9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // BtnStart
             // 
@@ -1141,18 +1106,6 @@
             this.BtnStart.UseHoverBackColor = true;
             this.BtnStart.UseVisualStyleBackColor = false;
             this.BtnStart.Click += new System.EventHandler(this.button1_Click_3Async);
-            // 
-            // roundedLabel10
-            // 
-            this.roundedLabel10.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel10.FillColor = System.Drawing.Color.White;
-            this.roundedLabel10.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel10.Location = new System.Drawing.Point(133, 100);
-            this.roundedLabel10.Name = "roundedLabel10";
-            this.roundedLabel10.Size = new System.Drawing.Size(120, 40);
-            this.roundedLabel10.TabIndex = 48;
-            this.roundedLabel10.Text = "- -";
-            this.roundedLabel10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // customProgressBar2
             // 
@@ -1195,18 +1148,6 @@
             this.Label_Desc.TabIndex = 43;
             this.Label_Desc.Text = "진행 정보";
             // 
-            // roundedLabel12
-            // 
-            this.roundedLabel12.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel12.FillColor = System.Drawing.Color.White;
-            this.roundedLabel12.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel12.Location = new System.Drawing.Point(7, 148);
-            this.roundedLabel12.Name = "roundedLabel12";
-            this.roundedLabel12.Size = new System.Drawing.Size(120, 40);
-            this.roundedLabel12.TabIndex = 46;
-            this.roundedLabel12.Text = "경과 시간";
-            this.roundedLabel12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // roundedLabel13
             // 
             this.roundedLabel13.BackColor = System.Drawing.Color.Transparent;
@@ -1218,18 +1159,6 @@
             this.roundedLabel13.TabIndex = 44;
             this.roundedLabel13.Text = "진행 차수";
             this.roundedLabel13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // roundedLabel14
-            // 
-            this.roundedLabel14.BackColor = System.Drawing.Color.Transparent;
-            this.roundedLabel14.FillColor = System.Drawing.Color.White;
-            this.roundedLabel14.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.roundedLabel14.Location = new System.Drawing.Point(7, 100);
-            this.roundedLabel14.Name = "roundedLabel14";
-            this.roundedLabel14.Size = new System.Drawing.Size(120, 40);
-            this.roundedLabel14.TabIndex = 45;
-            this.roundedLabel14.Text = "현재 시험";
-            this.roundedLabel14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // roundedPanel4
             // 
@@ -1552,13 +1481,10 @@
             treeNode4.Text = "통신 시험";
             treeNode5.Name = "메모리 시험";
             treeNode5.Text = "메모리 시험";
-            treeNode6.Name = "ER 속도센서 시험";
-            treeNode6.Text = "ER 속도센서 시험";
             this.modernTreeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3,
             treeNode4,
-            treeNode5,
-            treeNode6});
+            treeNode5});
             this.modernTreeView1.ShowLines = false;
             this.modernTreeView1.ShowPlusMinus = false;
             this.modernTreeView1.Size = new System.Drawing.Size(323, 282);
@@ -1953,14 +1879,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox richTextBox_Log;
         private RoundedPanel roundedPanel5;
-        private RoundedLabel roundedLabel9;
-        private RoundedLabel roundedLabel10;
         private YourNamespace.CustomProgressBar customProgressBar2;
         private RoundedLabel roundedLabel11;
         private System.Windows.Forms.Label Label_Desc;
-        private RoundedLabel roundedLabel12;
         private RoundedLabel roundedLabel13;
-        private RoundedLabel roundedLabel14;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private RoundedPanel roundedPanel6;
         private RoundedLabel roundedLabel1;
@@ -1991,7 +1913,6 @@
         private CustomIconButton imagebtn2;
         private RoundedLabel roundedLabel15;
         private CustomIconButton BtnChange;
-        private CustomNumeric customNumeric1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel4;

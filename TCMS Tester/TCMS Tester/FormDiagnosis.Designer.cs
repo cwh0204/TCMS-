@@ -58,12 +58,13 @@
             this.checkBox12 = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button_InputBoard = new TCMSTester.DiagnoseButton();
-            this.button_OutputBoard = new TCMSTester.DiagnoseButton();
+            this.button_WTB = new TCMSTester.DiagnoseButton();
             this.button_MVB = new TCMSTester.DiagnoseButton();
             this.button_PowerSupply = new TCMSTester.DiagnoseButton();
             this.button_PLC = new TCMSTester.DiagnoseButton();
             this.buttonTestStart = new CustomIconButton();
             this.buttonClose = new CustomIconButton();
+            this.button_PLC2 = new TCMSTester.DiagnoseButton();
             this.SuspendLayout();
             // 
             // Timer_Check
@@ -459,7 +460,7 @@
             this.button_InputBoard.IconSize = new System.Drawing.Size(40, 40);
             this.button_InputBoard.Image = global::TCMSTester.Properties.Resources.computer1;
             this.button_InputBoard.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_InputBoard.Location = new System.Drawing.Point(31, 260);
+            this.button_InputBoard.Location = new System.Drawing.Point(31, 360);
             this.button_InputBoard.Name = "button_InputBoard";
             this.button_InputBoard.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_InputBoard.Size = new System.Drawing.Size(511, 66);
@@ -470,31 +471,31 @@
             this.button_InputBoard.UseVisualStyleBackColor = false;
             this.button_InputBoard.Click += new System.EventHandler(this.button_InputBoard_Click);
             // 
-            // button_OutputBoard
+            // button_WTB
             // 
-            this.button_OutputBoard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.button_OutputBoard.BorderThickness = 1F;
-            this.button_OutputBoard.ButtonIcon = global::TCMSTester.Properties.Resources.mainboard;
-            this.button_OutputBoard.CurrentStatus = TCMSTester.eDiagStatus.Ready;
-            this.button_OutputBoard.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button_OutputBoard.FlatAppearance.BorderSize = 0;
-            this.button_OutputBoard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button_OutputBoard.Font = new System.Drawing.Font("맑은 고딕", 16.75F, System.Drawing.FontStyle.Bold);
-            this.button_OutputBoard.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(85)))), ((int)(((byte)(141)))));
-            this.button_OutputBoard.IconSize = new System.Drawing.Size(40, 40);
-            this.button_OutputBoard.Image = global::TCMSTester.Properties.Resources.computer1;
-            this.button_OutputBoard.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_OutputBoard.Location = new System.Drawing.Point(31, 332);
-            this.button_OutputBoard.Name = "button_OutputBoard";
-            this.button_OutputBoard.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
-            this.button_OutputBoard.Size = new System.Drawing.Size(511, 66);
-            this.button_OutputBoard.TabIndex = 24;
-            this.button_OutputBoard.Text = "전류출력보드 진단";
-            this.button_OutputBoard.TextLocation = new System.Drawing.Point(70, 16);
-            this.button_OutputBoard.UseAutoCenterLayout = false;
-            this.button_OutputBoard.UseVisualStyleBackColor = false;
-            this.button_OutputBoard.Visible = false;
-            this.button_OutputBoard.Click += new System.EventHandler(this.button_OutputBoard_Click);
+            this.button_WTB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.button_WTB.BorderThickness = 1F;
+            this.button_WTB.ButtonIcon = global::TCMSTester.Properties.Resources.mainboard;
+            this.button_WTB.CurrentStatus = TCMSTester.eDiagStatus.Ready;
+            this.button_WTB.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button_WTB.FlatAppearance.BorderSize = 0;
+            this.button_WTB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_WTB.Font = new System.Drawing.Font("맑은 고딕", 16.75F, System.Drawing.FontStyle.Bold);
+            this.button_WTB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(85)))), ((int)(((byte)(141)))));
+            this.button_WTB.IconSize = new System.Drawing.Size(40, 40);
+            this.button_WTB.Image = global::TCMSTester.Properties.Resources.computer1;
+            this.button_WTB.ImageLocation = new System.Drawing.Point(15, 13);
+            this.button_WTB.Location = new System.Drawing.Point(31, 392);
+            this.button_WTB.Name = "button_WTB";
+            this.button_WTB.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
+            this.button_WTB.Size = new System.Drawing.Size(511, 66);
+            this.button_WTB.TabIndex = 24;
+            this.button_WTB.Text = "WTB 보드 진단";
+            this.button_WTB.TextLocation = new System.Drawing.Point(70, 16);
+            this.button_WTB.UseAutoCenterLayout = false;
+            this.button_WTB.UseVisualStyleBackColor = false;
+            this.button_WTB.Visible = false;
+            this.button_WTB.Click += new System.EventHandler(this.button_OutputBoard_Click);
             // 
             // button_MVB
             // 
@@ -510,7 +511,7 @@
             this.button_MVB.IconSize = new System.Drawing.Size(40, 40);
             this.button_MVB.Image = global::TCMSTester.Properties.Resources.computer1;
             this.button_MVB.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_MVB.Location = new System.Drawing.Point(31, 332);
+            this.button_MVB.Location = new System.Drawing.Point(31, 392);
             this.button_MVB.Name = "button_MVB";
             this.button_MVB.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_MVB.Size = new System.Drawing.Size(511, 66);
@@ -536,7 +537,7 @@
             this.button_PowerSupply.IconSize = new System.Drawing.Size(40, 40);
             this.button_PowerSupply.Image = global::TCMSTester.Properties.Resources.energy;
             this.button_PowerSupply.ImageLocation = new System.Drawing.Point(15, 13);
-            this.button_PowerSupply.Location = new System.Drawing.Point(31, 183);
+            this.button_PowerSupply.Location = new System.Drawing.Point(31, 278);
             this.button_PowerSupply.Name = "button_PowerSupply";
             this.button_PowerSupply.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
             this.button_PowerSupply.Size = new System.Drawing.Size(511, 66);
@@ -591,7 +592,7 @@
             this.buttonTestStart.IconLocation = new System.Drawing.Point(45, 9);
             this.buttonTestStart.IconScale = 0.6F;
             this.buttonTestStart.Image = global::TCMSTester.Properties.Resources.play_button;
-            this.buttonTestStart.Location = new System.Drawing.Point(31, 413);
+            this.buttonTestStart.Location = new System.Drawing.Point(31, 464);
             this.buttonTestStart.Name = "buttonTestStart";
             this.buttonTestStart.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(33)))), ((int)(((byte)(58)))));
             this.buttonTestStart.Size = new System.Drawing.Size(251, 55);
@@ -601,6 +602,8 @@
             this.buttonTestStart.TextLocation = new System.Drawing.Point(85, 14);
             this.buttonTestStart.UseHoverBackColor = false;
             this.buttonTestStart.UseVisualStyleBackColor = false;
+            this.buttonTestStart.Visible = false;
+            this.buttonTestStart.Click += new System.EventHandler(this.buttonTestStart_Click);
             // 
             // buttonClose
             // 
@@ -621,7 +624,7 @@
             this.buttonClose.IconLocation = new System.Drawing.Point(60, 10);
             this.buttonClose.IconScale = 0.6F;
             this.buttonClose.Image = global::TCMSTester.Properties.Resources.logout;
-            this.buttonClose.Location = new System.Drawing.Point(293, 413);
+            this.buttonClose.Location = new System.Drawing.Point(293, 464);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.PressedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(33)))), ((int)(((byte)(58)))));
             this.buttonClose.Size = new System.Drawing.Size(249, 55);
@@ -633,15 +636,41 @@
             this.buttonClose.UseVisualStyleBackColor = false;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
+            // button_PLC2
+            // 
+            this.button_PLC2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.button_PLC2.BorderThickness = 1F;
+            this.button_PLC2.ButtonIcon = global::TCMSTester.Properties.Resources.computer1;
+            this.button_PLC2.CurrentStatus = TCMSTester.eDiagStatus.Ready;
+            this.button_PLC2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button_PLC2.FlatAppearance.BorderSize = 0;
+            this.button_PLC2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_PLC2.Font = new System.Drawing.Font("맑은 고딕", 16.75F, System.Drawing.FontStyle.Bold);
+            this.button_PLC2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(85)))), ((int)(((byte)(141)))));
+            this.button_PLC2.IconSize = new System.Drawing.Size(40, 40);
+            this.button_PLC2.Image = global::TCMSTester.Properties.Resources.computer1;
+            this.button_PLC2.ImageLocation = new System.Drawing.Point(15, 13);
+            this.button_PLC2.Location = new System.Drawing.Point(31, 191);
+            this.button_PLC2.Name = "button_PLC2";
+            this.button_PLC2.ReadyBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(215)))), ((int)(((byte)(225)))));
+            this.button_PLC2.Size = new System.Drawing.Size(511, 66);
+            this.button_PLC2.TabIndex = 27;
+            this.button_PLC2.Text = "PLC 진단";
+            this.button_PLC2.TextLocation = new System.Drawing.Point(70, 16);
+            this.button_PLC2.UseAutoCenterLayout = false;
+            this.button_PLC2.UseVisualStyleBackColor = false;
+            this.button_PLC2.Click += new System.EventHandler(this.button_PLC2_Click);
+            // 
             // FormDiagnosis
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(251)))), ((int)(((byte)(252)))));
-            this.ClientSize = new System.Drawing.Size(575, 484);
+            this.ClientSize = new System.Drawing.Size(575, 546);
             this.ControlBox = false;
+            this.Controls.Add(this.button_PLC2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_InputBoard);
-            this.Controls.Add(this.button_OutputBoard);
+            this.Controls.Add(this.button_WTB);
             this.Controls.Add(this.button_MVB);
             this.Controls.Add(this.button_PowerSupply);
             this.Controls.Add(this.button_PLC);
@@ -692,8 +721,9 @@
         private CustomIconButton buttonClose;
         private TCMSTester.DiagnoseButton button_PowerSupply;
         private TCMSTester.DiagnoseButton button_MVB;
-        private TCMSTester.DiagnoseButton button_OutputBoard;
+        private TCMSTester.DiagnoseButton button_WTB;
         private TCMSTester.DiagnoseButton button_InputBoard;
         private System.Windows.Forms.Label label1;
+        private TCMSTester.DiagnoseButton button_PLC2;
     }
 }
